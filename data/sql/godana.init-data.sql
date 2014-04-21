@@ -52,4 +52,4 @@ INSERT INTO `gdn_category` (`id_category`, `id_parent_category`, `category_name`
 
 INSERT INTO `gdn_file` (`id_file`, `type`, `relativePath`, `name`, `size`, `title`, `description`) VALUES (NULL, 'image/png', '/files/users/default/no-picture.png', 'no-picture.png', '1150', NULL, NULL);
 
-INSERT INTO `gdn_image` (`id`, `file_id`, `dimension`, `name`) VALUES (NULL, '1', 'xs', 'no-picture.png_w24_cx0_cy0_cw59_ch59.png'), (NULL, '1', 'sm', 'no-picture.png_w40_cx0_cy0_cw59_ch59.png'), (NULL, '1', 'md', 'no-picture.png_w60_cx0_cy0_cw59_ch59.png');
+INSERT INTO `gdn_image` (`id`, `file_id`, `dimension`, `name`) VALUES (NULL, '3', 'xs', 'no-picture.png_w24_cx0_cy0_cw59_ch59.png'), (NULL, '3', 'sm', 'no-picture.png_w40_cx0_cy0_cw59_ch59.png'), (NULL, '3', 'md', 'no-picture.png_w60_cx0_cy0_cw59_ch59.png');
