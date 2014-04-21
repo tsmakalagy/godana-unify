@@ -1,0 +1,157 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('Godana')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+                        ->appendStylesheet($this->basePath() . '/css/sb-admin.css')
+                        ->appendStylesheet($this->basePath() . '/font-awesome/css/font-awesome.min.css') ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+            ->prependFile($this->basePath() . '/js/jquery.min.js')
+            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+        ; ?>
+
+    </head>
+    <body>
+    	<div id="wrapper">
+    		<!-- Sidebar -->
+      		<nav class="navbar navbar-inverse navbar-fixed-top nav-gdn-top" role="navigation">
+      			<!-- Brand and toggle get grouped for better mobile display -->
+		        <div class="navbar-header">
+		          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+		            <span class="sr-only">Toggle navigation</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		          </button>
+		          <a class="navbar-brand" href="<?php echo $this->url('home', array(), array(), true) ?>">godana</a>
+		        </div>	
+		        
+		        <div class="collapse navbar-collapse navbar-ex1-collapse">
+		        <? 
+                    	$roles = $this->currentUserRole();
+                    	$isAdmin = false;
+                    	foreach ($roles as $role) {
+                    		if ($role->getRoleId() == 'admin') {
+                    			$isAdmin = true;
+                    		}
+                    }?>
+		          <ul class="nav navbar-nav side-nav">		            
+		            <li class="dropdown">
+		              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('Cooperative'); ?><b class="caret"></b></a>
+		              <ul class="dropdown-menu">		              
+		              	<li><a href="<?=$this->url('admin/cooperative/create', array(), array(), true) ?>"><?=$this->translate('Create cooperative'); ?></a></li>
+		              	<li><a href="<?=$this->url('admin/cooperative', array(), array(), true) ?>"><?=$this->translate('List cooperative'); ?></a></li>
+		                <li><a href="<?=$this->url('admin/cooperative/zone_create', array(), array(), true) ?>"><?=$this->translate('Create zone'); ?></a></li>
+		                <li><a href="<?=$this->url('admin/cooperative/line_create', array(), array(), true) ?>"><?=$this->translate('Create line'); ?></a></li>		                
+		                <li><a href="<?=$this->url('admin/cooperative/line_add', array(), array(), true) ?>"><?=$this->translate('Add line'); ?></a></li>
+		                
+		              </ul>
+		            </li>
+		            <li class="dropdown">
+	                	<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('Car'); ?><b class="caret"></b></a>
+	              		<ul class="dropdown-menu">
+	                		<li><a href="<?=$this->url('admin/cooperative/car_make_add', array(), array(), true) ?>"><?=$this->translate('Add car make'); ?></a></li>
+	                		<li><a href="<?=$this->url('admin/cooperative/car_model_add', array(), array(), true) ?>"><?=$this->translate('Add car model'); ?></a></li>
+	                		<li><a href="<?=$this->url('admin/cooperative/car_driver_add', array(), array(), true) ?>"><?=$this->translate('Add car driver'); ?></a></li>
+	                		<li><a href="<?=$this->url('admin/cooperative/car_add', array(), array(), true) ?>"><?=$this->translate('Add car'); ?></a></li>
+	                		<li><a href="<?=$this->url('admin/cooperative/line_car_add', array(), array(), true) ?>"><?=$this->translate('Add car line'); ?></a></li>	                		
+	                	</ul>
+	                </li>
+	                <li class="dropdown">
+	                	<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('Reservation'); ?><b class="caret"></b></a>
+	              		<ul class="dropdown-menu">	                		
+	                		<li><a href="<?=$this->url('admin/cooperative/reservation_board_create', array(), array(), true) ?>"><?=$this->translate('Reserve a car'); ?></a></li>
+	                		<li><a href="<?=$this->url('admin/cooperative/reservation_create', array(), array(), true) ?>"><?=$this->translate('Make a reservation'); ?></a></li>
+	                		<li><a href="<?=$this->url('admin/cooperative/reservation_car_list', array(), array(), true) ?>"><?=$this->translate('List reservation car'); ?></a></li>
+	                	</ul>
+	                </li>
+		          </ul>
+		          
+		          <ul class="nav navbar-nav navbar-right navbar-user">
+		          	<li class="dropdown user-dropdown">
+		              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?=$this->zfcUserDisplayName() ?> <b class="caret"></b></a>
+		              <ul class="dropdown-menu">
+		                <li><a href="<?php echo $this->url('zfcuser/profile', array(), array(), true) ?>"><i class="fa fa-user"></i> <? echo $this->translate('Profile');?></a></li>
+		                <li class="divider"></li>		                
+		                <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+		                <li class="divider"></li>
+		                <? if ($isAdmin):?>
+		                <li><a href="<?=$this->url('admin', array(), array(), true) ?>"><i class="fa fa-gear"></i> Admin</a></li>
+		                <li class="divider"></li>
+		                <? endif;?>
+		                <li><a href="<?php echo $this->url('zfcuser/logout', array(), array(), true) ?>"><i class="fa fa-power-off"></i> <?php echo $this->translate('Sign Out'); ?></a></li>
+		              </ul>
+		            </li>
+		          </ul>
+          		</div>          
+      		</nav>
+      		<div id="page-wrapper">
+      			<?=$this->content; ?>
+      		</div>
+    	</div>
+    	<div class="container">
+    	<?
+            $services = $this->getHelperPluginManager()->getServiceLocator();
+			$router = $services->get('router');
+			$request = $services->get('request');
+			
+			$routeMatch = $router->match($request);
+			if (isset($routeMatch)) {
+				$routeName = $routeMatch->getMatchedRouteName();
+				$routeParams = $routeMatch->getParams();
+				$routeParamsEn = $routeParams;
+				if (array_key_exists('lang', $routeParamsEn)) {
+					$routeParamsEn['lang'] = 'en';	
+				}
+				$routeParamsFr = $routeParams;
+				if (array_key_exists('lang', $routeParamsFr)) {
+					$routeParamsFr['lang'] = 'fr';	
+				}
+				$routeParamsMg = $routeParams;
+				if (array_key_exists('lang', $routeParamsMg)) {
+					$routeParamsMg['lang'] = 'mg';	
+				}	
+			}
+					
+            ?>
+    	<hr>
+            <footer>
+            	<div class="row">
+                <div class="col-md-5"><h5>&copy; Fano Raiza <?=date('Y'); ?></h5></div>
+                <div class="col-md-5 col-xs-12">
+                <div class="btn-group">
+				  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+				  <?=$this->translate('Language');  ?>: <span class="selection label label-primary"><?=strtoupper($this->lang); ?></span>&nbsp;<span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				  	<li><a href="<?=$this->url($routeName, $routeParamsEn); ?>">EN</a></li>
+				    <li class="divider"></li>
+				    <li><a href="<?=$this->url($routeName, $routeParamsFr); ?>">FR</a></li>
+				    <li class="divider"></li>
+				    <li><a href="<?=$this->url($routeName, $routeParamsMg); ?>">MG</a></li>
+				  </ul>
+				</div>
+                </div>
+                </div>
+                
+                
+            </footer>
+    	</div>
+    	<?php echo $this->inlineScript() ?>
+    </body>
+</html>

@@ -1,0 +1,68 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/social-buttons.css');?>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<div class="panel panel-default">
+<div class="panel-body">
+<?php
+$form = $this->loginForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('zfcuser/login', array(), array(), true));
+$form->setAttribute('method', 'post');
+//$form->setAttribute('class', 'form-horizontal');
+//$form->setAttribute('class', 'form-inline');
+$form->setAttribute('role', 'form');
+?>
+<div class="gdn_form_area">
+<?php echo $this->form()->openTag($form) ?>
+
+<? if($this->formElementErrors($form->get('identity'))): ?>
+<div class="alert alert-danger alert-dismissable">
+<button data-dismiss="alert" class="close">×</button>
+    	<?php  echo $this->formElementErrors()
+                ->setMessageOpenFormat('<div>')
+                ->setMessageSeparatorString('</div><div>')
+                ->setMessageCloseString('</div>')
+                ->render($form->get('identity')); ?>
+</div>
+<? endif;?>
+<!--        <?php echo $this->formElementErrors($form->get('identity')) ?>-->
+<div class="form-group">
+        <?php echo $this->translate($this->formLabel($form->get('identity'))) ?>
+        <div class="gdn_input_margin"><?php echo $this->formInput($form->get('identity')) ?></div>
+</div>
+<div class="form-group">
+        <?php echo $this->formLabel($form->get('credential')) ?>
+        <div class="gdn_input_margin"><?php echo $this->formInput($form->get('credential')) ?></div>
+</div>
+        <?php if ($this->redirect): ?>
+            <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
+        <?php endif ?>
+
+        <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-2 col-xs-6 col-xs-offset-1"><?php echo $this->formButton($form->get('submit')) ?></div>
+        <?php     echo $this->mySocialSignInButton('facebook') ?><?php     echo $this->mySocialSignInButton('github') ?>
+        </div>
+    
+
+<?php echo $this->form()->closeTag() ?>
+
+<?php if ($this->enableRegistration) : ?>
+<div class="row">
+<div class="col-sm-12">
+<?php echo $this->translate('Not registered?'); ?> <a href="<?php echo $this->url('zfcuser/register', array(), array(), true) . ($this->redirect ? '?redirect='.$this->redirect : '') ?>"><?php echo $this->translate('Sign up!'); ?></a>
+</div>
+</div>
+<?php endif; ?>
+</div><!-- end .gdn_form_area -->
+</div><!-- end .panel-body -->
+</div><!-- end .panel -->
+</div><!-- end .col-md-8 -->
+</div><!-- end row -->
+<script type="text/javascript">
+$(function() {
+	window.setTimeout(function() {
+		$('.alert').fadeOut("slow");
+	}, 3000);
+});
+</script>

@@ -1,0 +1,216 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css');?>
+<? $this->headTitle($this->translate('Admin Cooperative'));?>
+<div class="row">
+<? $reservationBoard = $this->reservationBoard;
+if (isset($reservationBoard)):
+	$line = $reservationBoard->getLine();
+	$reservationBoardId = $reservationBoard->getId();
+	$car = $reservationBoard->getCar();
+	$carSeats = $car->getLineCarSeats($line);
+	$carColumns = $car->getLineCarColumns($line);
+	$fare = $car->getLineCarFare($line);
+	$license = $car->getLicense();
+	$reservations = $reservationBoard->getReservations();
+	$reservationSeats = array();
+	foreach ($reservations as $reservation) {
+		array_push($reservationSeats, $reservation->getSeat());
+	}
+	$cooperativeName = $reservationBoard->getCooperative()->getName();
+	
+?>
+<? if ($carColumns == 3):?>
+<div class="col-md-5 col-xs-12 col-sm-7 col-md-offset-4">
+<? elseif ($carColumns == 4):?>
+<div class="col-md-6 col-xs-12 col-sm-12 col-md-offset-3">
+<? endif;?>
+<div class="panel panel-default">
+	<div class="panel-heading"><h3><span class="label label-info"><?=$cooperativeName; ?></span>&nbsp;<span class="label label-info -right"><?=$license; ?></span></h3></div>		
+	<div class="panel-body">
+		<? $carMake = $reservationBoard->getCar()->getModel()->getMake()->getName();?>
+		<img alt="" src="<?=$this->basePath().'/img/car/'.$carMake.'.jpg' ?>" width="120" height="30" class="img-responsive center-block">
+		<? if ($carColumns == 3):?>
+		<table class="reservation-table-3">
+		<? elseif ($carColumns == 4):?>
+		<table class="reservation-table-4">
+		<? endif;?>
+				<tr>
+					<? if ($carColumns == 3):
+						$count = 1;
+					?>
+					<td class="td-driver"><h4><span class="label label-info"><?=$this->translate('Driver'); ?></span></h4></td>
+					<? elseif ($carColumns == 4):
+						$count = 2;
+					?>
+					<td class="td-driver" colspan="2"><h4><span class="label label-info"><?=$this->translate('Driver'); ?></span></h4></td>
+					<? endif;
+					for ($i = 0; $i < $carSeats; $i++):
+						$seatNumber = $i + 1;
+						$count++;	
+						if (in_array($seatNumber, $reservationSeats)):
+						 	$key = array_search($seatNumber, $reservationSeats);
+							$res = $reservations[$key];
+							$reservationId = $res->getId();
+							$passenger = $res->getPassenger();
+							$p_name = $passenger->getName();
+							$is_fully_paid = true;
+							if ($res->getPayment() < $fare) {
+								$is_fully_paid = false;
+							}
+							$title = $passenger->getTitle();
+							if ($title == 0) {
+								$p = "Mr ".ucwords($p_name);
+							} else if ($title == 1) {
+								$p = "Mme ".ucwords($p_name);
+							} else if ($title == 2) {
+								$p = "Ms ".ucwords($p_name);
+							}		
+						?>
+						<td><? if ($is_fully_paid):?>	
+							<span class="user-sprite seat-paid seat-passenger">
+								<span class="seat-action">
+									<a href="#" class="show-detail my-tooltip" data-reservation-id="<?=$reservationId; ?>" title="<?=$this->translate('View'); ?>"
+									data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>"  ><span class="fa fa-eye"></span></a>
+									<a href="#" class="delete-reservation my-tooltip" data-reservation-id="<?=$reservationId; ?>" title="<?=$this->translate('Delete'); ?>" 
+									data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>"  ><span class="fa fa-trash-o"></span></a>
+									<a href="#" class="show-edit my-tooltip" data-reservation-id="<?=$reservationId; ?>" title="<?=$this->translate('Edit'); ?>"
+									data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>"  ><span class="fa fa-edit"></span></a>
+								</span>
+							</span>							
+							<? else:?>
+								<span class="user-sprite seat-taken seat-passenger">
+									<span class="seat-action">
+										<a href="#" class="show-detail my-tooltip" data-reservation-id="<?=$reservationId; ?>" title="<?=$this->translate('View'); ?>"
+										data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>"  ><span class="fa fa-eye"></span></a>
+										<a href="#" class="delete-reservation my-tooltip" data-reservation-id="<?=$reservationId; ?>" title="<?=$this->translate('Delete'); ?>" 
+										data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>"  ><span class="fa fa-trash-o"></span></a>
+										<a href="#" class="show-edit my-tooltip" data-reservation-id="<?=$reservationId; ?>" title="<?=$this->translate('Edit'); ?>"
+										data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>"  ><span class="fa fa-edit"></span></a>
+									</span>
+								</span>
+								
+							<? endif;?>
+						</td>
+						<? else:?>
+						<td>
+							<span class="user-sprite seat-available seat-passenger">
+								<span class="seat-action">
+									<a href="#" class="new-reservation my-tooltip" data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>" title="<?=$this->translate('New'); ?>"
+									><span class="fa fa-file"></span></a>
+								</span>
+							</span>
+							
+						</td>
+						<? endif;?>
+						<? if ($count % 3 == 0 && $carColumns == 3 && $i != $carSeats - 1):?>
+						</tr><tr>
+						<? elseif ($count % 4 == 0 && $carColumns == 4 && $i != $carSeats - 1):?>
+						</tr><tr>
+						<? endif;?>
+						<? if ($i == $carSeats - 1):?>
+						</tr>
+						<? endif;?>
+					<? endfor;?>
+		</table>		
+<? endif;?>
+
+	</div><!-- /.panel-body -->
+	<div class="panel-footer">
+		<span class="label label-default"><?=$this->translate('Empty'); ?></span>&nbsp;<span class="label label-warning"><?=$this->translate('Taken'); ?></span>
+		&nbsp;<span class="label label-danger"><?=$this->translate('Paid'); ?></span>
+	</div><!-- /.panel-footer -->
+</div><!-- /.panel -->
+</div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">  
+<div class="modal-dialog">    
+
+      
+</div><!-- /.modal-dialog --> 
+</div><!-- /.modal -->
+
+<div class="modal fade" id="viewReservationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">  
+<div class="modal-dialog">    
+
+      
+</div><!-- /.modal-dialog --> 
+</div><!-- /.modal -->
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/bootbox.min.js')
+			->appendFile($this->basePath() . '/js/select2.min.js');?>
+<script type="text/javascript">
+var urlForm = "<?=$this->url('admin/cooperative/show_reservation_form', array(), array(), true); ?>";
+var viewReservationUrl = "<?=$this->url('admin/cooperative/view_reservation', array(), array(), true); ?>";
+var deleteReservationUrl = "<?=$this->url('admin/cooperative/delete_reservation', array(), array(), true); ?>";
+var deleteConfirm = "<?=$this->translate('Are you sure?'); ?>";
+$(function() {
+
+	$('.my-tooltip').tooltip();
+	
+	$(document).on('click', '.show-edit', function() {
+		var seat = $(this).data('seat-id');
+		var resBoardId = $(this).data('resboard-id');
+		if ($(this).parents('.seat-passenger').hasClass('seat-paid') || 
+				$(this).parents('.seat-passenger').hasClass('seat-taken')) {
+			var reservationId = $(this).data('reservation-id');
+			$('#myModal').modal().find('.modal-dialog').load(urlForm+'?reservationId='+reservationId, function() {	
+			});
+		}		
+		return false;
+	});
+
+	$(document).on('click', '.show-detail', function() {
+		var seat = $(this).data('seat-id');
+		var resBoardId = $(this).data('resboard-id');		
+		var reservationId = $(this).data('reservation-id');
+		$('#viewReservationModal').modal().find('.modal-dialog').
+			load(viewReservationUrl+'?reservationId='+reservationId+'&seatNumber='+seat);		
+		return false;
+	});
+
+	$(document).on('click', '.new-reservation', function() {
+		var seat = $(this).data('seat-id');
+		var resBoardId = $(this).data('resboard-id');
+		$('#myModal').modal().find('.modal-dialog').load(urlForm, function() {
+			$('input[name="reservation-form[seat]"]').val(seat);
+			$('input[name="reservation-form[reservationBoard]"]').val(resBoardId);
+		});
+		return false;
+	});
+
+	$(document).on('click', '.delete-reservation', function() {
+		var that = this;
+		var reservationId = $(this).data('reservation-id');
+		var seat = $(this).data('seat-id');
+		bootbox.confirm(deleteConfirm, function(e) {
+			$.ajax({
+				url: deleteReservationUrl,
+				data: { reservationId : reservationId, seatNumber: seat },
+				dataType: 'json'
+			}).done(function(res) {
+				if (res.success) {
+					var span = res.span;
+					$(that).parents('td').html(span);
+					$('.my-tooltip').tooltip();
+				}
+			});
+		});
+		return false;
+	});
+
+	$('#myModal').on('hide.bs.modal', function(e) {
+		$('#myModal .modal-body').html("");
+		$('.btn-save').button('reset');
+	});
+
+	$('#viewReservationModal').on('hide.bs.modal', function(e) {
+		$('#viewReservationModal .modal-body').html("");
+	});
+	
+	
+});
+</script>

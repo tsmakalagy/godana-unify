@@ -1,0 +1,64 @@
+<? $this->headTitle($this->translate('Shops'));?>
+<div id="ctnr">
+<? $shops = $this->paginator;?>
+<? $count = 0;?>
+<? foreach ($shops as $shop):?>
+<? 
+	$shopId = $shop->getId();
+	$shopIdent = $shop->getIdent();
+	$name = $shop->getName();
+	$description = $shop->getDescription();
+	$categories = $shop->getCategories();
+	$categoryToDisplay = '';
+	foreach ($categories as $category):
+		$categoryToDisplay .= '<a class="btn btn-danger btn-xs" href="'.$this->url('shop', array('categoryIdent' => $category->getIdent()), array(), true).'">' . $category->getName() . '</a>' . ' ';
+	endforeach;
+	$categoryToDisplay = rtrim($categoryToDisplay, ' ');
+?>
+<? $count++;?>
+<div class="item">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><?=$name; ?>
+			<a class="btn btn-default pull-right btn-xs" href="<?=$this->url('detail-shop', array('shopIdent' => $shopIdent), array(), true) ?>"><?=$this->translate('More'); ?> <i class="glyphicon glyphicon-chevron-right"></i></a></h3>
+		</div>
+		<div class="panel-body">
+			<p><?=$description; ?></p>
+			<?=$categoryToDisplay; ?>
+		</div>
+		
+	</div>
+</div>
+<? endforeach;?>
+</div>
+<hr/>
+<div class="container">
+<div class="row">
+<?=$this->paginationControl(
+		$this->paginator,
+ 		'sliding',
+ 		array('partial/paginator.phtml', 'Godana'),
+	 	array(
+	 		'route' => 'shop',
+	 		'typeBid' => $this->typeBid,
+	 		'categoryIdent' => $this->categoryIdent,
+	 		'lang' => $this->lang
+	 	)
+);
+?>
+</div>
+</div>
+<script type="text/javascript">
+<!--
+$(function() {
+	var container = document.querySelector('#ctnr');
+	var msnry = new Masonry( container, {
+	  // options
+	  columnWidth: 100,
+	  itemSelector: '.item'
+	});
+});
+//-->
+</script>
+
+<? $this->inlineScript()->appendFile($this->basePath() . '/js/masonry.pkgd.min.js');?>

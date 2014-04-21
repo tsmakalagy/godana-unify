@@ -1,0 +1,416 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.Jcrop.min.css')                
+                ?>
+<? $this->headTitle($this->translate('Bid'));?>
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Bid'); ?></h3>
+</div>
+<div class="panel-body">
+<?php
+$form = $this->bidForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('add-bid', array('lang' => $this->lang)));
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'form-horizontal');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? $bid = $form->get('bid-form'); ?>
+<? echo $this->formHidden($bid->get('id'));?>
+
+<? $typeBid = $bid->get('type'); ?>
+<div class="form-group <?php if($this->formElementErrors($typeBid)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($typeBid); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($typeBid) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($typeBid); ?>
+</div>
+</div>
+
+
+<? $post = $bid->get('post');
+?>
+<? echo $this->formHidden($post->get('id'));?>
+<? $categories = $post->get('categories'); ?>
+<div class="form-group <?php if($this->formElementErrors($categories)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($categories); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($categories) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($categories); 
+	?>
+</div>
+</div>
+<? $title = $post->get('title'); ?>
+<div class="form-group <?php if($this->formElementErrors($title)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($title); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($title) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($title); ?>
+</div>
+</div>
+
+<? $detail = $post->get('detail'); ?>
+<div class="form-group <?php if($this->formElementErrors($detail)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($detail); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($detail) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($detail); ?>
+</div>
+</div>
+<? $contactsCollection = $post->get('contacts');?>
+<div id="contacts-group">
+	<? foreach ($contactsCollection as $c):?>
+	<div class="contacts-element">
+		<? echo $this->formHidden($c->get('id'));?>
+		<div class="form-group">
+			<?=$this->formLabel($c->get('type')); ?>
+			<div class="col-sm-7">
+			<?=$this->formElement($c->get('type')); ?>			
+			</div>
+		</div>
+		<div class="form-group <?php if($this->formElementErrors($c->get('value'))) 
+echo "has-error" ?>">
+			<?=$this->formLabel($c->get('value')); ?>
+			<div class="col-sm-7">
+			<?=$this->formElement($c->get('value')); ?>
+			<?=$this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($c->get('value')); ?>
+			</div>
+		</div>
+	</div>
+	<? endforeach;?>
+</div>
+
+
+<div class="form-group">
+	<span id="tplContact" data-template="<?=htmlspecialchars('<div class="contacts-element"><input type="hidden" value="" name="bid-form[post][contacts][__placeholder__][id]"><div class="form-group"><label for="bid-form[post][contacts][__placeholder__][type]" class="col-sm-3 control-label">').
+	$this->translate('Contact type').htmlspecialchars('</label><div class="col-sm-7"><select class="form-control" id="contact-chosen-__placeholder__" name="bid-form[post][contacts][__placeholder__][type]"><option value="1">').
+	$this->translate('Mobile').htmlspecialchars('</option><option value="2">').$this->translate('Email').htmlspecialchars('</option><option value="3">').
+	$this->translate('Address').htmlspecialchars('</option></select></div></div><div class="form-group"><label for="bid-form[post][contacts][__placeholder__][value]" class="col-sm-3 control-label">').
+	$this->translate('Contact value').htmlspecialchars('</label><div class="col-sm-7"><input type="text" value="" class="form-control" name="bid-form[post][contacts][__placeholder__][value]"></div></div></div>') ?>"></span>
+	<div class="col-sm-7 col-sm-offset-3"></div>
+</div>
+
+<? $city = $bid->get('idCity'); ?>
+<div class="form-group <?php if($this->formElementErrors($city)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($city); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($city) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($city); ?>
+</div>
+</div>
+<? echo $this->formHidden($bid->get('city'));?>
+
+
+<? $price = $bid->get('price'); ?>
+<div class="form-group <?php if($this->formElementErrors($price)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($price); ?>
+<div class="col-sm-7">
+	<div class="input-group"> 
+		<?php echo $this->formElement($price) ?>
+	    <span class="input-group-addon">Ariary</span>
+	</div>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($price); ?>
+</div>
+</div>
+
+<? echo $this->formHidden($post->get('published'));?>
+<? echo $this->formHidden($post->get('modified'));?>
+<? echo $this->formHidden($post->get('deleted'));?>
+<div class="listFileId"></div>
+
+<? echo $this->formHidden($form->get('csrf'));?>
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+	<i class="glyphicon glyphicon-picture"></i>
+	<span><?=$this->translate('Add image'); ?></span>
+</button>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<? echo $this->formElement($form->get('submit'));?>
+</div>
+</div>
+<?php echo $this->form()->closeTag() ?>
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog wide-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Upload image'); ?></h4>
+      </div>
+      <div class="modal-body modal-body-modified">
+		<? 
+      	$form = $this->fileForm;
+		$form->prepare();
+		$form->setAttribute('class', 'form-inline');
+		echo $this->form()->openTag($form);
+		$elem = $form->get('files');
+		?>
+		<div class="row fileupload-buttonbar">
+            <div class="container media-content">
+            	<div class="row row-media hide">
+	            	<div class="col-md-8 image-preview-container">
+	            		<div class="container ">
+	            			<div class="row files"></div>		
+	            		</div>
+	            	</div>
+					<div class="col-md-4 image-edit-container">
+	            		<div class="container ">
+	            			<div class="row"><div class="col-md-12"><div class="image-detail-container"></div></div></div>		
+	            		</div>
+	            	</div>
+            	</div>
+            	<div class="row row-upload">
+					<div class="img-selection center-block center-vertical">
+						<div class="file-upload-btn ">
+							<span class="btn btn-default btn-lg  fileinput-button">
+			                    <span><?=$this->translate('Add images'); ?></span>
+			                    <?php echo $this->formFile($elem); ?>
+							</span>
+		                </div>		
+		                <?=$this->translate('or'); ?>               
+						<button class="btn btn-default btn-lg btn-choose"><?=$this->translate('Choose images'); ?></button>
+					</div>
+            	</div>
+			</div>
+        </div>
+         <?php echo $this->form()->closeTag($form); ?>
+      </div><!-- /.modal-body -->      
+      
+      <div class="modal-footer modal-footer-modified">
+		<button class="btn btn-default btn-preview-add-image pull-left hide"><?=$this->translate('Add images'); ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+        <button type="button" id="save-images" class="btn btn-primary" disabled="disabled"><?=$this->translate('Insert into post'); ?></button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-4 template-upload fade">
+{% if (i) { %}
+	<span class="preview">
+       	{% if (file.thumbnailUrl) { %}
+           	<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    	{% } %}
+		
+	</span>
+{% } else { %}
+	<div class="my-progress fileupload-progress fade">
+		<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+		</div>
+	</div>
+	<strong class="error text-danger"></strong>
+	<button class="btn btn-warning cancel">
+    	<i class="glyphicon glyphicon-ban-circle"></i>
+        <span>Cancel</span>
+	</button>
+{% } %}
+</div>
+{% } %}
+</script>
+
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+{% if (file.thumbnailUrl) { %}
+	<div class="col-md-4 template-download fade">
+		<span class="preview">		
+			<img src="{%=file.thumbnailUrl%}" class="img-thumbnail img-thumbnail-preview">
+			<span class="my-zoom-icon">
+				<a href='#' data-toggle="tooltip" title="Deselect" class="deselect my-tooltip"><span class="glyphicon glyphicon-minus"></span></a> 
+				<a href="#" data-toggle="tooltip" title="Crop" class="crop my-tooltip"><span class="glyphicon glyphicon-th"></span></a> 
+				<a href="#" class="delete my-tooltip"  data-toggle="tooltip" title="Delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><span class="glyphicon glyphicon-remove"></span></a>
+			</span>
+			<input type="hidden" class="fileId" value="{%=file.id%}"/>		
+		
+			<input type="checkbox" name="delete" value="1" class="toggle hidden">
+		</span>	
+	</div>
+{% } %}
+{% if (file.error) { %}
+	<div class="col-md-4 template-download fade">
+    	<div class="error-file"><span class="label label-danger">Error</span> {%=file.error%}</div>
+	</div>
+		{% } %}
+{% } %}
+</script>
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js')
+			->appendFile($this->basePath() . '/js/bid-upload.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+            ->appendFile($this->basePath() . '/js/tmpl.min.js')
+            ->appendFile($this->basePath() . '/js/load-image.min.js')
+            ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js')
+            ->appendFile($this->basePath() . '/js/jquery.Jcrop.min.js');?>
+<script type="text/javascript">
+var city_url = "<?=$this->url('admin/shop_admin/city', array(), array(), true); ?>";
+$(function() {
+	$(".chosen-select").select2({
+		minimumResultsForSearch: 10
+	});
+	
+	$('#save-images').click(function(e) {
+		$('.fileId').each(function() {
+			if ($(this).hasClass('file-selected')) {				
+	   			$('.listFileId').append('<input type="hidden" name="file-id[]" class="file-id" value="'+$(this).val()+'">');
+			}   		
+		});
+		$('#myModal').modal('hide');		
+		return false;
+	});
+
+	$("#id_city").select2({
+		placeholder: "Search for a city",
+	    minimumInputLength: 3,
+	    ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+	        url: city_url,
+	        dataType: 'json',
+	        quietMillis: 100,
+	        data: function (term, page) {
+	            return {
+	                q: term, // search term
+	                page_limit: 10,
+	                page: page // page number
+	            };
+	        },
+	        results: function (data, page) { // parse the results into the format expected by Select2.
+	            // since we are using custom formatting functions we do not need to alter remote JSON data
+	            var more = (page * 10) < data.total; // whether or not there are more results available
+	            return {results: data.results, more: more};
+	        }
+//	        results: data
+	    },
+	    formatSelection: format,
+	    formatResult: format
+	});
+	$('#id_city').change(function(e) {
+		$('#city').val($(this).val());
+	});
+
+	function format(item) { return item.text; };
+	
+	/* ADDING MORE CONTACT */
+	var tplContact = $('#tplContact');
+	var tplContactManager = tplContact.parent();
+	var contactsGroup = $('#contacts-group');
+	
+	
+	var addContact = function () {	    	    
+		var contactsCount = contactsGroup.find('.contacts-element').length;
+	    contactsGroup.append(tplContact.data('template').replace(/__placeholder__/g, contactsCount));
+	    return contactsCount;
+	};
+
+	var removeBtnContacts =  $('<button class="btn btn-primary col-sm-offset-1"><i class="glyphicon glyphicon-minus"></i> <?=$this->translate('Contact'); ?></button>')
+    .on('click', function(e) {
+        e.preventDefault();        
+        count = contactsGroup.find('.contacts-element').length;
+        if (count == 2) {
+        	contactsGroup.find('.contacts-element:last-child').remove();
+        	$(this).off('click');
+            $(this).remove();
+        } else {
+        	contactsGroup.find('.contacts-element:last-child').remove();
+        }
+    });
+
+	
+
+	var btnContacts = $('<button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> <?=$this->translate('Contact'); ?></button>')
+	    .button({
+	        icons: {
+	            primary: 'ui-icon-circle-plus'
+	        }
+	    }).on('click', function (e) {
+	    	tplContactManager.find('div').append(removeBtnContacts);
+	        e.preventDefault();
+	        $('.removeElement').html('');
+	        var index = addContact();
+	        $("#contact-chosen-"+index).select2({ 
+	    		width: '100%',
+	    		minimumResultsForSearch: 10
+	    	});
+	        //addRemoveButton('#contacts');
+	    });
+
+	tplContactManager.find('div').append(btnContacts);
+	var initContactsCount = contactsGroup.find('.contacts-element').length;
+	if (initContactsCount > 1) {	
+		tplContactManager.find('div').append(removeBtnContacts);
+	}
+	
+});
+</script>
+
+<!-- The blueimp Gallery widget -->
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter="">
+		    <div class="slides"></div>
+		    <h3 class="title"></h3>
+		    <a class="prev">‹</a>
+		    <a class="next">›</a>
+		    <a class="close">×</a>
+		    <a class="play-pause"></a>
+		    <ol class="indicator"></ol>
+		</div>

@@ -1,0 +1,694 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css');?>
+<? $this->headTitle($this->translate('Feed'));?>
+<style type="text/css">
+<!--
+.item-feed {
+	width: 40%;
+}
+@media (min-width: 320px) and (max-width: 580px) {
+	.item-feed {width: 100%;}
+}
+.tag {
+	left: 830px;
+    position: absolute;
+    top: 79px;
+}
+.tag ul {
+    list-style: none outside none;
+    padding-left: 0;
+}
+.user-profile-img {
+    margin-right: 20px;
+    width: 40px;
+}
+
+.post-user-name, .post-date, .comment-user-name, .comment-date {
+	margin: 0;
+}
+
+.post-body, .comment-body {
+	margin-top: 15px;
+}
+.bj {
+  	/*padding:0 0 20px;
+  	overflow: hidden;*/
+}
+.add_cmt, .add_feed {
+	background-color:#FFFFFF;
+  	border:1px solid #DDDDDD;
+  	box-sizing:border-box;
+  	color:#999999;
+  	cursor:text;
+  	font-size:12px;
+  	height:auto;
+  	margin:0;
+  	padding:6px 8px;
+}
+.fd_textarea, .fd_text, .tag-select {
+	/*background: none repeat scroll 0 0 #F5F5F5;*/
+}
+.cmt_textarea, .fd_textarea, .fd_text {	
+    border: 1px solid #DDDDDD;
+    color: #999999;
+    cursor: text;
+    font-size: 12px;
+    height: auto;
+    margin: 0;
+    padding: 6px 8px;
+    width: 100%;    
+}
+.tag-select {
+	width: 100%;
+	color: #999999;
+    cursor: text;
+    font-size: 12px;
+    height: auto;
+    margin: 0;
+}
+
+.feed-form .select2-choices {
+	border-radius: 0;
+	border: 1px solid #DDDDDD;
+	box-shadow: none;
+}
+
+.fd_text, .fd_textarea {
+	margin-bottom: 5px;
+}
+.cmt_action, .fd_action, .fd_upload {
+	margin-top: 5px;
+}
+.cmt_area, .fd_area {
+	background: none repeat scroll 0 0 #F5F5F5;
+    border: 1px solid #DDDDDD;
+    padding: 10px;
+}
+.cmt {
+	border-bottom: 1px solid #DDDDDD;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+.cmt_container, .fd_container {
+    padding: 0 0 25px;
+}
+
+.cmt:hover {
+	cursor: pointer;
+}
+.remove-button {
+	display: none;
+}
+.cmt:hover > .comment-header > .rmv > .remove-button {
+	display: inline-block;
+}
+.fd_title .help-block {
+	color: #B94A48;
+	font-size: 12px;
+}
+.loading-panel {
+	width: 250px;
+}
+-->
+</style>
+
+<div id="ctnr">
+<div class="item-feed feed-create">
+	<div class="panel panel-default">		
+		<div class="panel-body">
+			<div class="fd_area">
+				<div class="bj">
+					<div class="add_feed" role="button"><?=$this->translate("What's new?") ?></div>
+				</div>
+				<div class="fd_container hide">
+				<? $feedForm = $this->feedForm;?>
+				<? 	$feedForm->prepare();
+					$feedForm->setAttribute('action', '#');
+					$feedForm->setAttribute('class', 'feed-form');
+					$feedForm->setAttribute('method', 'post');				
+					$feed = $feedForm->get('feed-form');
+					$post = $feed->get('post');
+					$title = $post->get('title');
+					$detail = $post->get('detail');
+					$tags = $post->get('tag');
+					$deleted = $post->get('deleted');
+					$csrf = $feedForm->get('csrf');
+					$submit = $feedForm->get('submit');
+					$reset = $feedForm->get('reset');
+					?>
+					<?=$this->form()->openTag($feedForm);?>
+					<?=$this->formHidden($feed->get('id'));?>
+					<div class="fd_title">
+					<?=$this->formElement($title); ?>
+					</div>
+					<?=$this->formElement($detail); ?>
+					<?=$this->formHidden($tags); ?>
+					<?=$this->formHidden($deleted);?>
+					<?=$this->formHidden($csrf);?>
+					<div class="listFileId"></div>
+					<div class="fd_upload pull-left">
+						<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-camera"></i></button>
+					</div>
+					<div class="fd_action pull-right">
+						<?=$this->formElement($submit);?>&nbsp;
+						<?=$this->formElement($reset);?>
+					</div>
+					<?=$this->form()->closeTag($feedForm);?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<? $feeds = $this->feeds;?>
+<? $count = 0;?>
+<? foreach ($feeds as $feed):?>
+<? $feedId = $feed->getId();?>
+<? $post = $feed->getPost();?>
+<? $postIdent = $post->getIdent();?>
+<? $user = $post->getUser();?>
+<? $comments = $post->getComments();?>
+<? $count++;?>
+<div class="item-feed">
+	<div class="panel panel-default">		
+		<div class="panel-body">
+			<div class="row post-header">
+				<div class="col-md-3 col-xs-3"><img src="<?=$this->userPicture('sm', $user); ?>" class="img-circle"/></div>
+				<div class="col-md-9 col-xs-9"><h4 class="post-user-name"><?=ucwords($this->zfcUserDisplayName($user)); ?></h4>
+				<h5 class="post-date"><small><?=$this->translate($this->displayTimeInterval($post->getPublished())); ?></small></h5></div>
+				<input type="hidden" class="hide" id="published" value="<?=$post->getPublished()->getTimestamp(); ?>"/>
+			</div>
+			<div class="post-body">
+				<h4 class="text-muted"><?=stripcslashes($post->getTitle()); ?></h4>
+				<p class="detail-feed"><?=stripcslashes($post->getDetail()); ?></p>
+			</div>
+			
+			<? $files = $post->getFiles();?>
+			<? $postId = $post->getId();?>
+			<? if (isset($files) && count($files) > 0):?>
+				<div class="row" id="<?=$post->getId(); ?>">
+					<? $file = $files[0];?>
+					<div class="col-xs-12 col-sm-12 col-md-12" >					  
+					    <a href="<?=$file->getRelativePath(); ?>" download="<?=$file->getName(); ?>" data-gallery="#blueimp-gallery-<?=$postId; ?>">
+					      <img src="<?=$file->getMediumRelativePath(); ?>" class="img-responsive">
+					    </a>
+					  </div>
+				<? for ($i = 1; $i < count($files); $i++):
+					$file = $files[$i];
+				?>					
+					<div class="col-xs-6 col-sm-12 col-md-12 hide" >					  
+					    <a href="<?=$file->getRelativePath(); ?>" download="<?=$file->getName(); ?>" data-gallery="#blueimp-gallery-<?=$postId; ?>">
+					      <img src="<?=$file->getMediumRelativePath(); ?>" class="img-responsive">
+					    </a>
+					  </div>  	
+					  								
+				<? endfor;?>
+				</div>
+			<? endif;?>
+			<h4>
+			<? $tags = $post->getTags();?>
+			<? if (isset($tags) && count($tags) > 0):?>	
+			<? foreach ($tags as $tag):?>
+				<a class="btn btn-link btn-xs" href="#">#<?=$tag->getTitle(); ?></a>
+			<? endforeach;?>
+			<? endif;?>			
+			</h4>
+			<div class="cmt_area">
+				<? if (isset($comments) && count($comments)):?>
+				<? $nb_comments = count($comments);
+					$count = 0;
+					$max_to_show = 1;
+				?>
+				<div class="cmt_feed">
+					<? foreach ($comments as $comment):
+						$user = $comment->getUser();
+						$created = $comment->getCreated();
+						$detail = $comment->getDetail();
+					?>
+					<? if ($count < $max_to_show - 1):
+					?>
+					<div class="cmt hide" id="cmt_<?=$comment->getId(); ?>">
+					<? else:?>
+					<div class="cmt" id="cmt_<?=$comment->getId(); ?>">
+					<? endif;?>
+						<div class="row comment-header">
+							<div class="col-md-1 col-xs-1"><img src="<?=$this->userPicture('xs', $user); ?>" class="img-circle"/></div>
+							<div class="col-md-9 col-xs-8"><h5 class="comment-user-name"><?=ucwords($this->zfcUserDisplayName($user)); ?></h5>							
+							<h5 class="comment-date"><small><?=$this->translate($this->displayTimeInterval($created)); ?></small></h5></div>
+							<? $currentUser = $this->zfcUserIdentity();?>
+							<? if ($currentUser && $currentUser->getId() === $user->getId()): ?>
+							<div class="col-md-1 col-xs-1 rmv"><span class="glyphicon glyphicon-remove remove-button" title="<?=$this->translate('Remove'); ?>"></span></div>
+							<? endif;?>
+						</div>
+						<div class="comment-body"><?=stripcslashes($detail); ?></div>
+					</div>
+					<? $count++;?>
+					<? endforeach;?>
+				</div>
+				<? else: ?>
+				<div class="cmt_feed hide"></div>
+				<? endif;?>
+				<div class="bj">
+					<div class="add_cmt" role="button"><?=$this->translate('Add a comment...') ?></div>
+				</div>
+				<div class="cmt_container hide">
+					<form method="post" name="comment-form" action="#" class="comment-form">
+						<textarea class="cmt_textarea" name="detail"></textarea>
+						<input type="hidden" name="feed" value="<?=$feedId ?>"/>
+						<div class="cmt_action pull-right">
+							<button class="btn btn-primary btn-xs" id="save_cmt" name="submit" type="submit" data-loading-text="<?=$this->translate('Loading...'); ?>"><?=$this->translate('Comment') ?></button>&nbsp;
+							<button class="btn btn-danger btn-xs reset_cmt" type="reset"><?=$this->translate('Cancel') ?></button></div>
+					</form>
+				</div> <!-- end .cmt_container -->
+			</div> <!-- end .cmt_area -->			
+		</div> <!-- end  .panel-body -->	
+	</div> <!-- end .panel -->
+</div> <!-- end .item-feed -->
+<? endforeach;?>
+</div><!-- end .ctnr -->
+
+<div class="col-md-2 tag">
+<div class="panel panel-default">		
+	<div class="panel-body">
+		<?=$this->cloud; ?>
+	</div>
+</div>
+</div>
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+	<div class="slides"></div>
+	<h3 class="title"></h3>
+	<a class="prev">‹</a>
+	<a class="next">›</a>
+	<a class="close">×</a>
+	<a class="play-pause"></a>
+	<ol class="indicator"></ol>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog wide-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Upload image'); ?></h4>
+      </div>
+      <div class="modal-body modal-body-modified">
+		<? 
+      	$form = $this->fileForm;
+		$form->prepare();
+		$form->setAttribute('class', 'form-inline');
+		echo $this->form()->openTag($form);
+		$elem = $form->get('files');
+		?>
+		<div class="row fileupload-buttonbar">
+            <div class="container media-content">
+            	<div class="row row-media hide">
+	            	<div class="col-md-8 image-preview-container">
+	            		<div class="container ">
+	            			<div class="row files"></div>		
+	            		</div>
+	            	</div>
+					<div class="col-md-4 image-edit-container">
+	            		<div class="container ">
+	            			<div class="row"><div class="col-md-12"><div class="image-detail-container"></div></div></div>		
+	            		</div>
+	            	</div>
+            	</div>
+            	<div class="row row-upload">
+					<div class="img-selection center-block center-vertical">
+						<div class="file-upload-btn ">
+							<span class="btn btn-default btn-lg  fileinput-button">
+			                    <span><?=$this->translate('Add images'); ?></span>
+			                    <?php echo $this->formFile($elem); ?>
+							</span>
+		                </div>		
+		                <?=$this->translate('or'); ?>               
+						<button class="btn btn-default btn-lg btn-choose"><?=$this->translate('Choose images'); ?></button>
+					</div>
+            	</div>
+			</div>
+        </div>
+         <?php echo $this->form()->closeTag($form); ?>
+      </div><!-- /.modal-body -->      
+      
+      <div class="modal-footer modal-footer-modified">
+		<button class="btn btn-default btn-preview-add-image pull-left hide"><?=$this->translate('Add images'); ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+        <button type="button" id="save-images" class="btn btn-primary" disabled="disabled"><?=$this->translate('Insert into post'); ?></button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-4 template-upload fade">
+{% if (i) { %}
+	<span class="preview">
+       	{% if (file.thumbnailUrl) { %}
+           	<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    	{% } %}
+		
+	</span>
+{% } else { %}
+	<div class="my-progress fileupload-progress fade">
+		<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+		</div>
+	</div>
+	<strong class="error text-danger"></strong>
+	<button class="btn btn-warning cancel">
+    	<i class="glyphicon glyphicon-ban-circle"></i>
+        <span>Cancel</span>
+	</button>
+{% } %}
+</div>
+{% } %}
+</script>
+
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+{% if (file.thumbnailUrl) { %}
+	<div class="col-md-4 template-download fade">
+		<span class="preview">		
+			<img src="{%=file.thumbnailUrl%}" class="img-thumbnail img-thumbnail-preview">
+			<span class="my-zoom-icon">
+				<a href='#' data-toggle="tooltip" title="Deselect" class="deselect my-tooltip"><span class="glyphicon glyphicon-minus"></span></a> 
+				<a href="#" data-toggle="tooltip" title="Crop" class="crop my-tooltip"><span class="glyphicon glyphicon-th"></span></a> 
+				<a href="#" class="delete my-tooltip"  data-toggle="tooltip" title="Delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><span class="glyphicon glyphicon-remove"></span></a>
+			</span>
+			<input type="hidden" class="fileId" value="{%=file.id%}"/>		
+		
+			<input type="checkbox" name="delete" value="1" class="toggle hidden">
+		</span>	
+	</div>
+{% } %}
+{% if (file.error) { %}
+	<div class="col-md-4 template-download fade">
+    	<div class="error-file"><span class="label label-danger">Error</span> {%=file.error%}</div>
+	</div>
+		{% } %}
+{% } %}
+</script>
+
+<script type="text/javascript">
+var urlForm = "<?=$this->url('tools/feed/add_ajax', array(), array(), true); ?>";
+var commentUrl = "<?=$this->url('feed-comment', array(), array(), true); ?>";
+var loadAjaxUrl = "<?=$this->url('tools/feed/load_ajax', array(), array(), true); ?>";
+var tagUrl = "<?=$this->url('tools/feed/ajax_tag', array(), array(), true); ?>";
+var msnry = {};
+var loadingUrl = "<?=$this->serverUrl() . $this->basePath() .'/img/load.gif' ?>";
+var loadingBlock = '<div class="panel panel-default loading-panel center-block"><div class="panel-body">';
+loadingBlock += "<img src='"+loadingUrl+"'>";
+loadingBlock += "</div>";
+loadingBlock += "</div>";
+<!--
+$(function() {
+	var opts = {
+		placeholder: "#tag",
+		tags: true,
+		minimumResultsForSearch: 4,
+		tokenSeparators: [",", " "],
+		createSearchChoice: function(term, data) {
+			if ($(data).filter(function() {
+		    	return this.text.localeCompare(term) === 0;
+		    }).length === 0) {
+		    	return {
+		        	id: term,
+		        	text: term
+		      	};
+		    }
+		},
+		multiple: true,
+		ajax: {
+			url: tagUrl,
+		    dataType: "json",
+		    data: function(term, page) {
+		    	return {
+		        	q: term
+		      	};
+		    },
+		    results: function(data, page) {
+		    	return {
+		        	results: data
+		      	};
+		    }
+		}	
+	};
+	$(".tag-select").data("s2opts", opts).select2(opts);	
+	var container = document.querySelector('#ctnr');
+	$('.detail-feed').readmore({
+	  	maxHeight: 100,
+	  	speed: 0,
+	  	moreLink: '<a href="#"><?=$this->translate('Read more') ?></a>',
+	  	lessLink: '<a href="#"><?=$this->translate('Close') ?></a>',
+	  	afterToggle: function(trigger, element, more) {
+	  		msnry.layout();
+		}	
+	});
+	
+	
+	msnry = new Masonry( container, {
+	  // options
+	  columnWidth: 68,
+	  itemSelector: '.item-feed'
+	});
+
+	msnry.on( 'layoutComplete', function() {
+	  	  return true;
+	  	});
+
+	$('textarea').autosize({
+		callback: function(e) {
+			msnry.layout();
+		}
+	});
+
+	$(document).on("click", ".add_cmt", function(e) {
+		e.preventDefault();
+		$(this).parents('.cmt_area').find('.cmt_container').removeClass('hide');
+		$(this).parents('.cmt_area').find('.cmt_textarea').focus();
+		$(this).parent('.bj').addClass('hide');
+		msnry.layout();
+	});
+
+	$(document).on("click", ".add_feed", function(e) {
+		e.preventDefault();
+		$(this).parents('.fd_area').find('.fd_container').removeClass('hide');
+		$(this).parents('.fd_area').find('.fd_text').focus();
+		$(this).parent('.bj').addClass('hide');
+		msnry.layout();
+	});
+
+	$(document).on("click", ".reset_cmt", function(e) {
+		var that = this;
+		$(that).parents('.cmt_area').find('.cmt_container').addClass("hide");
+		$(that).parents('.cmt_area').find('.bj').removeClass("hide");
+		resetForm($("form[name=comment-form]"));
+		msnry.layout();
+	});
+
+	$(document).on("click", ".reset_feed", function(e) {
+		var that = this;
+		$(that).parents('.fd_area').find('.fd_container').addClass("hide");
+		$(that).parents('.fd_area').find('.bj').removeClass("hide");
+		$('#save_feed').button('reset');
+		
+		resetForm($("form[name=create-feed-form]"));
+		$(".tag-select").select2("destroy").select2($(".tag-select").data("s2opts"));		
+		$('.listFileId').html("");		
+		msnry.layout();
+	});
+
+	$('#save-images').click(function(e) {
+		$('.fileId').each(function() {
+			if ($(this).hasClass('file-selected')) {				
+	   			$('.listFileId').append('<input type="hidden" name="file-id[]" class="file-id" value="'+$(this).val()+'">');
+			}   		
+		});
+		$('#myModal').modal('hide');		
+		return false;
+	});	
+
+	$('.remove-button').tooltip();
+	$("form.comment-form").submit(function() {	
+		var that = this;			
+		$(that).find("button[name=submit]").button('loading');	
+		$.post(
+			commentUrl,
+			$(that).serialize(),
+	        function(data) {
+	    		$(that).find("button[name=submit]").button('reset');
+		        if (data.success) {			        			        
+			        var cmt_feed = $(that).parents('.cmt_area').find('.cmt_feed');
+			        var cmt_container = $(that).parents('.cmt_area').find('.cmt_container');
+			        var bj = $(that).parents('.cmt_area').find('.bj');
+					var cmt = data.cmt;
+					$(cmt_feed).append(cmt);
+					$(cmt_container).find('.cmt_textarea').val("");
+					$(cmt_container).addClass("hide");
+					$(bj).removeClass("hide");
+			        if ($(cmt_feed).hasClass("hide")) {
+			        	$(cmt_feed).removeClass("hide");
+			        }
+			        $('.remove-button').tooltip();
+			        msnry.layout();
+		        }
+	    	},
+	    	'json'
+	    );
+	    return false;
+	});
+	$(document).on("click", ".remove-button", function(e) {
+		var that = this;
+		bootbox.confirm("<?=$this->translate('Do you want to delete this comment?'); ?>", function(e) {
+			if (e) {
+				var feed = $(that).parents('.cmt_area').find('.cmt_feed');
+				var cmt = $(that).parents('.cmt');		
+				var id = $(cmt).attr("id").slice(4);
+				$.ajax({
+					url: '/feed/remove/comment/ajax',
+					data: "id="+id,
+					dataType: 'json',
+					beforeSend: function(e) {},
+					success: function(e) {
+						$("#cmt_"+id).remove();
+						msnry.layout();
+					}
+				});
+			}			
+		});
+		
+		
+		return false;
+	});
+	$("form#create-feed-form").submit(function() {		
+        
+        $('#save_feed').button('loading'); 
+		$.post(
+			urlForm,
+			$("form#create-feed-form").serialize(),
+            function(itemJson) {
+            	var error = false;
+            	var errorTitle = itemJson.title;
+            	
+                if (errorTitle != undefined) {	                
+	                $(".fd_text").css('border', '1px solid #B94A48');
+	                var errorMessage = '';
+	                for (var i = 0; i < errorTitle.length; i++) {
+		                errorMessage += '<div class="help-block">'+errorTitle[i]+'</div>';
+	                }
+	                $('.fd_title').append(errorMessage);    
+	                msnry.layout();                 
+                    error = true;
+                }                 
+                 
+                if (!error) {     
+                	if (itemJson.success) {
+						$('.fd_area').find('.fd_container').addClass("hide");
+						$('.fd_area').find('.bj').removeClass("hide");
+						$('#save_feed').button('reset'); 
+						var item_feed = itemJson.item_feed;
+						$(item_feed).insertAfter($('.feed-create'));						
+						resetForm($("form[name=create-feed-form]"));
+						$('.listFileId').html("");
+						$(".tag-select").select2("destroy").select2($(".tag-select").data("s2opts"));
+						msnry.reloadItems();
+						msnry.layout();
+						$('textarea').autosize({
+							callback: function(e) {
+								msnry.layout();
+							}
+						});
+                    }
+                }
+                 
+        	},
+        	'json'
+        );         
+        return false;
+    });	
+
+    $('.fd_text').focus(function() {
+        var that = this;
+        $('.fd_title .help-block').remove();
+        $(that).css('border', '1px solid #DDDDDD');
+        $('#save_feed').button('reset'); 
+    });
+	
+	var myTimer, pendingAjax;
+    $(window).scroll(function () {
+    	if(typeof(myTimer)!='undefined'){
+            clearTimeout(myTimer);
+        }
+       	if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+           	$top = 0;           	   
+           	var $lastItem = $('.item-feed:last');
+        	var $timestamp = $lastItem.find('#published').val();
+        	$limit = 6;	        
+        	myTimer = window.setTimeout(function() {
+            	if (typeof(pendingAjax) != 'undefined') {
+            		pendingAjax.abort();
+            		$('.loading-panel').remove();
+            	}            	
+        		pendingAjax = $.ajax({
+        			url: loadAjaxUrl,
+        			data: "timestamp="+$timestamp+"&top="+$top+"&limit="+$limit,
+        			dataType: 'json',
+        			beforeSend: function(e) {
+        				$(loadingBlock).insertAfter($('#ctnr'));
+        			},
+        			success: function(e) {            			
+        				var item_feeds = e.item_feed;
+        				$('.loading-panel').remove();
+        				if (e.success && item_feeds.length) {		        							
+        					for (i = 0; i < item_feeds.length; i++) {
+        						var item_feed = item_feeds[i];
+        						$(item_feed).insertAfter($('.item-feed:last'));
+        						msnry.reloadItems();
+        					} 
+        					msnry.layout();
+        					$('textarea').autosize({
+    							callback: function(e) {
+    								msnry.layout();
+    							}
+    						});
+        				}			
+        			}
+        		});            	
+        	}, 300);
+       	}       	
+    });
+});
+
+function resetForm($form) {
+	$form.find('input:text, input:hidden, input:password, input:file, select, textarea').val('');
+	$form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');				
+}
+
+//-->
+</script>
+
+<? $this->inlineScript()->appendFile($this->basePath() . '/js/masonry.pkgd.min.js')
+			->appendFile($this->basePath() . '/js/bootbox.min.js')
+			->appendFile($this->basePath() . '/js/readmore.min.js')
+			->appendFile($this->basePath() . '/js/select2.min.js')
+			->appendFile($this->basePath() . '/js/jquery.autosize.min.js')
+			->appendFile($this->basePath() . '/js/feed-upload.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+            ->appendFile($this->basePath() . '/js/tmpl.min.js')
+            ->appendFile($this->basePath() . '/js/load-image.min.js')
+            ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js');?>

@@ -1,0 +1,56 @@
+{
+	"name": "zendframework/skeleton-application",
+    "description": "Skeleton Application for ZF2",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://framework.zend.com/",
+	"minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.2.*",
+        "doctrine/doctrine-module": "0.*",
+        "zendframework/zend-developer-tools": "dev-master",
+        "bjyoungblood/bjy-profiler": "dev-master",
+        "doctrine/doctrine-orm-module": "0.*",
+        "zf-commons/zfc-user": "dev-master",
+        "socalnick/scn-social-auth": "dev-master",
+	"manuakasam/sam-user": "dev-master",
+		"imagine/Imagine": "0.3.*",
+		"webino/webino-image-thumb": "2.*",
+		"zendframework/zendsearch": "0.1",
+		"doctrine/data-fixtures": "dev-master",
+		"goalio/goalio-mailservice": "dev-master",
+		"goalio/goalio-rememberme": "0.*",
+		"goalio/goalio-forgotpassword": "0.*",
+		"goalio/goalio-forgotpassword-doctrine-orm": "dev-master",
+		"goalio/goalio-rememberme-doctrine-orm": "dev-master",
+		"zendframework/zendservice-recaptcha": "dev-master"
+    },
+"repositories": [
+    {
+        "type": "composer",
+        "url": "https://packages.zendframework.com/"
+    },
+    {
+        "type": "package",
+        "package": {
+            "name": "zendframework/zendsearch",
+            "version": "0.1",
+            "source": {
+                "url": "https://github.com/zendframework/ZendSearch.git",
+                "type": "git",
+                "reference": "master"
+            }
+        }
+    }
+],
+"autoload": {
+    "psr-0": {
+        "ZendSearch\\": "vendor/zendframework/zendsearch/library/"
+    }
+}  
+	  
+}

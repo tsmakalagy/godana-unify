@@ -1,0 +1,74 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css');?>
+<? $this->headTitle($this->translate('Bid'));?>
+<div class="row">
+<? $bid = $this->bid;?>
+<? $type = $bid->getType();?>
+<? if ($type === 0) {
+	$typeBid = 'offer';
+} else if ($type === 1) {
+	$typeBid = 'demand';
+}?>
+<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title"><?=stripcslashes($bid->getPost()->getTitle()); ?>
+<!--			<span class="bid-heading-back pull-right">-->
+			<a class="btn btn-primary btn-xs pull-right" href="<?=$this->url('bid', array('lang' => $this->lang)) ?>"><i class="glyphicon glyphicon-chevron-left"></i> <?=$this->translate('Back'); ?></a>	</h3>
+					
+		</div>
+		<div class="panel-body">
+			<p><?=stripcslashes($bid->getPost()->getDetail()); ?></p>
+					
+			<? $files = $bid->getPost()->getFiles();?>
+			<? $postId = $bid->getPost()->getId();?>
+			<? if (isset($files) && count($files) > 0):?>
+				<div class="row well well-sm" id="<?=$bid->getPost()->getId(); ?>">
+				<? foreach ($files as $file):?>	
+					  <div class="col-xs-6 col-sm-4 col-md-4" >					  
+					    <a href="<?=$file->getUrl(); ?>" class="img-thumbnail"  download="<?=$file->getName(); ?>" data-gallery="#blueimp-gallery-<?=$postId; ?>">
+					      <img src="<?=$file->getThumbnailUrl(); ?>" class="img-responsive">
+					    </a>
+					  </div>					  					  									
+				<? endforeach;?>
+				</div>
+			<? endif;?>
+			<h4 class="bid-info">
+			<a href="<?=$this->url('type-bid', array('lang' => $this->lang, 'type' => $typeBid)) ?>" class="btn btn-success btn-xs"><?=$this->translate(ucfirst($typeBid)) ?></a>&nbsp;
+			<?  $this->plugin("currencyformat")->setCurrencyCode("MGA")->setLocale("fr_FR");?>
+			<span class="label label-danger"><?=$this->currencyFormat($bid->getPrice()); ?></span>
+			<a class="btn btn-primary btn-xs" href="#"><?=$bid->getCity()->getCityAccented(); ?></a>
+			<? $contacts = $bid->getPost()->getContacts();?>
+			<? if (isset($contacts) && count($contacts) > 0):?>
+			<? foreach ($contacts as $contact):?>
+				<span class="label label-success"><?=$contact->getValue(); ?></span>
+			<? endforeach;?>			
+			<? endif;?>	
+			
+			<? $categories = $bid->getPost()->getCategories();?>
+			<? if (isset($categories) && count($categories) > 0):?>	
+			<br/>		
+			<? foreach ($categories as $category):?>
+				<? $categoryIdent = $category->getIdent();?>
+				<a class="btn btn-primary btn-xs" href="<?=$this->url('category-bid', array('lang' => $this->lang, 'type' => $typeBid, 'categoryIdent' => $categoryIdent)) ?>"><?=$category->getName(); ?></a>
+			<? endforeach;?>
+			<? endif;?>
+			</h4>
+		</div>		
+	</div>
+<!--<?php echo $this->map_html; ?>-->
+</div>
+</div>
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+	<div class="slides"></div>
+	<h3 class="title"></h3>
+	<a class="prev">‹</a>
+	<a class="next">›</a>
+	<a class="close">×</a>
+	<a class="play-pause"></a>
+	<ol class="indicator"></ol>
+</div>
+
+
+<? $this->inlineScript()->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js');?>

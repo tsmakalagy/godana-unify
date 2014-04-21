@@ -1,0 +1,282 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css')
+                ?>
+<? $this->headTitle($this->translate('Feed'));?>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Feed'); ?></h3>
+</div>
+<div class="panel-body">
+<? if ($this->status):?>
+<div class="alert alert-dismissable alert-success">
+<button data-dismiss="alert" class="close">×</button>
+<strong><?= $this->translate('Success!'); ?></strong> <?= $this->translate('Feed created successfully.'); ?> 
+</div>
+<? endif;?>
+<?php
+$form = $this->feedForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('tools/feed/add', array('lang' => $this->lang)));
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'form-horizontal');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? $feed = $form->get('feed-form'); ?>
+<? echo $this->formHidden($feed->get('id'));?>
+<? $post = $feed->get('post');?>
+<? $title = $post->get('title'); ?>
+<div class="form-group <?php if($this->formElementErrors($title)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($title); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($title) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($title); ?>
+</div>
+</div>
+
+<? $detail = $post->get('detail'); ?>
+<div class="form-group <?php if($this->formElementErrors($detail)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($detail); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($detail) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($detail); ?>
+</div>
+</div>
+
+<? $tags = $post->get('tag'); ?>
+<div class="form-group <?php if($this->formElementErrors($tags)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($tags); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($tags) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($tags); ?>
+</div>
+</div>
+
+<? echo $this->formHidden($post->get('deleted'));?>
+<div class="listFileId"></div>
+
+<? echo $this->formHidden($form->get('csrf'));?>
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+	<i class="glyphicon glyphicon-picture"></i>
+	<span><?=$this->translate('Add image'); ?></span>
+</button>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<? echo $this->formElement($form->get('submit'));?>
+</div>
+</div>
+<?php echo $this->form()->closeTag() ?>
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog wide-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Upload image'); ?></h4>
+      </div>
+      <div class="modal-body modal-body-modified">
+		<? 
+      	$form = $this->fileForm;
+		$form->prepare();
+		$form->setAttribute('class', 'form-inline');
+		echo $this->form()->openTag($form);
+		$elem = $form->get('files');
+		?>
+		<div class="row fileupload-buttonbar">
+            <div class="container media-content">
+            	<div class="row row-media hide">
+	            	<div class="col-md-8 image-preview-container">
+	            		<div class="container ">
+	            			<div class="row files"></div>		
+	            		</div>
+	            	</div>
+					<div class="col-md-4 image-edit-container">
+	            		<div class="container ">
+	            			<div class="row"><div class="col-md-12"><div class="image-detail-container"></div></div></div>		
+	            		</div>
+	            	</div>
+            	</div>
+            	<div class="row row-upload">
+					<div class="img-selection center-block center-vertical">
+						<div class="file-upload-btn ">
+							<span class="btn btn-default btn-lg  fileinput-button">
+			                    <span><?=$this->translate('Add images'); ?></span>
+			                    <?php echo $this->formFile($elem); ?>
+							</span>
+		                </div>		
+		                <?=$this->translate('or'); ?>               
+						<button class="btn btn-default btn-lg btn-choose"><?=$this->translate('Choose images'); ?></button>
+					</div>
+            	</div>
+			</div>
+        </div>
+         <?php echo $this->form()->closeTag($form); ?>
+      </div><!-- /.modal-body -->      
+      
+      <div class="modal-footer modal-footer-modified">
+		<button class="btn btn-default btn-preview-add-image pull-left hide"><?=$this->translate('Add images'); ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+        <button type="button" id="save-images" class="btn btn-primary" disabled="disabled"><?=$this->translate('Insert into post'); ?></button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-4 template-upload fade">
+{% if (i) { %}
+	<span class="preview">
+       	{% if (file.thumbnailUrl) { %}
+           	<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    	{% } %}
+		
+	</span>
+{% } else { %}
+	<div class="my-progress fileupload-progress fade">
+		<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+		</div>
+	</div>
+	<strong class="error text-danger"></strong>
+	<button class="btn btn-warning cancel">
+    	<i class="glyphicon glyphicon-ban-circle"></i>
+        <span>Cancel</span>
+	</button>
+{% } %}
+</div>
+{% } %}
+</script>
+
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+{% if (file.thumbnailUrl) { %}
+	<div class="col-md-4 template-download fade">
+		<span class="preview">		
+			<img src="{%=file.thumbnailUrl%}" class="img-thumbnail img-thumbnail-preview">
+			<span class="my-zoom-icon">
+				<a href='#' data-toggle="tooltip" title="Deselect" class="deselect my-tooltip"><span class="glyphicon glyphicon-minus"></span></a> 
+				<a href="#" data-toggle="tooltip" title="Crop" class="crop my-tooltip"><span class="glyphicon glyphicon-th"></span></a> 
+				<a href="#" class="delete my-tooltip"  data-toggle="tooltip" title="Delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><span class="glyphicon glyphicon-remove"></span></a>
+			</span>
+			<input type="hidden" class="fileId" value="{%=file.id%}"/>		
+		
+			<input type="checkbox" name="delete" value="1" class="toggle hidden">
+		</span>	
+	</div>
+{% } %}
+{% if (file.error) { %}
+	<div class="col-md-4 template-download fade">
+    	<div class="error-file"><span class="label label-danger">Error</span> {%=file.error%}</div>
+	</div>
+		{% } %}
+{% } %}
+</script>
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js')
+			->appendFile($this->basePath() . '/js/feed-upload.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+            ->appendFile($this->basePath() . '/js/tmpl.min.js')
+            ->appendFile($this->basePath() . '/js/load-image.min.js')
+            ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js');?>
+<script type="text/javascript">
+$(function() {
+	$(".chosen-select").select2({
+		minimumResultsForSearch: 10
+	});
+	$(".tag-select").select2({
+		tags: true,
+		minimumResultsForSearch: 4,
+		tokenSeparators: [",", " "],
+		createSearchChoice: function(term, data) {
+			if ($(data).filter(function() {
+		    	return this.text.localeCompare(term) === 0;
+		    }).length === 0) {
+		    	return {
+		        	id: term,
+		        	text: term
+		      	};
+		    }
+		},
+		multiple: true,
+		ajax: {
+			url: 'ajax/tag',
+		    dataType: "json",
+		    data: function(term, page) {
+		    	return {
+		        	q: term
+		      	};
+		    },
+		    results: function(data, page) {
+		    	return {
+		        	results: data
+		      	};
+		    }
+		}		
+	});	
+
+	$('#save-images').click(function(e) {
+		$('.fileId').each(function() {
+			if ($(this).hasClass('file-selected')) {				
+	   			$('.listFileId').append('<input type="hidden" name="file-id[]" class="file-id" value="'+$(this).val()+'">');
+			}   		
+		});
+		$('#myModal').modal('hide');		
+		return false;
+	});	
+
+	function format(item) { return item.text; };
+	
+})
+</script>
+
+<!-- The blueimp Gallery widget -->
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter="">
+		    <div class="slides"></div>
+		    <h3 class="title"></h3>
+		    <a class="prev">‹</a>
+		    <a class="next">›</a>
+		    <a class="close">×</a>
+		    <a class="play-pause"></a>
+		    <ol class="indicator"></ol>
+		</div>

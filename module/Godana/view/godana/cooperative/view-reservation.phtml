@@ -1,0 +1,94 @@
+<?  $this->plugin("currencyformat")->setCurrencyCode("MGA")->setLocale("fr_FR");?>
+<? $reservation = $this->reservation;
+	$passenger = $reservation->getPassenger();
+	$p_name = $passenger->getName();
+	$payment = $reservation->getPayment();
+	$title = $passenger->getTitle();
+	if ($title == 0) {
+		$p = "Mr ".ucwords($p_name);
+	} else if ($title == 1) {
+		$p = "Mme ".ucwords($p_name);
+	} else if ($title == 2) {
+		$p = "Ms ".ucwords($p_name);
+	}
+	$seatNumber = $this->seatNumber;
+	$s = (int)$reservation->getStatus();
+	$is_fully_paid = false;
+	switch ($s) {
+		case 0:
+			$status = 'Advance';
+			break;
+		case 1:
+			$status = 'Fully paid';
+			$is_fully_paid = true;
+			break;
+		case 2:
+			$status = 'None';
+			break;
+	}
+	$contacts = $passenger->getContacts();
+	$reservationBoard = $reservation->getReservationBoard();
+    $line = $reservationBoard->getLine();
+	$car = $reservationBoard->getCar();
+	$fare = $car->getLineCarFare($line);
+	$departureTime = $reservationBoard->getDepartureTime();
+	$remainder = 0;
+	if (!$is_fully_paid) {
+		$remainder = $fare - $payment; 
+	}
+?>
+<div class="modal-content">
+	<div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Reservation'); ?></h4>
+	</div>
+    <div class="modal-body">  
+    	<div class="form-horizontal">
+    		<div class="form-group">
+		    	<label class="col-sm-5 control-label"><?=$this->translate('Name') ?></label>
+			    <div class="col-sm-7">
+			      	<p class="form-control-static"><?=$p ?></p>
+			    </div>			    
+		  	</div>
+		  	<? foreach ($contacts as $c):
+		  	$cType = $c->getType()->getName();?>
+		  	<div class="form-group">
+		    	<label class="col-sm-5 control-label"><?=$this->translate(ucfirst($cType)); ?></label>
+			    <div class="col-sm-7">
+			      	<p class="form-control-static"><?=$c->getValue(); ?></p>
+			    </div>			    
+		  	</div>
+		  	<? endforeach;?>
+		  	<div class="form-group">
+		    	<label class="col-sm-5 control-label"><?=$this->translate('Payment') ?></label>
+			    <div class="col-sm-7">
+			      	<p class="form-control-static"><?=$this->currencyFormat($payment); ?></p>
+			    </div>			    
+		  	</div>
+		  	<? if (!$is_fully_paid):?>
+		  	<div class="form-group">
+		    	<label class="col-sm-5 control-label"><?=$this->translate('Remainder') ?></label>
+			    <div class="col-sm-7">
+			      	<p class="form-control-static"><?=$this->currencyFormat($remainder); ?></p>
+			    </div>			    
+		  	</div>
+		  	<? endif;?>
+		  	<div class="form-group">
+		    	<label class="col-sm-5 control-label"><?=$this->translate('Status') ?></label>
+			    <div class="col-sm-7">
+			      	<p class="form-control-static"><?=$this->translate($status) ?></p>
+			    </div>			    
+		  	</div>
+		  	<div class="form-group">
+		    	<label class="col-sm-5 control-label"><?=$this->translate('Seat number') ?></label>
+			    <div class="col-sm-7">
+			      	<p class="form-control-static"><?=$seatNumber; ?></p>
+			    </div>			    
+		  	</div>
+		  	
+    	</div>
+    </div><!-- /.modal-body -->
+    <div class="modal-footer">
+    	<button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+    </div><!-- /.modal-footer -->
+</div><!-- /.modal-content -->

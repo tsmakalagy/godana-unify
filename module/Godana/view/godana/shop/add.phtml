@@ -1,0 +1,351 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/chosen.min.css')
+                ->appendStylesheet($this->basePath() . '/css/chosen-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')                
+                ->appendStylesheet($this->basePath() . '/css/typeahead.js-bootstrap.css')
+                ?>
+<? $this->headTitle($this->translate('Admin Shop'));?>
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+<div class="panel panel-primary">
+<div class="panel-heading"><h3 class="panel-title"><?=$this->translate('Create shop'); ?></h3></div>
+<div class="panel-body">
+<?php
+$form = $this->shopForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('admin/shop_admin/shop_add', array('lang' => $this->lang)));
+$form->setAttribute('method', 'post');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? $shop = $form->get('shop-form'); ?>
+<? echo $this->formHidden($shop->get('id'));?>
+
+<? $categories = $shop->get('categories'); ?>
+<? $value_options = $categories->getValueOptions();?>
+<? if (count($value_options) > 0):?>
+<div class="form-group <?php if($this->formElementErrors($categories)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($categories); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($categories) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($categories); 
+	?>
+</div>
+</div>
+<? endif;?>
+<div id="categories-group">
+<!--	 More categories to add here -->
+</div>
+
+<!--<? $categoriesCollection = $shop->get('new-categories');?>
+<div id="categories-group">
+	<? foreach ($categoriesCollection as $c):?>
+	<div class="categories-element">
+		<? echo $this->formHidden($c->get('id'));?>
+		<div class="form-group">
+			<?=$this->formLabel($c->get('name')); ?>
+			<div class="col-sm-7">
+			<?=$this->formElement($c->get('name')); ?>
+			<?=$this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($c->get('name')); ?>
+			</div>
+		</div>		
+	</div>
+	<? endforeach;?>
+</div>
+
+--><div class="form-group">
+	<span id="tplCategory" data-template="<?=htmlspecialchars('<div class="categories-element"><input type="hidden" value="" name="shop-form[new-categories][__placeholder__][id]"><div class="form-group"><label for="shop-form[new-categories][__placeholder__][name]" class="col-sm-3 control-label">').
+	$this->translate('Category name').htmlspecialchars('</label><div class="col-sm-7"><input type="text" value="" class="form-control" name="shop-form[new-categories][__placeholder__][name]"></div></div></div>') ?>"></span>
+	<div class="col-sm-4 col-sm-offset-3"></div>
+</div>
+
+<? $name = $shop->get('name'); ?>
+<div class="form-group <?php if($this->formElementErrors($name)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($name); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($name) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($name); ?>
+</div>
+</div>
+
+<? $description = $shop->get('description'); ?>
+<div class="form-group <?php if($this->formElementErrors($description)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($description); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($description) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($description); ?>
+</div>
+</div>
+
+<? $owner = $shop->get('owner'); ?>
+<div class="form-group <?php if($this->formElementErrors($owner)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($owner); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($owner) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($owner); ?>
+</div>
+</div>
+
+<? $city = $shop->get('idCity'); ?>
+<div class="form-group <?php if($this->formElementErrors($city)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($city); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($city) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($city); ?>
+</div>
+</div>
+<? echo $this->formHidden($shop->get('cities'));?>
+
+<? $contactsCollection = $shop->get('contacts');?>
+
+<? foreach ($contactsCollection as $c):
+	$contactId = $c->get('id');
+	$contactType = $c->get('type');
+	$contactValue = $c->get('value');
+?>
+<div class="gdn_input_margin contact_group">
+	<div class="form-group <?php if($this->formElementErrors($contactValue)) 
+		echo "has-error" ?>">
+		<?=$this->formHidden($contactId); ?>
+		<?=$this->formHidden($contactType); ?>
+		<div class="input-group">
+	  		<div class="input-group-btn">
+				<button type="button" class="btn btn-default btn_lg gdn_btn dropdown-toggle" data-toggle="dropdown"><span class="contact_selected" data-type="1"><i class='fa fa-mobile-phone fa-2x'></i></span> <span class="caret"></span></button>
+				<ul class="dropdown-menu contact_choice">
+		  			<li><a href="#" data-value="1" ><i class="fa fa-mobile-phone fa-2x"></i> <?=$this->translate('Mobile') ?></a></li>
+		  			<li><a href="#" data-value="2" ><strong>@</strong> <?=$this->translate('Email')?></a></li>
+		  			<li><a href="#" data-value="3" ><i class="fa fa-home"></i> <?=$this->translate('Adress')?></a></li>
+		  			<li class="divider"></li>
+		  			<li><a href="#" class="add_contact"><i class="fa fa-plus"></i> <?=$this->translate('Contact') ?></a></li>
+				</ul>
+	  		</div><!-- /.input-group-btn -->
+	  		<?php echo $this->formElement($contactValue) ?>			
+		</div><!-- /input-group -->
+		<?php  echo $this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($contactValue); ?>
+	</div><!-- /.form-group -->
+</div><!-- /.contact_group -->
+<? endforeach;?>
+<span id="tplContact" data-template='
+<?=htmlspecialchars('<div class="gdn_input_margin contact_group"><div class="form-group"><input type="hidden" value="" name="shop-form[contacts][__placeholder__][id]">
+<input type="hidden" name="shop-form[contacts][__placeholder__][type]" class="contact_type"><div class="input-group">
+<div class="input-group-btn"><button data-toggle="dropdown" class="btn btn-default btn_lg gdn_btn dropdown-toggle" type="button"><span class="contact_selected" data-type="1"><i class="fa fa-mobile-phone fa-2x"></i></span> <span class="caret"></span></button>
+<ul class="dropdown-menu contact_choice">
+<li><a data-value="1" href="#"><i class="fa fa-mobile-phone fa-2x"></i> ')
+ . $this->translate('Mobile') .
+htmlspecialchars('</a></li><li><a data-value="2" href="#"><strong>@</strong> ')
+ . $this->translate('Email') .
+htmlspecialchars('</a></li><li><a data-value="3" href="#"><i class="fa fa-home"></i> ')
+ . $this->translate('Adress') .
+htmlspecialchars('</a></li><li class="divider"></li><li><a class="remove_contact" href="#"><i class="fa fa-minus"></i> ')
+ . $this->translate('Contact') . 
+htmlspecialchars('</a></li></ul></div><input type="text" value="" placeholder="')
+ . $this->translate('Contact') .
+htmlspecialchars('" class="gdn_text" name="shop-form[contacts][__placeholder__][value]"></div></div></div>'); ?>
+'></span>
+
+<? echo $this->formHidden($shop->get('deleted'));?>
+<? echo $this->formHidden($form->get('csrf'));?>
+<? $submit = $form->get('submit');
+$reset = $form->get('reset'); ?>
+<div class="fd_action pull-right">
+	<?=$this->formElement($submit);?>&nbsp;
+	<?=$this->formElement($reset);?>
+</div>
+<?php echo $this->form()->closeTag() ?>
+
+</div>
+</div>
+</div>
+</div>   
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/typeahead.min.js')
+			->appendFile($this->basePath() . '/js/chosen.jquery.min.js')
+			->appendFile($this->basePath() . '/js/select2.min.js')
+			->appendFile($this->basePath() . '/js/jquery.autosize.min.js')
+			//->appendFile($this->basePath() . '/js/main.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js');?>
+<script type="text/javascript">
+var category_placeholder = "<?=$this->translate('Categories'); ?>";
+var owner_placeholder = "<?=$this->translate('Owner'); ?>";
+var city_placeholder = "<?=$this->translate('City'); ?>";
+var city_url = "<?=$this->url('admin/shop_admin/city', array(), array(), true); ?>";
+$(function() {
+	$(".category-select").select2({
+		placeholder: category_placeholder,
+		minimumResultsForSearch: 10,
+	});
+	$(".owner-select").select2({
+		placeholder: owner_placeholder,
+		minimumResultsForSearch: 10,
+	});	
+
+	$(".city-select").select2({
+		placeholder: city_placeholder,
+	    minimumInputLength: 3,
+	    ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+	        url: city_url,
+	        dataType: 'json',
+	        quietMillis: 100,
+	        data: function (term, page) {
+	            return {
+	                q: term, // search term
+	                page_limit: 10,
+	                page: page, // page number
+	            };
+	        },
+	        results: function (data, page) { // parse the results into the format expected by Select2.
+	            // since we are using custom formatting functions we do not need to alter remote JSON data
+	            var more = (page * 10) < data.total; // whether or not there are more results available
+	            return {results: data.results, more: more};
+	        }
+//	        results: data
+	    },
+	    formatSelection: format,
+	    formatResult: format
+	});
+	$('#id_city').change(function(e) {
+		$('#city').val($(this).val());
+	});
+	function format(item) { return item.text; };
+
+	$('textarea').autosize();
+
+	$(document).on("click", ".reset_shop", function(e) {
+		e.preventDefault();
+		resetForm($("form[name=create-shop-form]"));		
+		$(".category-select").select2('val', '');
+		//$(".owner-select").select2('val', '');
+		$(".city-select").select2('val', '');
+	});
+
+	$(document).on("click", ".add_contact", function() {
+		var contactsCount = $('#create-shop-form').find('.contact_group').length;
+		var template = $("#tplContact").data('template').replace(/__placeholder__/g, contactsCount);	
+		$(template).insertAfter( '.contact_group:last' );		
+		$( '.contact_group:last' ).find('.contact_type').val(1);	
+		return false;
+	});
+
+	$('.contact_type').val(1);
+
+	$(document).on("click", ".contact_choice a", function() {
+		var choice = $(this).data('value');
+		var contact_selected = $(this).parents('.input-group-btn').find('.contact_selected');  
+		var contact_type = $(this).parents('.contact_group').find('.contact_type');
+		//$(contact_selected).data("type", 45);
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+		}
+		if (!$(this).hasClass('add_contact') && !$(this).hasClass('remove_contact')) {	
+			//console.log('add_contact');		
+			$(contact_type).val(choice);
+		}
+		$(this).parents('.input-group-btn').removeClass('open');
+		return false;
+	});
+
+	$(document).on("click", ".remove_contact", function() {
+		$( '.contact_group:last' ).remove();
+		//msnry.layout();
+		return false;
+	});
+	/* ADDING MORE CATEGORY */
+//	var tplCategory = $('#tplCategory');
+//	var tplCategoryManager = tplCategory.parent();
+//
+//	var addCategory = function () {
+//	    var categoriesGroup = $('#categories-group');
+//	    var categoriesCount = categoriesGroup.find('.categories-element').length;
+//	    categoriesGroup.append(tplCategory.data('template').replace(/__placeholder__/g, categoriesCount));
+//	}
+//
+//	var btnCategories = $('<button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i><?=$this->translate('Add category'); ?></button>')
+//	    .button({
+//	        icons: {
+//	            primary: 'ui-icon-circle-plus'
+//	        }
+//	    }).on('click', function (e) {
+//	        e.preventDefault();
+//	        $('.removeElement').html('');
+//	        addCategory();
+//	        //addRemoveButton('#categories');
+//	    });
+//
+//	tplCategoryManager.find('div').append(btnCategories);
+	
+	/* ADDING MORE CONTACT */
+//	var tplContact = $('#tplContact');
+//	var tplContactManager = tplContact.parent();
+//
+//	var addContact = function () {
+//	    var contactsGroup = $('#contacts-group');
+//	    var contactsCount = contactsGroup.find('.contacts-element').length;
+//	    contactsGroup.append(tplContact.data('template').replace(/__placeholder__/g, contactsCount));
+//	}
+//
+//	var btnContacts = $('<button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i><?=$this->translate('Add contact'); ?></button>')
+//	    .button({
+//	        icons: {
+//	            primary: 'ui-icon-circle-plus'
+//	        }
+//	    }).on('click', function (e) {
+//	        e.preventDefault();
+//	        $('.removeElement').html('');
+//	        addContact();
+//	        $(".new-contact-chosen").chosen({ 
+//	    		width: '100%',
+//	    		placeholder_text_multiple: 'Choose a category...', 
+//	    		disable_search_threshold: 10,
+//	    	})
+//	        //addRemoveButton('#contacts');
+//	    });
+//
+//	tplContactManager.find('div').append(btnContacts);
+});
+	function resetForm($form) {
+		$form.find('input:text, input:hidden, input:password, input:file, select, textarea').val('');
+		$form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');				
+	} 
+</script>

@@ -1,0 +1,476 @@
+<?php echo $this->headLink()                
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.Jcrop.min.css');
+                ?>
+<? $this->headTitle($this->translate('Admin Shop'));?>
+<div class="row">
+<div class="col-md-9 col-md-offset-1">
+<div class="panel panel-primary">
+<div class="panel-heading"><h3 class="panel-title"><?=$this->translate('Edit shop'); ?></h3></div>
+<div class="panel-body">
+<? if ($this->status):?>
+<div class="alert alert-dismissable alert-success">
+<button data-dismiss="alert" class="close">×</button>
+<strong><?= $this->translate('Success!'); ?></strong> <?= $this->translate('The modification is successfull!'); ?> 
+</div>
+<? endif;?>
+<?php
+$form = $this->shopForm;
+$shop = $this->shop;
+$shopId = $shop->getId();
+$cover = $shop->getCover();
+$coverExist = false;
+if (isset($cover) && $cover instanceof \Godana\Entity\File) {
+	$coverExist = true;
+	$rootUrl = $this->serverUrl() . $this->basePath();
+	$coverUrl = $rootUrl . $shop->getCover()->getImageRelativePathByDimension('md');
+}
+$form->prepare();
+$form->setAttribute('action', $this->url('admin/shop_admin/shop_edit', array('lang' => $this->lang, 'id' => $shopId)));
+$form->setAttribute('method', 'post');
+?>
+
+<div class="gdn_input_margin img-cover">
+<? if ($coverExist):?>
+<img src="<?=$coverUrl ?>" class="img-thumbnail img-responsive">
+<? else:?>
+<div class="default-cover img-rounded"><h3><?=$this->translate('Set shop cover'); ?></h3></div>
+<? endif;?>
+<span class="fa-stack fa-lg edit-cover show-modal" title="<?=$this->translate('Change cover');?>">
+	<i class="fa fa-square fa-stack-2x fa-inverse"></i>
+	<i class="fa fa-edit fa-stack-1x"></i>
+</span>
+</div>
+
+<?php echo $this->form()->openTag($form) ?>
+<? $shop = $form->get('shop-form'); ?>
+<? echo $this->formHidden($shop->get('id'));?>
+
+<? $categories = $shop->get('categories'); ?>
+<? $value_options = $categories->getValueOptions();?>
+<? if (count($value_options) > 0):?>
+<div class="form-group <?php if($this->formElementErrors($categories)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($categories); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($categories) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($categories); 
+	?>
+</div>
+</div>
+<? endif;?>
+<!-- <div id="categories-group">-->
+<!--	 More categories to add here -->
+<!--</div>-->
+
+<div class="form-group">
+	<span id="tplCategory" data-template="<?=htmlspecialchars('<div class="categories-element"><input type="hidden" value="" name="shop-form[new-categories][__placeholder__][id]"><div class="form-group"><label for="shop-form[new-categories][__placeholder__][name]" class="col-sm-3 control-label">').
+	$this->translate('Category name').htmlspecialchars('</label><div class="gdn_input_margin"><input type="text" value="" class="form-control" name="shop-form[new-categories][__placeholder__][name]"></div></div></div>') ?>"></span>
+	<div class="col-sm-4 col-sm-offset-3"></div>
+</div>
+
+<? $name = $shop->get('name'); ?>
+<div class="form-group <?php if($this->formElementErrors($name)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($name); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($name) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($name); ?>
+</div>
+</div>
+
+<? $description = $shop->get('description'); ?>
+<div class="form-group <?php if($this->formElementErrors($description)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($description); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($description) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($description); ?>
+</div>
+</div>
+
+<? $owner = $shop->get('owner'); ?>
+<div class="form-group <?php if($this->formElementErrors($owner)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($owner); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($owner) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($owner); ?>
+</div>
+</div>
+
+<?=$this->formElement($shop->get('idCity')); ?>
+
+<? $citiesCollection = $shop->get('cities');?>
+<div id="cities-group">
+	<? foreach ($citiesCollection as $c):?>
+	<div class="cities-element">
+		<?=$this->formHidden($c->get('id')); ?>
+		<div class="form-group <?php if($this->formElementErrors($c->get('cityAccented'))) 
+echo "has-error" ?>">
+			<?=$this->formLabel($c->get('cityAccented')); ?>
+			<div class="gdn_input_margin">
+			<?=$this->formElement($c->get('cityAccented')); ?>
+			<?=$this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($c->get('cityAccented')); ?>			
+			</div>
+		</div>		
+	</div>
+	<? endforeach;?>
+</div>
+
+<? $contactsCollection = $shop->get('contacts');?>
+
+<? foreach ($contactsCollection as $c):
+	$contactId = $c->get('id');
+	$contactType = $c->get('type');
+	$contactValue = $c->get('value');
+?>
+<div class="gdn_input_margin contact_group">
+	<div class="form-group <?php if($this->formElementErrors($contactValue)) 
+		echo "has-error" ?>">
+		<?=$this->formHidden($contactId); ?>
+		<?=$this->formElement($contactType); ?>
+		<div class="input-group">
+	  		<div class="input-group-btn">
+				<button type="button" class="btn btn-default btn_lg gdn_btn dropdown-toggle" data-toggle="dropdown"><span class="contact_selected" data-type="1"><i class='fa fa-mobile-phone fa-2x'></i></span> <span class="caret"></span></button>
+				<ul class="dropdown-menu contact_choice">
+		  			<li><a href="#" data-value="1" ><i class="fa fa-mobile-phone fa-2x"></i> <?=$this->translate('Mobile') ?></a></li>
+		  			<li><a href="#" data-value="2" ><strong>@</strong> <?=$this->translate('Email')?></a></li>
+		  			<li><a href="#" data-value="3" ><i class="fa fa-home"></i> <?=$this->translate('Adress')?></a></li>
+		  			<li class="divider"></li>
+		  			<li><a href="#" class="add_contact"><i class="fa fa-plus"></i> <?=$this->translate('Contact') ?></a></li>
+				</ul>
+	  		</div><!-- /.input-group-btn -->
+	  		<?php echo $this->formElement($contactValue) ?>			
+		</div><!-- /input-group -->
+		<?php  echo $this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($contactValue); ?>
+	</div><!-- /.form-group -->
+</div><!-- /.contact_group -->
+<? endforeach;?>
+
+
+
+<span id="tplContact" data-template='
+<?=htmlspecialchars('<div class="gdn_input_margin contact_group"><div class="form-group"><input type="hidden" value="" name="shop-form[contacts][__placeholder__][id]">
+<input type="hidden" name="shop-form[contacts][__placeholder__][type]" class="contact_type"><div class="input-group">
+<div class="input-group-btn"><button data-toggle="dropdown" class="btn btn-default btn_lg gdn_btn dropdown-toggle" type="button"><span class="contact_selected" data-type="1"><i class="fa fa-mobile-phone fa-2x"></i></span> <span class="caret"></span></button>
+<ul class="dropdown-menu contact_choice">
+<li><a data-value="1" href="#"><i class="fa fa-mobile-phone fa-2x"></i> ')
+ . $this->translate('Mobile') .
+htmlspecialchars('</a></li><li><a data-value="2" href="#"><strong>@</strong> ')
+ . $this->translate('Email') .
+htmlspecialchars('</a></li><li><a data-value="3" href="#"><i class="fa fa-home"></i> ')
+ . $this->translate('Adress') .
+htmlspecialchars('</a></li><li class="divider"></li><li><a class="remove_contact" href="#"><i class="fa fa-minus"></i> ')
+ . $this->translate('Contact') . 
+htmlspecialchars('</a></li></ul></div><input type="text" value="" placeholder="')
+ . $this->translate('Contact') .
+htmlspecialchars('" class="gdn_text" name="shop-form[contacts][__placeholder__][value]"></div></div></div>'); ?>
+'></span>
+
+
+<? echo $this->formHidden($shop->get('deleted'));?>
+<? echo $this->formHidden($form->get('csrf'));?>
+<div class="listFileId"></div>
+<!--<div class="fd_upload pull-left">
+<a href="#" onclick="return false;" class="btn btn-info show-modal"><?=$this->translate('Change cover'); ?></a>
+</div>
+--><div class="fd_action pull-right">
+<? echo $this->formElement($form->get('submit'));?>
+</div>
+
+<?php echo $this->form()->closeTag() ?>
+
+</div>
+</div>
+</div>
+</div>   
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog wide-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Upload image'); ?></h4>
+      </div>
+      <div class="modal-body modal-body-modified">
+		<? 
+      	$form = $this->fileForm;
+		$form->prepare();
+		$form->setAttribute('class', 'form-inline');
+		echo $this->form()->openTag($form);
+		$elem = $form->get('files');
+		?>
+		<div class="row fileupload-buttonbar">
+            <div class="container media-content">
+            	<div class="row row-media hide">
+	            	<div class="col-md-8 image-preview-container">
+	            		<div class="container ">
+	            			<div class="row files"></div>		
+	            		</div>
+	            	</div>
+					<div class="col-md-4 image-edit-container">
+	            		<div class="container ">
+	            			<div class="row"><div class="col-md-12"><div class="image-detail-container"></div></div></div>		
+	            		</div>
+	            	</div>
+            	</div>
+            	<div class="row row-upload">
+					<div class="img-selection center-block center-vertical">
+						<div class="file-upload-btn ">
+							<span class="btn btn-default btn-lg  fileinput-button">
+			                    <span><?=$this->translate('Add images'); ?></span>
+			                    <?php echo $this->formFile($elem); ?>
+							</span>
+		                </div>		
+		                <?=$this->translate('or'); ?>               
+						<button class="btn btn-default btn-lg btn-choose"><?=$this->translate('Choose images'); ?></button>
+					</div>
+            	</div>
+			</div>
+        </div>
+         <?php echo $this->form()->closeTag($form); ?>
+      </div><!-- /.modal-body -->      
+      
+      <div class="modal-footer modal-footer-modified">
+		<button class="btn btn-default btn-preview-add-image pull-left hide"><?=$this->translate('Add images'); ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+        <button type="button" id="save-images" class="btn btn-primary" disabled="disabled"><?=$this->translate('Insert into post'); ?></button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-4 template-upload fade">
+{% if (i) { %}
+	<span class="preview">
+       	{% if (file.thumbnailUrl) { %}
+           	<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    	{% } %}
+		
+	</span>
+{% } else { %}
+	<div class="my-progress fileupload-progress fade">
+		<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+		</div>
+	</div>
+	<strong class="error text-danger"></strong>
+	<button class="btn btn-warning cancel">
+    	<i class="glyphicon glyphicon-ban-circle"></i>
+        <span>Cancel</span>
+	</button>
+{% } %}
+</div>
+{% } %}
+</script>
+
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+{% if (file.thumbnailUrl) { %}
+	<div class="col-md-4 template-download fade">
+		<span class="preview">		
+			<img src="{%=file.thumbnailUrl%}" class="img-thumbnail img-thumbnail-preview">
+			<span class="my-zoom-icon">
+				<a href='#' data-toggle="tooltip" title="Deselect" class="deselect my-tooltip"><span class="glyphicon glyphicon-minus"></span></a> 
+				<a href="#" data-toggle="tooltip" title="Crop" class="crop my-tooltip"><span class="glyphicon glyphicon-th"></span></a> 
+				<a href="#" class="delete my-tooltip"  data-toggle="tooltip" title="Delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><span class="glyphicon glyphicon-remove"></span></a>
+			</span>
+			<input type="hidden" class="fileId" value="{%=file.id%}"/>		
+		
+			<input type="checkbox" name="delete" value="1" class="toggle hidden">
+		</span>	
+	</div>
+{% } %}
+{% if (file.error) { %}
+	<div class="col-md-4 template-download fade">
+    	<div class="error-file"><span class="label label-danger">Error</span> {%=file.error%}</div>
+	</div>
+		{% } %}
+{% } %}
+</script>
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+			->appendFile($this->basePath() . '/js/jquery.Jcrop.min.js')
+			->appendFile($this->basePath() . '/js/jquery.godana.js')
+            ->appendFile($this->basePath() . '/js/tmpl.min.js')
+            ->appendFile($this->basePath() . '/js/load-image.min.js')
+            ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js');?>
+<script type="text/javascript">
+var category_placeholder = "<?=$this->translate('Categories'); ?>";
+var owner_placeholder = "<?=$this->translate('Owner'); ?>";
+var city_placeholder = "<?=$this->translate('City'); ?>";
+    var city_url = "<?=$this->url('admin/shop_admin/city', array(), array(), true); ?>",
+        ajax_url = "<?=$this->url('admin/shop_admin/upload', array(), array(), true); ?>",
+        crop_url = "<?=$this->url('crop', array(), array(), true); ?>";
+$(function() {
+	$(".category-select").select2({
+		placeholder: category_placeholder,
+		minimumResultsForSearch: 10,
+	});
+	$(".owner-select").select2({
+		placeholder: owner_placeholder,
+		minimumResultsForSearch: 10,
+	});	
+	$(".chosen-select").select2({
+		minimumResultsForSearch: 10,
+	});
+	$('.show-modal').tooltip();
+	$(".city-select").select2({
+		//placeholder: city_placeholder,
+	    minimumInputLength: 3,
+	    initSelection : function (element, callback) {
+            var obj= {id:$("#cityId").val(),text:$("#cityAccented").val()};
+            callback(obj);
+        },
+	    ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+	        url: city_url,
+	        dataType: 'json',
+	        quietMillis: 100,
+	        data: function (term, page) {
+	            return {
+	                q: term, // search term
+	                page_limit: 10,
+	                page: page, // page number
+	            };
+	        },
+	        results: function (data, page) { // parse the results into the format expected by Select2.
+	            // since we are using custom formatting functions we do not need to alter remote JSON data
+	            var more = (page * 10) < data.total; // whether or not there are more results available
+	            return {results: data.results, more: more};
+	        }
+	    },
+	    formatSelection: format,
+	    formatResult: format
+	});
+	$('#idCity').change(function(e) {
+		var data = $('.city-select').select2("data");
+		$('#cityId').val(data.id);
+		$("#cityAccented").val(data.text);
+	});
+	function format(item) { return item.text; };
+	var shopId = $('input[name="shop-form[id]"]').val();
+	$('.show-modal').godana({
+		cropWidth: 1170,
+		cropHeight: 250,
+		xs: 0,
+		sm: 400,
+		md: 1170,
+		ajaxUrl: ajax_url+'?shopId='+shopId,
+        cropUrl: crop_url
+	});
+
+	$('#save-images').click(function(e) {
+		$('.fileId').each(function() {
+			if ($(this).hasClass('file-selected')) {				
+	   			$('.listFileId').append('<input type="hidden" name="file-id[]" class="file-id" value="'+$(this).val()+'">');
+			}   		
+		});
+		$('#myModal').modal('hide');		
+		return false;
+	});
+	
+	$('.contact_group').each(function() {
+		var that = this;
+		var choice = $(that).find('.contact_type').val();
+		var contact_selected = $(that).find('.contact_selected');  
+		var contact_type = $(that).find('.contact_type');
+		choice = parseInt(choice);
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email				
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+			default:
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+		}
+	});
+	$(document).on("click", ".add_contact", function() {
+		var contactsCount = $('#edit-shop-form').find('.contact_group').length;
+		var template = $("#tplContact").data('template').replace(/__placeholder__/g, contactsCount);	
+		$(template).insertAfter( '.contact_group:last' );		
+		$( '.contact_group:last' ).find('.contact_type').val(1);	
+		return false;
+	});
+
+	//$('.contact_type').val(1);
+
+	$(document).on("click", ".contact_choice a", function() {
+		var choice = $(this).data('value');
+		var contact_selected = $(this).parents('.input-group-btn').find('.contact_selected');  
+		var contact_type = $(this).parents('.contact_group').find('.contact_type');
+		//$(contact_selected).data("type", 45);
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+		}
+		if (!$(this).hasClass('add_contact') && !$(this).hasClass('remove_contact')) {	
+			//console.log('add_contact');		
+			$(contact_type).val(choice);
+		}
+		$(this).parents('.input-group-btn').removeClass('open');
+		return false;
+	});
+
+	$(document).on("click", ".remove_contact", function() {
+		$( '.contact_group:last' ).remove();
+		//msnry.layout();
+		return false;
+	});
+});
+</script>

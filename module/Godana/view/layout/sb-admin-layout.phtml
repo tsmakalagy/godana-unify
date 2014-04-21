@@ -1,0 +1,309 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('Godana')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+                        ->appendStylesheet($this->basePath() . '/css/sb-admin.css')
+                        ->appendStylesheet($this->basePath() . '/font-awesome/css/font-awesome.min.css') ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+            ->prependFile($this->basePath() . '/js/jquery.min.js')
+            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+            ->appendFile($this->basePath() . '/js/jquery.metisMenu.js')
+            ->appendFile($this->basePath() . '/js/sb-admin.js')
+        ; ?>
+
+    </head>
+    <body>
+    	<div id="wrapper">
+	    	<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+	            <div class="navbar-header">
+	                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+	                    <span class="sr-only">Toggle navigation</span>
+	                    <span class="icon-bar"></span>
+	                    <span class="icon-bar"></span>
+	                    <span class="icon-bar"></span>
+	                </button>
+	                <a class="navbar-brand" href="<?php echo $this->url('home', array(), array(), true) ?>">godana</a>
+	            </div>
+	            <!-- /.navbar-header -->
+	
+	            <ul class="nav navbar-top-links navbar-right">
+	                <? if ($this->zfcUserIdentity()):?>
+	                <li class="dropdown">
+	                    <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><img src="<?=$this->userPicture('xs'); ?>"> <i class="caret"></i></a>
+	                    <ul class="dropdown-menu dropdown-user">
+	                        <li>
+								<a tabindex="-1" href="<?php echo $this->url('zfcuser/profile', array(), array(), true) ?>"><i class="fa fa-user"></i> <? echo $this->translate('Profile');?></a>
+	                        </li>
+	                        <li class="divider"></li>
+	                        <? 
+								$roles = $this->currentUserRole();
+								$isAdmin = false;
+								$isShopOwner = false;
+								$isCooperative = false;
+								foreach ($roles as $role) {
+									if ($role->getRoleId() == 'admin') {
+										$isAdmin = true;
+									}
+									if ($role->getRoleId() == 'shop-owner') {
+										$isShopOwner = true;
+									}
+									if (strpos($role->getRoleId(), 'cooperative') === 0) {
+										$isCooperative = true;
+									}
+								}
+								if ($isAdmin):?>
+	                        <li>
+	                        	<a tabindex="-1" href="<?=$this->url('admin', array(), array(), true); ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Admin');?></a>
+	                        </li>
+	                        <li class="divider"></li>
+	                        	<? endif;?>
+	                        	<? if ($isShopOwner && !$isAdmin): ?>
+	                        <li>
+	                        	<a tabindex="-1" href="<?=$this->url('admin', array(), array(), true); ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Admin');?></a>
+							</li>
+							<li class="divider"></li>
+								<? endif;?>
+								<? if ($isCooperative && !$isAdmin): ?>
+							<li>
+								<a tabindex="-1" href="<?=$this->url('admin/cooperative', array(), array(), true) ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Cooperative');?></a>
+							</li>
+							<li class="divider"></li>
+								<? endif;?>
+							<li>
+								<a tabindex="-1" href="<?php echo $this->url('zfcuser/logout', array(), array(), true) ?>"><i class="fa fa-power-off"></i> <?php echo $this->translate('Sign Out'); ?></a>
+							</li>
+	                    </ul>
+	                    <!-- /.dropdown-user -->
+	                </li>
+	                <? else: ?>
+	                <li>
+	                	<a href="<?php echo $this->url('zfcuser/login', array(), array(), true); ?>"><? echo $this->translate('Login');?></a>
+	                </li>
+	                <? endif;?>
+	                <!-- /.dropdown -->
+	            </ul>
+	            <!-- /.navbar-top-links -->
+	
+	        </nav>
+	        <!-- /.navbar-static-top -->
+	        <? $roles = $this->currentUserRole();
+	        $isAdmin = false;
+	        foreach ($roles as $role) {
+	        	if ($role->getRoleId() == 'admin') {
+	        		$isAdmin = true;
+	        	}
+	        }
+	        ?>
+	        <nav class="navbar-default navbar-static-side" role="navigation">
+	            <div class="sidebar-collapse">
+	                <ul class="nav" id="side-menu">
+	                    <li><a href="#"><i class="fa fa-dashboard fa-fw"></i> <?=$this->translate('Dashboard') ?></a></li>
+	                    <? if ($isAdmin):?>
+			            <li><a href="<?=$this->url('admin/search_init', array(), array(), true) ?>"><i class="fa fa-refresh fa-fw"></i> <?=$this->translate('Reinitialize search') ?></a></li>		            
+	                    <li>
+	                        <a href="#"><i class="fa fa-user fa-fw"></i> <?=$this->translate('Users'); ?><span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">
+	                            <li>
+	                                <a href="<?=$this->url('admin/user/add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add'); ?></a>
+	                            </li>
+	                            <li>
+	                                <a href="<?=$this->url('admin/user', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+	                            </li>
+	                        </ul>
+	                        <!-- /.nav-second-level -->
+	                    </li>
+	                    <li>
+	                        <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> <?=$this->translate('Shops'); ?><span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">
+	                            <li>
+	                                <a href="<?=$this->url('admin/shop_admin/shop_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add'); ?></a>
+	                            </li>
+	                            <li>
+	                                <a href="<?=$this->url('admin/shop_admin', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+	                            </li>
+	                        </ul>
+	                        <!-- /.nav-second-level -->
+	                    </li>
+	                    <? endif;?>
+	                    <li>
+	                        <a href="#"><i class="fa fa-tags fa-fw"></i> <?=$this->translate('Products'); ?><span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">	                            
+	                            <li>
+	                                <a href="<?=$this->url('admin/product/add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add product'); ?></a>
+	                            </li>
+	                            <li>
+	                                <a href="<?=$this->url('admin/product/list', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List product'); ?></a>
+	                            </li>
+	                            <li>
+	                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Type'); ?> <span class="fa arrow"></span></a>
+	                                <ul class="nav nav-third-level">
+	                                    <li>
+			                                <a href="<?=$this->url('admin/product/type_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add'); ?></a>
+			                            </li>
+	                                    <li>
+			                                <a href="<?=$this->url('admin/product/type_list', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+			                            </li>	                                    
+	                                </ul>
+	                                <!-- /.nav-third-level -->
+	                            </li>
+	                        </ul>
+	                        <!-- /.nav-second-level -->
+	                    </li>       
+	                    <li>
+	                        <a href="#"><i class="fa fa-ticket fa-fw"></i> <?=$this->translate('Cooperative'); ?><span class="fa arrow"></span></a>
+	                        <ul class="nav nav-second-level">	                            
+	                            <li>
+	                                <a href="<?=$this->url('admin/cooperative/create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New'); ?></a>
+	                            </li>
+	                            <li>
+	                                <a href="<?=$this->url('admin/cooperative', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+	                            </li>
+	                            <li>
+	                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Zone'); ?> <span class="fa arrow"></span></a>
+	                                <ul class="nav nav-third-level">
+	                                    <li>
+			                                <a href="<?=$this->url('admin/cooperative/zone_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New'); ?></a>
+			                            </li>
+	                                    <li>
+			                                <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+			                            </li>	                                    
+	                                </ul>
+	                                <!-- /.nav-third-level -->
+	                            </li>
+	                            <li>
+	                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Line'); ?> <span class="fa arrow"></span></a>
+	                                <ul class="nav nav-third-level">
+	                                    <li>
+			                                <a href="<?=$this->url('admin/cooperative/line_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New'); ?></a>
+			                            </li>
+	                                    <li>
+			                                <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+			                            </li>	
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/line_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add cooperative line'); ?></a>
+			                            </li>                                    
+	                                </ul>
+	                                <!-- /.nav-third-level -->
+	                            </li>
+	                            <li>
+	                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Car'); ?> <span class="fa arrow"></span></a>
+	                                <ul class="nav nav-third-level">
+	                                    <li>
+			                                <a href="<?=$this->url('admin/cooperative/car_make_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New make'); ?></a>
+			                            </li>
+	                                    <li>
+			                                <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List make'); ?></a>
+			                            </li>
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/car_model_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New model'); ?></a>
+			                            </li>
+	                                    <li>
+			                                <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List model'); ?></a>
+			                            </li>	
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/car_driver_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New driver'); ?></a>
+			                            </li> 
+			                            <li>
+			                                <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List driver'); ?></a>
+			                            </li>   
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/car_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add car'); ?></a>
+			                            </li>
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/line_car_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add car line'); ?></a>
+			                            </li>                                
+	                                </ul>
+	                                <!-- /.nav-third-level -->
+	                            </li>
+	                            <li>
+	                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Reservation'); ?> <span class="fa arrow"></span></a>
+	                                <ul class="nav nav-third-level">
+	                                    <li>
+			                                <a href="<?=$this->url('admin/cooperative/reservation_board_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Reserve a car'); ?></a>
+			                            </li>
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/reservation_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Make a reservation'); ?></a>
+			                            </li>
+			                            <li>
+			                                <a href="<?=$this->url('admin/cooperative/reservation_car_list', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List reservation car'); ?></a>
+			                            </li> 			                                                        
+	                                </ul>
+	                                <!-- /.nav-third-level -->
+	                            </li>
+	                        </ul>
+	                        <!-- /.nav-second-level -->
+	                    </li>             
+	                </ul>
+	                <!-- /#side-menu -->
+	            </div>
+	            <!-- /.sidebar-collapse -->
+	        </nav>
+	        <!-- /.navbar-static-side -->
+	        <div id="page-wrapper">
+	        	<?=$this->content; ?>
+	        </div>
+	        <!-- /#page-wrapper -->
+    	</div><!-- /#wrapper -->
+    	<div class="container">
+    	<?
+            $services = $this->getHelperPluginManager()->getServiceLocator();
+			$router = $services->get('router');
+			$request = $services->get('request');
+			
+			$routeMatch = $router->match($request);
+			$routeName = $routeMatch->getMatchedRouteName();
+			$routeParams = $routeMatch->getParams();
+			$routeParamsEn = $routeParams;
+			if (array_key_exists('lang', $routeParamsEn)) {
+				$routeParamsEn['lang'] = 'en';	
+			}
+			$routeParamsFr = $routeParams;
+			if (array_key_exists('lang', $routeParamsFr)) {
+				$routeParamsFr['lang'] = 'fr';	
+			}
+			$routeParamsMg = $routeParams;
+			if (array_key_exists('lang', $routeParamsMg)) {
+				$routeParamsMg['lang'] = 'mg';	
+			}			
+            ?>    	
+            <footer>
+            	<div class="row row-footer">
+                <div class="col-md-5"><h5>&copy; Fano Raiza <?=date('Y'); ?></h5></div>
+                <div class="col-md-5 col-xs-12">
+                <div class="btn-group">
+				  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+				  <?=$this->translate('Language');  ?>: <span class="selection label label-primary"><?=strtoupper($this->lang); ?></span>&nbsp;<span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				  	<li><a href="<?=$this->url($routeName, $routeParamsEn); ?>">EN</a></li>
+				    <li class="divider"></li>
+				    <li><a href="<?=$this->url($routeName, $routeParamsFr); ?>">FR</a></li>
+				    <li class="divider"></li>
+				    <li><a href="<?=$this->url($routeName, $routeParamsMg); ?>">MG</a></li>
+				  </ul>
+				</div>
+                </div>
+                </div>
+                
+                
+            </footer>
+    	</div>
+    	<?php echo $this->inlineScript() ?>
+    </body>
+</html>

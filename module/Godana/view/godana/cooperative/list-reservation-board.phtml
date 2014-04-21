@@ -1,0 +1,79 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/DT_bootstrap.css');?>
+<? $this->headTitle($this->translate('Admin Cooperative'));?>
+<div class="row">
+<div class="col-md-12">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Reservation board'); ?></h3>
+</div>
+<div class="panel-body">
+<? $reservationBoards = $this->reservationBoards;?>
+<? $locale = 'en_US';
+	if ($this->lang == 'en') {
+		$locale = 'en_US';
+	} else if ($this->lang == 'mg' || $this->lang == 'fr') {
+		$locale = 'fr_FR';
+	}
+?>
+<div class="table-responsive">
+<table id="list_reservation_board" class="table table-striped table-bordered dataTable">
+<thead><tr><th><small>#&nbsp;</small></th><th><small><?=$this->translate('Cooperative'); ?></small></th><th><small><?=$this->translate('Line'); ?></small></th><th><small><?=$this->translate('Car'); ?><small</th>
+<th><small><?=$this->translate('Departure time'); ?></small></th><th><small><?=$this->translate('Seat available'); ?></small></th><th><small><?=$this->translate('Action'); ?></small></th></tr></thead>
+<tbody>
+<? foreach($reservationBoards as $reservationBoard):
+	$cooperativeName = ucwords($reservationBoard->getCooperative()->getName());
+	$line = $reservationBoard->getLine()->getLineJourney();
+	$car = $reservationBoard->getCar()->getLicense();
+	$car = preg_replace('/\s/', '&nbsp;', $car);
+	$departureTime = ucwords($this->dateFormat(
+		$reservationBoard->getDepartureTime(),
+		IntlDateFormatter::LONG,
+		IntlDateFormatter::SHORT,
+		$locale
+	));
+	$reservationBoardId =$reservationBoard->getId();
+	$seatAvailable = $reservationBoard->getSeatAvailable();	
+?>
+<tr><small><td><?=$reservationBoard->getId();?></td><td><?=$cooperativeName; ?></td><td><?=$line; ?></td><td><?=$car; ?></td><td><?=$departureTime; ?></td>
+<td><?=$seatAvailable; ?></td><td><a class="btn btn-primary btn-xs" href="<?=$this->url('admin/cooperative/reservation_car_detail', array('lang' => $this->lang, 'reservationBoardId' => $reservationBoardId)); ?>"><?=$this->translate('Detail'); ?></a></td></small></tr>
+<? endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/jquery.dataTables.min.js')
+			->appendFile($this->basePath() . '/js/moment-with-langs.min.js')
+			->appendFile($this->basePath() . '/js/DT_bootstrap.js');?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#list_reservation_board').dataTable( {
+		"sDom": "<'row'<'col-md-6 col-xs-12'l><'col-md-6 col-xs-12'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
+		"sPaginationType": "bootstrap",
+		"oLanguage": {
+			"sLengthMenu": "_MENU_ records per page"
+		},
+//		"aoColumnDefs" : [ {
+//            'bSortable' : false,
+//            'aTargets' : [ 0, 3, 6 ]
+//        } ],
+        "aoColumns": [
+                      null,
+                      null,
+                      null,                      
+                      null,  
+                      { "sType": "datetime" },                    
+                      null,
+                      null
+                  ]
+	} );
+	$('#list_reservation_board_length select').addClass('form-control');
+	$('#list_reservation_board_filter input').addClass('form-control');
+	$('.dataTables_length').addClass('form-group');
+	$('.dataTables_filter').addClass('form-group');
+} );
+</script>

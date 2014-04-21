@@ -1,0 +1,60 @@
+<? $this->headTitle($this->translate('Shops'));?>
+<? $product = $this->product;?>
+<? $shop = $this->shop;?>
+<? $shopIdent = $shop->getIdent();?>
+<? 
+	$categories = $shop->getCategories();
+	$categoryToDisplay = '';
+	foreach ($categories as $category):
+		$categoryToDisplay .= '<a class="btn btn-success btn-lg" href="'.$this->url('shop', array('categoryIdent' => $category->getIdent()), array(), true).'">' . $category->getName() . '</a>' . ' ';
+	endforeach;
+	$categoryToDisplay = rtrim($categoryToDisplay, ' ');
+?>
+<?  $this->plugin("currencyformat")->setCurrencyCode("MGA")->setLocale("fr_FR");?>
+<div class="jumbotron">
+<h1><?=$shop->getName(); ?></h1>
+<p><?=$shop->getDescription(); ?></p>
+<h5><?=$categoryToDisplay; ?></h5>
+</div>
+<? $product = $this->product;?>
+<? $productType = $product->getType();?>
+<div class="row">
+<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title"><?=$product->getName(); ?>
+			<a class="btn btn-default btn-xs pull-right" href="<?=$this->url('detail-shop', array('lang' => $this->lang, 'shopIdent' => $shopIdent)) ?>"><i class="glyphicon glyphicon-chevron-left"></i> <?=$this->translate('Back'); ?></a>	</h3>
+					
+		</div>
+		<div class="panel-body">
+			<p><?=$product->getDescription(); ?></p>
+			<? $files = $product->getFiles();?>
+			<? $productId = $product->getId(); ?>
+			<? if (isset($files) && count($files) > 0):?>
+				<div class="row well well-sm" id="<?=$productId; ?>">
+				<? foreach ($files as $file):?>	
+					  <div class="col-xs-6 col-sm-4 col-md-4" >					  
+					    <a href="<?=$file->getUrl(); ?>" class="img-thumbnail"  download="<?=$file->getName(); ?>" data-gallery="#blueimp-gallery-<?=$productId; ?>">
+					      <img src="<?=$file->getThumbnailUrl(); ?>" class="img-responsive">
+					    </a>
+					  </div>					  					  									
+				<? endforeach;?>
+				</div>
+			<? endif;?>
+			<h4 class="bid-info">
+			<a href="#" class="btn btn-success btn-xs"><?=$productType->getName(); ?></a>&nbsp;
+			<span class="label label-danger"><?=$this->currencyFormat($product->getPrice()); ?> / <?=$product->getMeasurement();?> <?=$productType->getUnit(); ?></span>
+			<? $productAttributes = $product->getAttributes();?>
+			<? if (isset($productAttributes) && count($productAttributes) > 0):?>
+			<? foreach ($productAttributes as $productAttr):?>
+				<? $attr = $productAttr->getAttribute(); ?>
+				<? $attrName = $attr->getName();?>
+				<? $attrValue = $productAttr->getValue();?>
+				<span class="label label-primary"><?=$attrName; ?>: <?=$attrValue; ?></span>
+			<? endforeach;?>
+			<? endif;?>
+			</h4>
+		</div>	
+	</div>
+</div>
+</div>

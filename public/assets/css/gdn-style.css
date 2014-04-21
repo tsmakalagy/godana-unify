@@ -1,0 +1,100 @@
+@CHARSET "UTF-8";
+
+
+.social-or-login:before {
+    border-top: 1px solid #CCCCCC;
+    content: "";
+    display: block;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: -1;
+}
+.social-or-login {
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+}
+.center, .align-center {
+    text-align: center;
+}
+
+
+.social-or-login *:first-child {
+    background: none repeat scroll 0 0 #FCFCFC;
+    color: #555555;
+    display: inline-block;
+    font-size: 13px;
+    padding: 0 8px;
+    font-family: 'Open Sans',sans-serif;
+}
+
+.social-login {
+    margin-top: 12px;
+}
+
+.social-login a {
+    border: 0 none;
+    border-radius: 100% 100% 100% 100% !important;
+    height: 42px;
+    line-height: 46px;
+    margin: 0 1px;
+    padding: 0;
+    width: 42px;
+}
+
+.social-login a > [class*="icon-"] {
+    font-size: 24px;
+}
+.btn > [class*="icon-"] {
+    display: inline;
+    margin-right: 4px;
+}
+
+.btn-facebook {
+    background-color: #006DCC;
+    background-image: linear-gradient(to bottom, #0088CC, #0044CC);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-facebook:hover {
+	background-color: #0044CC;
+	color: #FFFFFF;
+}
+
+
+.gdn-register {
+    border-top: 1px solid #CCCCCC;
+    margin-top: 22px;
+    padding-top: 15px;
+}
+
+.log-page h3, .reg-page h3 {
+	border-bottom: 1px solid #CCCCCC;
+    margin-bottom: 22px;
+    padding-bottom: 15px;
+}
+
+.input-gdn-register {
+	width: 95%;
+}
+
+.required-label {
+	display: inline-block;
+}
+
+.gdn-select {
+	margin-bottom: 19px !important;
+}
+
+.loading-email, .loading-username,
+.loading-firstname, .loading-lastname, .loading-dateofbirth,
+.loading-password, .loading-passwordVerify {
+    left: -8px;
+    position: relative;
+    top: -36px;
+}

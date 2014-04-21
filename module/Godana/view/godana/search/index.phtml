@@ -1,0 +1,40 @@
+<div class="row">
+<? if (count($this->hits) > 0):?>
+<h3>
+<?=sprintf($this->translate('Search for \'%s\' returned %d hits'), $this->query, count($this->hits)); ?>
+</h3>
+<? $hits = $this->hits;?>
+<dl>
+<? foreach ($hits as $hit):?>
+<? $type = $hit->type;?>
+<? $id = $hit->id;?>
+<? switch ($type):?>
+<? 
+	case 0:
+		$typeHit = 'Offer';
+		break;
+	case 1:
+		$typeHit = 'Demand';
+		break;
+	case 2:
+		$typeHit = 'Shop';
+		break;	
+	case 3:
+		$typeHit = 'Product';
+		break;
+?>
+<? endswitch;?>
+<dt><?=$this->translate($typeHit); ?> - <a href="<?=$hit->link; ?>"><?=stripcslashes($hit->title); ?></a></dt>
+<dd>
+<? if ($type == 0 || $type == 1):?>
+<?=$this->translate('Published on ');?><?=$hit->published; ?>
+ - 
+<? endif;?>
+<?=$this->truncateText(stripcslashes($hit->contents), 50);?>
+</dd>
+<? endforeach;?>
+</dl>
+<? else: ?>
+<h3>No result found!</h3>
+<? endif;?>
+</div>

@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'entsans';
+	src: url('./entsans.eot');
+	src: local('entsans'), url('./entsans.woff') format('woff'), url('./entsans.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_372">Text with this font applied</p> */
+.fontsforweb_fontid_372 {
+	font-family: 'entsans' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

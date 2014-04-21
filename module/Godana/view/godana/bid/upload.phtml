@@ -1,0 +1,141 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css');?>
+<style type="text/css">
+
+</style>
+<?php
+// Init Form
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('class', 'form-inline');
+
+// Configure Errors Helper
+$errorsHelper  = $this->plugin('formelementerrors');
+$errorsHelper
+    ->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>');
+?>
+<?php echo $this->form()->openTag($form); ?>
+<?php
+    $elem = $form->get('files');
+    //$elem->setLabelAttributes(array('class' => 'control-label'));
+    $errors = $elem->getMessages();
+    $errorClass = (!empty($errors)) ? ' error' : '';
+    ?>
+    <div class="row fileupload-buttonbar">
+            <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files...</span>
+                    <?php echo $this->formFile($elem); ?>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="glyphicon glyphicon-picture"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-danger delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">
+                
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+<!--                <div class="progress-extended">&nbsp;</div>-->
+            </div>
+<!--            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>-->
+			<div class="container">
+				<div class="row files"></div>
+			</div>
+        </div>
+    
+<?php echo $this->form()->closeTag($form); ?>
+    <!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter="">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-2 template-upload fade">
+	<span class="preview">
+       	{% if (file.thumbnailUrl) { %}
+           	<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    	{% } %}
+		<span class="my-progress">
+			<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+		</span>
+{% if (file.error) { %}
+			<p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+	</span>
+		{% } %}
+
+</div>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-2 col-xs-4 template-download fade">
+	<span class="preview">
+		{% if (file.thumbnailUrl) { %}
+			<img src="{%=file.thumbnailUrl%}" class="img-thumbnail">
+			<span class="my-zoom-icon">
+<a href='#' data-toggle="tooltip" title="Deselect" class="deselect my-tooltip"><span class="glyphicon glyphicon-minus"></span></a> 
+<a href="{%=file.url%}" download="{%=file.name%}" data-gallery  data-toggle="tooltip" title="Zoom" class="my-tooltip"><span class="glyphicon glyphicon-zoom-in"></span></a> 
+<a href="#" class="delete my-tooltip"  data-toggle="tooltip" title="Delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><span class="glyphicon glyphicon-remove"></span></a>
+</span>
+		{% } %}
+		{% if (file.error) { %}
+			<span class="my-progress">			
+        		<div><span class="label label-danger">Error</span> {%=file.error%}</div>            
+			</span>
+		{% } %}
+		<input type="checkbox" name="delete" value="1" class="toggle hidden">
+	</span>	
+</div>
+{% } %}
+</script>
+<?php $this->inlineScript()->appendFile($this->basePath() . '/js/main.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+            ->appendFile($this->basePath() . '/js/tmpl.min.js')
+            ->appendFile($this->basePath() . '/js/load-image.min.js')
+            ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js');  
+?>
+<script type="text/javascript">
+$(function() {
+	
+});
+</script>

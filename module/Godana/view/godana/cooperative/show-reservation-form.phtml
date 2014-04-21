@@ -1,0 +1,347 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css');?>
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form); ?>
+<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Reservation'); ?></h4>
+      </div>
+      <div class="modal-body">               
+
+<!--        <p>One fine body&hellip;</p>-->
+			
+			<? $reservation = $form->get('reservation-form'); ?>
+			<? echo $this->formHidden($reservation->get('id'));?>
+			<? $reservationBoardElement = $reservation->get('reservationBoard');?>
+			<? //$reservationBoardElement->setValue($reservationBoard->getId());?>
+			<? echo $this->formHidden($reservationBoardElement); ?>
+			<? echo $this->formHidden($reservation->get('seat')); ?>
+			
+			<? $passenger = $reservation->get('passenger');?>
+			<? echo $this->formHidden($passenger->get('id'));?>
+			<div class="form-group">
+				<?=$this->formLabel($passenger->get('title')); ?>
+				<div class="gdn_input_margin">
+				<?=$this->formElement($passenger->get('title')); ?>			
+				</div>
+			</div>
+			<div class="form-group <?php if($this->formElementErrors($passenger->get('name'))) 
+			echo "has-error" ?>">
+				<?=$this->formLabel($passenger->get('name')); ?>
+				<div class="gdn_input_margin">
+				<?=$this->formElement($passenger->get('name')); ?>
+				<?=$this->formElementErrors()
+					->setMessageOpenFormat('<div class="help-block">')
+				    ->setMessageSeparatorString('</div><div class="help-block">')
+				    ->setMessageCloseString('</div>')
+				    ->render($passenger->get('name')); ?>
+				</div>
+			</div>
+			<? $contactsCollection = $passenger->get('contacts');?>
+			<? foreach ($contactsCollection as $c):
+				$contactId = $c->get('id');
+				$contactType = $c->get('type');
+				$contactValue = $c->get('value');
+			?>
+			<div class="gdn_input_margin contact_group">
+				<div class="form-group <?php if($this->formElementErrors($contactValue)) 
+					echo "has-error" ?>">
+					<?=$this->formHidden($contactId); ?>
+					<?=$this->formHidden($contactType); ?>
+					<div class="input-group">
+				  		<div class="input-group-btn">
+							<button type="button" class="btn btn-default btn_lg gdn_btn dropdown-toggle" data-toggle="dropdown"><span class="contact_selected" data-type="1"><i class='fa fa-mobile-phone fa-2x'></i></span> <span class="caret"></span></button>
+							<ul class="dropdown-menu contact_choice">
+					  			<li><a href="#" data-value="1" ><i class="fa fa-mobile-phone fa-2x"></i> <?=$this->translate('Mobile') ?></a></li>
+					  			<li><a href="#" data-value="2" ><strong>@</strong> <?=$this->translate('Email')?></a></li>
+					  			<li><a href="#" data-value="3" ><i class="fa fa-home"></i> <?=$this->translate('Adress')?></a></li>
+					  			<li class="divider"></li>
+					  			<li><a href="#" class="add_contact"><i class="fa fa-plus"></i> <?=$this->translate('Contact') ?></a></li>
+							</ul>
+				  		</div><!-- /.input-group-btn -->
+				  		<?php echo $this->formElement($contactValue) ?>			
+					</div><!-- /input-group -->
+					<?php  echo $this->formElementErrors()
+							->setMessageOpenFormat('<div class="help-block">')
+						    ->setMessageSeparatorString('</div><div class="help-block">')
+						    ->setMessageCloseString('</div>')
+						    ->render($contactValue); ?>
+				</div><!-- /.form-group -->
+			</div><!-- /.contact_group -->
+			<? endforeach;?>
+			<span id="tplContact" data-template='
+			<?=htmlspecialchars('<div class="gdn_input_margin contact_group"><div class="form-group"><input type="hidden" value="" name="reservation-form[passenger][contacts][__placeholder__][id]">
+			<input type="hidden" name="reservation-form[passenger][contacts][__placeholder__][type]" class="contact_type"><div class="input-group">
+			<div class="input-group-btn"><button data-toggle="dropdown" class="btn btn-default btn_lg gdn_btn dropdown-toggle" type="button"><span class="contact_selected" data-type="1"><i class="fa fa-mobile-phone fa-2x"></i></span> <span class="caret"></span></button>
+			<ul class="dropdown-menu contact_choice">
+			<li><a data-value="1" href="#"><i class="fa fa-mobile-phone fa-2x"></i> ')
+			 . $this->translate('Mobile') .
+			htmlspecialchars('</a></li><li><a data-value="2" href="#"><strong>@</strong> ')
+			 . $this->translate('Email') .
+			htmlspecialchars('</a></li><li><a data-value="3" href="#"><i class="fa fa-home"></i> ')
+			 . $this->translate('Adress') .
+			htmlspecialchars('</a></li><li class="divider"></li><li><a class="remove_contact" href="#"><i class="fa fa-minus"></i> ')
+			 . $this->translate('Contact') . 
+			htmlspecialchars('</a></li></ul></div><input type="text" value="" placeholder="')
+			 . $this->translate('Contact') .
+			htmlspecialchars('" class="gdn_text" name="reservation-form[passenger][contacts][__placeholder__][value]"></div></div></div>'); ?>
+			'></span>
+			
+			
+			<? $payment = $reservation->get('payment'); ?>
+			<div class="form-group <?php if($this->formElementErrors($payment)) 
+			echo "has-error" ?>">
+			<?php echo $this->formLabel($payment); ?>
+			<div class="gdn_input_margin">
+			<div class="input-group">
+			<?php echo $this->formElement($payment) ?>
+			<span class="input-group-addon">Ariary</span>
+			</div>
+			<?php  echo $this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($payment); ?>
+			    
+			</div>
+			</div>
+			<input type="hidden" id="blabla"/>
+			<?// echo $this->formHidden($reservation->get('created'));?>
+			<? echo $this->formHidden($form->get('csrf'));?>			
+			
+	</div><!-- /.modal-body -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+        <button type="submit" class="btn btn-primary btn-save" data-loading-text="<?=$this->translate('Loading'); ?>..."><?=$this->translate('Save changes'); ?></button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-content -->	
+      
+
+<?php echo $this->form()->closeTag() ?>  
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js');?>
+<script type="text/javascript">
+var is_xmlhttprequest = <?=$this->is_xmlhttprequest; ?>;
+var urlform           = '<?=$this->url('admin/cooperative/validate_post_ajax', array(), array(), true); ?>';
+$(function() {	
+	$(".title-select").select2({minimumResultsForSearch: 10});
+	
+	var reservationId = $('input[name="reservation-form[id]"]').val();	
+	if (reservationId > 0) {
+		$("form#create-reservation-form").submit(function() {		
+	        //if not call by ajax
+	        //submit to showformAction
+	        if (is_xmlhttprequest == 0)
+	            return true;
+
+	        $('.btn-save').button('loading');
+	        var seat = $('input[name="reservation-form[seat]"]').val();
+	        //if by ajax
+	        //check by ajax : validatepostajaxAction
+			$.post(
+	        	urlform+'?reservationId='+reservationId,
+				$("form#create-reservation-form").serialize(),
+	            function(itemJson) {
+	            	var error = false;
+	            	var errorName = itemJson.name;
+	            	var errorContact = itemJson.value;
+	            	var errorPayment = itemJson.payment;
+	            	
+	            	if (errorName != undefined && errorName.length > 0) {
+		                var inputName = $('input[name="reservation-form[passenger][name]"]');
+		                $(inputName).parents('.form-group').addClass('has-error');
+		                var errorMessage = '';
+		                for (var i = 0; i < errorName.length; i++) {
+			                errorMessage += '<div class="help-block">'+errorName[i]+'</div>';
+		                }
+		                $(inputName).parents('div.gdn_input_margin').append(errorMessage);                     
+	                    error = true;
+	                } 
+	                if (errorContact != undefined && errorContact.length > 0) {
+		                var inputContact = $('input[name="reservation-form[passenger][contacts][0][value]"]');
+		                $(inputContact).parents('.form-group').addClass('has-error');
+		                var errorMessage = '';
+		                for (var i = 0; i < errorContact.length; i++) {
+			                errorMessage += '<div class="help-block">'+errorContact[i]+'</div>';
+		                }
+		                $(inputContact).parents('div.gdn_input_margin .form-group').append(errorMessage);                     
+	                    error = true;
+	                } 
+	                if (errorPayment != undefined && errorPayment.length > 0) {
+		                var inputPayment = $('input[name="reservation-form[payment]"]');
+		                $(inputPayment).parents('.form-group').addClass('has-error');
+		                var errorMessage = '';
+		                for (var i = 0; i < errorPayment.length; i++) {
+			                errorMessage += '<div class="help-block">'+errorPayment[i]+'</div>';
+		                }
+		                $(inputPayment).parents('div.gdn_input_margin').append(errorMessage);                     
+	                    error = true;
+	                }
+	                 
+	                if (!error) {  
+	                	if (itemJson.success){
+		                	var target = $('a[data-seat-id='+seat+']');		                	
+		                	var span = itemJson.span;
+							$(target).parents('td').html(span);
+							$('.my-tooltip').tooltip();
+		                	
+	                		$('#myModal').modal('hide');
+	                    }
+	                }
+	                 
+	        	},
+	        	'json'
+	        );         
+	        return false;
+	    });		
+	} else {
+		$("form#create-reservation-form").submit(function() {		
+	        //if not call by ajax
+	        //submit to showformAction
+	        if (is_xmlhttprequest == 0)
+	            return true;
+	        $('.btn-save').button('loading'); 
+	        //if by ajax
+	        //check by ajax : validatepostajaxAction
+	        var seat = $('input[name="reservation-form[seat]"]').val();
+			$.post(
+	        	urlform,
+				$("form#create-reservation-form").serialize(),
+	            function(itemJson) {
+	            	var error = false;
+	            	var errorTitle = itemJson.title
+	            	var errorName = itemJson.name;
+	            	var errorContact = itemJson.contacts;
+	            	var errorPayment = itemJson.payment;
+
+	            	if (errorTitle != undefined && errorTitle.length > 0) {
+		                var inputTitle = $('select[name="reservation-form[passenger][title]"]');
+		                $(inputTitle).parents('.form-group').addClass('has-error');
+		                var errorMessage = '';
+		                for (var i = 0; i < errorTitle.length; i++) {
+			                errorMessage += '<div class="help-block">'+errorTitle[i]+'</div>';
+		                }
+		                $(inputTitle).parents('div.gdn_input_margin').append(errorMessage);                     
+	                    error = true;
+	                } 
+	            	
+	                if (errorName != undefined && errorName.length > 0) {
+		                var inputName = $('input[name="reservation-form[passenger][name]"]');
+		                $(inputName).parents('.form-group').addClass('has-error');
+		                var errorMessage = '';
+		                for (var i = 0; i < errorName.length; i++) {
+			                errorMessage += '<div class="help-block">'+errorName[i]+'</div>';
+		                }
+		                $(inputName).parents('div.gdn_input_margin').append(errorMessage);                     
+	                    error = true;
+	                } 
+
+	                var contactsCount = $('#create-reservation-form').find('.contact_group').length;
+	                
+	                
+	                if (errorContact != undefined && errorContact.length > 0) {
+		                for (var i = 0; i < errorContact.length; i++) {
+		                	var inputContact = $('input[name="reservation-form[passenger][contacts]['+i+'][value]"]');
+			                $(inputContact).parents('.form-group').addClass('has-error');
+			                var errorMessage = '';
+			                for (var j = 0; j < errorContact[i].length; j++) {
+				                errorMessage += '<div class="help-block">'+errorContact[i][j]+'</div>';
+			                }
+			                $(inputContact).parents('div.gdn_input_margin .form-group').append(errorMessage);                     
+		                    error = true;
+		                }
+		                
+	                } 
+	                if (errorPayment != undefined && errorPayment.length > 0) {
+		                var inputPayment = $('input[name="reservation-form[payment]"]');
+		                $(inputPayment).parents('.form-group').addClass('has-error');
+		                var errorMessage = '';
+		                for (var i = 0; i < errorPayment.length; i++) {
+			                errorMessage += '<div class="help-block">'+errorPayment[i]+'</div>';
+		                }
+		                $(inputPayment).parents('div.gdn_input_margin').append(errorMessage);                     
+	                    error = true;
+	                }
+	                 
+	                if (!error) {     
+	                	if (itemJson.success){
+		                	var target = $('a[data-seat-id='+seat+']');
+		                	var span = itemJson.span;
+							$(target).parents('td').html(span);
+							$('.my-tooltip').tooltip();
+		                	
+	                		$('#myModal').modal('hide');
+	                    }
+	                }
+	                 
+	        	},
+	        	'json'
+	        );         
+	        return false;
+	    });	
+	}
+
+	/* ADDING MORE CONTACT */
+	$('.contact_group').each(function() {
+		var that = this;
+		var choice = $(that).find('.contact_type').val();
+		var contact_selected = $(that).find('.contact_selected');  
+		var contact_type = $(that).find('.contact_type');
+		choice = parseInt(choice);
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email				
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+			default:
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+		}
+	});
+	$('#create-reservation-form').on("click", ".add_contact", function() {
+		var contactsCount = $('#create-reservation-form').find('.contact_group').length;
+		var template = $("#tplContact").data('template').replace(/__placeholder__/g, contactsCount);	
+		$(template).insertAfter( '.contact_group:last' );		
+		$( '.contact_group:last' ).find('.contact_type').val(1);	
+		return false;
+	});
+
+	//$('.contact_type').val(1);
+
+	$('#create-reservation-form').on("click", ".contact_choice a", function() {
+		var choice = $(this).data('value');
+		var contact_selected = $(this).parents('.input-group-btn').find('.contact_selected');  
+		var contact_type = $(this).parents('.contact_group').find('.contact_type');
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+		}
+		if (!$(this).hasClass('add_contact') && !$(this).hasClass('remove_contact')) {	
+			$(contact_type).val(choice);
+		}
+		$(this).parents('.input-group-btn').removeClass('open');
+		return false;
+	});
+
+	$('#create-reservation-form').on("click", ".remove_contact", function() {
+		$( '.contact_group:last' ).remove();
+		return false;
+	});
+});
+</script>

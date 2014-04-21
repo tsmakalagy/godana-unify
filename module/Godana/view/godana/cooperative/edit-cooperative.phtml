@@ -1,0 +1,219 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')?>
+<? $this->headTitle($this->translate('Admin Cooperative'));?>
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Edit cooperative'); ?></h3>
+</div>
+<div class="panel-body">
+<? if ($this->status):?>
+<div class="alert alert-dismissable alert-success">
+<button data-dismiss="alert" class="close">×</button>
+<strong><?= $this->translate('Success!'); ?></strong> <?= $this->translate('Cooperative saved successfully.'); ?> 
+</div>
+<? endif;?>
+<?php
+$form = $this->cooperativeForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('admin/cooperative/edit', array('lang' => $this->lang, 'cooperativeId' => $this->cooperativeId)));
+$form->setAttribute('method', 'post');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? $cooperative = $form->get('cooperative-form'); ?>
+<? echo $this->formHidden($cooperative->get('id'));?>
+
+<? $name = $cooperative->get('name'); ?>
+<div class="form-group <?php if($this->formElementErrors($name)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($name); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($name) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($name); ?>
+</div>
+</div>
+
+<? $description = $cooperative->get('description'); ?>
+<div class="form-group <?php if($this->formElementErrors($description)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($description); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($description) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($description); ?>
+</div>
+</div>
+
+<? $admins = $cooperative->get('admins'); ?>
+<div class="form-group <?php if($this->formElementErrors($admins)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($admins); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($admins) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($admins); ?>
+</div>
+</div>
+
+<? $tellers = $cooperative->get('tellers'); ?>
+<div class="form-group <?php if($this->formElementErrors($tellers)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($tellers); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($tellers) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($tellers); ?>
+</div>
+</div>
+
+<? $contactsCollection = $cooperative->get('contacts');?>
+
+<? foreach ($contactsCollection as $c):
+	$contactId = $c->get('id');
+	$contactType = $c->get('type');
+	$contactValue = $c->get('value');
+?>
+<div class="gdn_input_margin contact_group">
+	<div class="form-group <?php if($this->formElementErrors($contactValue)) 
+		echo "has-error" ?>">
+		<?=$this->formHidden($contactId); ?>
+		<?=$this->formElement($contactType); ?>
+		<div class="input-group">
+	  		<div class="input-group-btn">
+				<button type="button" class="btn btn-default btn_lg gdn_btn dropdown-toggle" data-toggle="dropdown"><span class="contact_selected" data-type="1"><i class='fa fa-mobile-phone fa-2x'></i></span> <span class="caret"></span></button>
+				<ul class="dropdown-menu contact_choice">
+		  			<li><a href="#" data-value="1" ><i class="fa fa-mobile-phone fa-2x"></i> <?=$this->translate('Mobile') ?></a></li>
+		  			<li><a href="#" data-value="2" ><strong>@</strong> <?=$this->translate('Email')?></a></li>
+		  			<li><a href="#" data-value="3" ><i class="fa fa-home"></i> <?=$this->translate('Adress')?></a></li>
+		  			<li class="divider"></li>
+		  			<li><a href="#" class="add_contact"><i class="fa fa-plus"></i> <?=$this->translate('Contact') ?></a></li>
+				</ul>
+	  		</div><!-- /.input-group-btn -->
+	  		<?php echo $this->formElement($contactValue) ?>			
+		</div><!-- /input-group -->
+		<?php  echo $this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($contactValue); ?>
+	</div><!-- /.form-group -->
+</div><!-- /.contact_group -->
+<? endforeach;?>
+<span id="tplContact" data-template='
+<?=htmlspecialchars('<div class="gdn_input_margin contact_group"><div class="form-group"><input type="hidden" value="" name="cooperative-form[contacts][__placeholder__][id]">
+<input type="hidden" name="cooperative-form[contacts][__placeholder__][type]" class="contact_type"><div class="input-group">
+<div class="input-group-btn"><button data-toggle="dropdown" class="btn btn-default btn_lg gdn_btn dropdown-toggle" type="button"><span class="contact_selected" data-type="1"><i class="fa fa-mobile-phone fa-2x"></i></span> <span class="caret"></span></button>
+<ul class="dropdown-menu contact_choice">
+<li><a data-value="1" href="#"><i class="fa fa-mobile-phone fa-2x"></i> ')
+ . $this->translate('Mobile') .
+htmlspecialchars('</a></li><li><a data-value="2" href="#"><strong>@</strong> ')
+ . $this->translate('Email') .
+htmlspecialchars('</a></li><li><a data-value="3" href="#"><i class="fa fa-home"></i> ')
+ . $this->translate('Adress') .
+htmlspecialchars('</a></li><li class="divider"></li><li><a class="remove_contact" href="#"><i class="fa fa-minus"></i> ')
+ . $this->translate('Contact') . 
+htmlspecialchars('</a></li></ul></div><input type="text" value="" placeholder="')
+ . $this->translate('Contact') .
+htmlspecialchars('" class="gdn_text" name="cooperative-form[contacts][__placeholder__][value]"></div></div></div>'); ?>
+'></span>
+
+<? echo $this->formHidden($form->get('csrf'));?>
+
+<div class="fd_action pull-right">
+	<?=$this->formElement($form->get('submit'));?>
+</div>
+<?php echo $this->form()->closeTag() ?>
+</div>
+</div>
+</div>
+</div>
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js')?>
+
+<script type="text/javascript">
+var admin_placeholder = "<?=$this->translate('Admins'); ?>",
+teller_placeholder = "<?=$this->translate('Tellers'); ?>";
+$(function() {
+	$(".admin-select").select2({
+		placeholder: admin_placeholder,
+		minimumResultsForSearch: 10
+	});
+	$(".teller-select").select2({
+		placeholder: teller_placeholder,
+		minimumResultsForSearch: 10
+	});
+
+	/* ADDING MORE CONTACT */
+	$('.contact_group').each(function() {
+		var that = this;
+		var choice = $(that).find('.contact_type').val();
+		var contact_selected = $(that).find('.contact_selected');  
+		var contact_type = $(that).find('.contact_type');
+		choice = parseInt(choice);
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email				
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+			default:
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+		}
+	});
+	$(document).on("click", ".add_contact", function() {
+		var contactsCount = $('#create-cooperative-form').find('.contact_group').length;
+		var template = $("#tplContact").data('template').replace(/__placeholder__/g, contactsCount);	
+		$(template).insertAfter( '.contact_group:last' );		
+		$( '.contact_group:last' ).find('.contact_type').val(1);	
+		return false;
+	});	
+
+	$(document).on("click", ".contact_choice a", function() {
+		var choice = $(this).data('value');
+		var contact_selected = $(this).parents('.input-group-btn').find('.contact_selected');  
+		var contact_type = $(this).parents('.contact_group').find('.contact_type');
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+		}
+		if (!$(this).hasClass('add_contact') && !$(this).hasClass('remove_contact')) {	
+			$(contact_type).val(choice);
+		}
+		$(this).parents('.input-group-btn').removeClass('open');
+		return false;
+	});
+
+	$(document).on("click", ".remove_contact", function() {
+		$( '.contact_group:last' ).remove();
+		return false;
+	});
+});
+</script>

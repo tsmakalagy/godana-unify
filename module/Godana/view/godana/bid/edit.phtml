@@ -1,0 +1,176 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/chosen.min.css')
+                ->appendStylesheet($this->basePath() . '/css/chosen-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css')
+                ->appendStylesheet($this->basePath() . '/css/typeahead.js-bootstrap.css')
+                ?>
+<style type="text/css">
+<!--
+.contact-group:before, .contact-group:after {
+	content: " ";
+    display: table;
+}
+
+.contact-group:after {
+    clear: both;
+}
+
+.contact-group {
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: 15px;
+}
+-->
+</style>
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Bid'); ?></h3>
+</div>
+<div class="panel-body">
+<?php
+$form = $this->bidForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('bid/edit', array('lang' => 'en')));
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'form-horizontal');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? $bid = $form->get('bid-form'); ?>
+<? echo $this->formHidden($bid->get('id'));?>
+
+
+
+<? $post = $bid->get('post');
+?>
+<? echo $this->formHidden($post->get('id'));?>
+<? $title = $post->get('title'); ?>
+<div class="form-group <?php if($this->formElementErrors($title)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($title); ?>
+<div class="col-sm-7">
+<?php echo $this->formElement($title) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($title); ?>
+</div>
+</div>
+<!--<div class="contact-group">
+<button onclick="return add_contact();" class="btn btn-primary">Add a new contact</button>
+<? echo $this->formCollection($post->get('contacts'));?>
+</div>
+
+
+-->
+<? $contactsCollection = $post->get('contacts');?>
+<div id="contacts-group">
+	<? foreach ($contactsCollection as $c):?>
+	<div class="contacts-element">
+		<? echo $this->formHidden($c->get('id'));?>
+		<div class="form-group">
+			<?=$this->formLabel($c->get('type')); ?>
+			<div class="col-sm-7">
+			<?=$this->formElement($c->get('type')); ?>			
+			</div>
+		</div>
+		<div class="form-group">
+			<?=$this->formLabel($c->get('value')); ?>
+			<div class="col-sm-7">
+			<?=$this->formElement($c->get('value')); ?>
+			<?=$this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($c->get('value')); ?>
+			</div>
+		</div>
+	</div>
+	<? endforeach;?>
+</div>
+<div class="form-group">
+	<span id="tplContact" data-template="<?=htmlspecialchars('<div class="contacts-element"><input type="hidden" value="" name="bid-form[post][contacts][__placeholder__][id]"><div class="form-group"><label for="bid-form[post][contacts][__placeholder__][type]" class="col-sm-3 control-label">Contact type</label><div class="col-sm-7"><select class="form-control" name="bid-form[post][contacts][__placeholder__][type]"><option value="1">mobile</option><option value="2">mail</option></select></div></div><div class="form-group"><label for="bid-form[post][contacts][__placeholder__][value]" class="col-sm-3 control-label">Contact value</label><div class="col-sm-7"><input type="text" value="" class="form-control" name="bid-form[post][contacts][__placeholder__][value]"></div></div></div>') ?>"></span>
+	<div class="col-sm-4 col-sm-offset-3"></div>
+</div>
+<? echo $this->formHidden($form->get('csrf'));?>
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+	<i class="glyphicon glyphicon-picture"></i>
+	<span>Add image</span>
+</button>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<? echo $this->formElement($form->get('submit'));?>
+</div>
+</div>
+<?php echo $this->form()->closeTag() ?>
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/typeahead.min.js')
+			->appendFile($this->basePath() . '/js/chosen.jquery.min.js')
+			->appendFile($this->basePath() . '/js/main.js')
+			->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+            ->appendFile($this->basePath() . '/js/tmpl.min.js')
+            ->appendFile($this->basePath() . '/js/load-image.min.js')
+            ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+            ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+            ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js');?>
+<script type="text/javascript">
+$(document).ready(function() {
+	var tplContact = $('#tplContact');
+	var tplContactManager = tplContact.parent();
+
+	var addContact = function () {
+	    var contactsGroup = $('#contacts-group');
+	    var contactsCount = contactsGroup.find('.contacts-element').length;
+	    contactsGroup.append(tplContact.data('template').replace(/__placeholder__/g, contactsCount));
+	}
+
+	var btnContacts = $('<button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Add contact</button>')
+	    .button({
+	        icons: {
+	            primary: 'ui-icon-circle-plus'
+	        }
+	    }).on('click', function (e) {
+	        e.preventDefault();
+	        $('.removeElement').html('');
+	        addContact();
+	        //addRemoveButton('#contacts');
+	    });
+
+	tplContactManager.find('div').append(btnContacts);
+});
+
+</script>
+<script>
+    function add_contact() {
+         var currentCount = $('form > div > fieldset > fieldset').length;
+         console.log(currentCount);
+         var template = $('form > div > fieldset > span').data('template');
+         template = template.replace(/__placeholder__/g, currentCount);
+         $('form > div > fieldset').append(template);
+         return false;
+    }
+</script>
+

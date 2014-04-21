@@ -1,0 +1,240 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+    	<?php echo $this->headTitle('Godana')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+    	<meta name="description" content="" />
+    	<meta name="author" content="" />
+
+	    <!-- CSS -->
+	    <?php echo $this->headLink()
+	    				->appendStylesheet($this->basePath() . '/assets/plugins/bootstrap/css/bootstrap.min.css')
+	    				->appendStylesheet($this->basePath() . '/assets/css/style.css')
+	    				->appendStylesheet($this->basePath() . '/assets/css/headers/header1.css')
+	    				->appendStylesheet($this->basePath() . '/assets/plugins/bootstrap/css/bootstrap-responsive.min.css')
+	    				->appendStylesheet($this->basePath() . '/assets/css/style_responsive.css')
+	    				->appendStylesheet($this->basePath() . '/assets/plugins/font-awesome/css/font-awesome.css')
+	    				->appendStylesheet($this->basePath() . '/assets/plugins/flexslider/flexslider.css')
+	    				->appendStylesheet($this->basePath() . '/assets/plugins/parallax-slider/css/parallax-slider.css')
+	    				->appendStylesheet($this->basePath() . '/assets/css/gdn-style.css')
+	    				 ?>            	
+	    <link rel="stylesheet" href="<?php echo $this->basePath() . '/assets/css/themes/default.css'?>" id="style_color" />
+        
+        <!-- JS Global Compulsory -->	
+        <?php echo $this->headScript()
+        				->appendFile($this->basePath() . '/assets/js/jquery-1.8.2.min.js')
+        				->appendFile($this->basePath() . '/assets/js/modernizr.custom.js')
+        				->appendFile($this->basePath() . '/assets/plugins/bootstrap/js/bootstrap.min.js')
+        				->appendFile($this->basePath() . '/assets/plugins/flexslider/jquery.flexslider-min.js')
+        				->appendFile($this->basePath() . '/assets/plugins/parallax-slider/js/modernizr.js')
+        				->appendFile($this->basePath() . '/assets/plugins/parallax-slider/js/jquery.cslider.js')
+        				->appendFile($this->basePath() . '/assets/plugins/back-to-top.js')
+        				->appendFile($this->basePath() . '/assets/js/respond.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        				->appendFile($this->basePath() . '/assets/js/app.js')
+        				->appendFile($this->basePath() . '/assets/js/pages/index.js')
+        ?>
+    </head>
+    <body>
+    	<!--=== Top ===-->    
+		<div class="top">
+		    <div class="container">         
+		        <ul class="loginbar pull-right">
+		            <li><i class="icon-globe"></i><a>Languages <i class="icon-sort-up"></i></a>
+		                <ul class="nav-list">
+		                    <li class="active"><a href="#">English</a> <i class="icon-ok"></i></li>
+		                    <li><a href="#">Spanish</a></li>
+		                    <li><a href="#">Russian</a></li>
+		                    <li><a href="#">German</a></li>
+		                </ul>
+		            </li>   
+		            <li class="devider">&nbsp;</li>
+		            <li><a href="page_faq.html" class="login-btn">Help</a></li>  
+		            <li class="devider">&nbsp;</li>
+		            <li><a href="<?php echo $this->url('zfcuser/login', array(), array(), true); ?>"  class="login-btn"><? echo $this->translate('Login');?></a></li>
+		        </ul>
+		    </div>      
+		</div><!--/top-->
+		<!--=== End Top ===-->    
+		
+		<!--=== Header ===-->
+		<div class="header">               
+		    <div class="container"> 
+		        <!-- Logo -->       
+		        <div class="logo">  
+		        	<a href="<?=$this->url('home', array(), array(), true) ?>" class="navbar-brand gdn-brand">godana</a>                                           
+		            <!-- <a href="index.html"><img id="logo-header" src="<?php echo $this->basePath();?>/assets/img/logo1-default.png" alt="Logo" /></a>-->
+		        </div><!-- /logo -->        
+		                                    
+		        <!-- Menu -->       
+		        <div class="navbar">                                
+		            <div class="navbar-inner">                                  
+		                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		                    <span class="icon-bar"></span>
+		                    <span class="icon-bar"></span>
+		                    <span class="icon-bar"></span>
+		                </a><!-- /nav-collapse -->                                  
+		                <div class="nav-collapse collapse">                                     
+		                    <ul class="nav top-2">
+		                        <li class="<?php echo $this->home_active; ?>">
+		                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('Home');?>		                                                         
+		                            </a>		                                                
+		                        </li>
+		                        <li>
+		                            <a href="" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('Bid');?></a>		                                                
+		                        </li>
+		                        <li>
+		                            <a href="" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('Shop');?>                       
+		                            </a>		                                              
+		                        </li>
+		                        <li>
+		                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$this->translate('More');?>
+		                                <b class="caret"></b>                            
+		                            </a>
+		                            <ul class="dropdown-menu">
+		                                <li><a href="portfolio.html">Portfolio</a></li>
+		                                <li><a href="portfolio_item.html">Portfolio Item</a></li>
+		                                <li><a href="portfolio_2columns.html">Portfolio 2 Columns</a></li>
+		                                <li><a href="portfolio_3columns.html">Portfolio 3 Columns</a></li>
+		                                <li><a href="portfolio_4columns.html">Portfolio 4 Columns</a></li>
+		                            </ul>
+		                            <b class="caret-out"></b>                        
+		                        </li>		                        
+		                        <li><a class="search"><i class="icon-search search-btn"></i></a></li>                               
+		                    </ul>
+		                    <div class="search-open">
+		                        <div class="input-append">
+		                            <form />
+		                                <input type="text" class="span3" placeholder="Search" />
+		                                <button type="submit" class="btn-u">Go</button>
+		                            </form>
+		                        </div>
+		                    </div>
+		                </div><!-- /nav-collapse -->                                
+		            </div><!-- /navbar-inner -->
+		        </div><!-- /navbar -->                          
+		    </div><!-- /container -->               
+		</div><!--/header -->      
+		<!--=== End Header ===-->
+		
+		<!--=== Content Part ===-->
+		<div class="container">
+			<?php echo $this->content; ?>
+		</div><!--/container-->		
+		<!-- End Content Part -->	
+    
+    	<!--=== Footer ===-->
+		<div class="footer">
+			<div class="container">
+				<div class="row-fluid">
+					<div class="span4">
+		                <!-- About -->
+				        <div class="headline"><h3>About</h3></div>	
+						<p class="margin-bottom-25">Unify is an incredibly beautiful responsive Bootstrap Template for corporate and creative professionals.</p>	
+		
+			            <!-- Monthly Newsletter -->
+				        <div class="headline"><h3>Monthly Newsletter</h3></div>	
+						<p>Subscribe to our newsletter and stay up to date with the latest news and deals!</p>
+						<form class="form-inline" />
+							<div class="input-append">
+								<input type="text" placeholder="Email Address" class="input-medium" />
+								<button class="btn-u">Subscribe</button>
+							</div>
+						</form>							
+					</div><!--/span4-->	
+					
+					<div class="span4">
+		                <div class="posts">
+		                    <div class="headline"><h3>Recent Blog Entries</h3></div>
+		                    <dl class="dl-horizontal">
+		                        <dt><a href="#"><img src="<?php echo $this->basePath();?>/assets/img/sliders/elastislide/6.jpg" alt="" /></a></dt>
+		                        <dd>
+		                            <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
+		                        </dd>
+		                    </dl>
+		                    <dl class="dl-horizontal">
+		                    <dt><a href="#"><img src="<?php echo $this->basePath();?>/assets/img/sliders/elastislide/10.jpg" alt="" /></a></dt>
+		                        <dd>
+		                            <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
+		                        </dd>
+		                    </dl>
+		                    <dl class="dl-horizontal">
+		                    <dt><a href="#"><img src="<?php echo $this->basePath();?>/assets/img/sliders/elastislide/11.jpg" alt="" /></a></dt>
+		                        <dd>
+		                            <p><a href="#">Anim moon officia Unify is an incredibly beautiful responsive Bootstrap Template</a></p> 
+		                        </dd>
+		                    </dl>
+		                </div>
+					</div><!--/span4-->
+		
+					<div class="span4">
+			            <!-- Monthly Newsletter -->
+				        <div class="headline"><h3>Contact Us</h3></div>	
+		                <address>
+							25, Lorem Lis Street, Orange <br />
+							California, US <br />
+							Phone: 800 123 3456 <br />
+							Fax: 800 123 3456 <br />
+							Email: <a href="mailto:info@anybiz.com" class="">info@anybiz.com</a>
+		                </address>
+		
+		                <!-- Stay Connected -->
+				        <div class="headline"><h3>Stay Connected</h3></div>	
+		                <ul class="social-icons">
+		                    <li><a href="#" data-original-title="Feed" class="social_rss"></a></li>
+		                    <li><a href="#" data-original-title="Facebook" class="social_facebook"></a></li>
+		                    <li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
+		                    <li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
+		                    <li><a href="#" data-original-title="Pinterest" class="social_pintrest"></a></li>
+		                    <li><a href="#" data-original-title="Linkedin" class="social_linkedin"></a></li>
+		                    <li><a href="#" data-original-title="Vimeo" class="social_vimeo"></a></li>
+		                </ul>
+					</div><!--/span4-->
+				</div><!--/row-fluid-->	
+			</div><!--/container-->	
+		</div><!--/footer-->	
+		<!--=== End Footer ===-->
+    
+    	<!--=== Copyright ===-->
+		<div class="copyright">
+			<div class="container">
+				<div class="row-fluid">
+					<div class="span8">						
+			            <p>2013 &copy; Unify. ALL Rights Reserved. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+					</div>
+					<div class="span4">	
+						<a href="index.html"><img id="logo-footer" src="<?php echo $this->basePath();?>/assets/img/logo2-default.png" class="pull-right" alt="" /></a>
+					</div>
+				</div><!--/row-fluid-->
+			</div><!--/container-->	
+		</div><!--/copyright-->	
+		<!--=== End Copyright ===-->
+    
+    	<?php echo $this->inlineScript() ?>
+    	
+    	<script type="text/javascript">
+        jQuery(document).ready(function() {
+          	App.init();
+            App.initSliders();
+            Index.initParallaxSlider();
+            scrolltotop.init();
+        });
+        	
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-29166220-1']);
+		  _gaq.push(['_setDomainName', 'htmlstream.com']);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		</script>
+    </body>
+</html>

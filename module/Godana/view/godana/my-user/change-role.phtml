@@ -1,0 +1,139 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')?>
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Change role'); ?></h3>
+</div>
+<div class="panel-body">
+<? if ($this->status):?>
+<div class="alert alert-dismissable alert-success">
+<button data-dismiss="alert" class="close">×</button>
+<strong><?= $this->translate('Success!'); ?></strong> <?= $this->translate('Role changed successfully.'); ?> 
+</div>
+<? endif;?>
+<?php
+$form = $this->userRoleForm;
+$form->prepare();
+$user = $this->user;
+$userId = $user->getId();
+$form->setAttribute('action', $this->url('admin/user/role_change', array('lang' => $lang, 'userId' => $userId)));
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'form-horizontal');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? echo $this->formHidden($form->get('id'));?>
+<div class="form-group">
+    <label class="col-sm-3 control-label"><?=$this->translate('Name') ?></label>
+    <div class="col-sm-7">
+      <p class="form-control-static"><?=$user->getFirstName(); ?></p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label"><?=$this->translate('Email') ?></label>
+    <div class="col-sm-7">
+      <p class="form-control-static"><?=$user->getEmail(); ?></p>
+    </div>
+</div>
+
+<? $rolesCollection = $form->get('roles');?>
+
+<div id="roles-group">
+	<? foreach ($rolesCollection as $c):?>
+	<div class="roles-element">
+		<div class="form-group">
+			<?=$this->formLabel($c->get('id')); ?>
+			<div class="col-sm-7">
+			<?=$this->formElement($c->get('id')); ?>			
+			</div>
+		</div>		
+	</div>
+	<? endforeach;?>
+</div>
+<div class="form-group">
+	<span id="tplRole" data-template="<?=htmlspecialchars('<div class="roles-element"><div class="form-group"><label for="roles[__placeholder__][id]" class="col-sm-3 control-label">Role</label><div class="col-sm-7"><select name="roles[__placeholder__][id]" id="role-chosen-__placeholder__" class="form-control role-select"><option value="1">guest</option>
+	<option value="2">user</option>
+	<option value="3">moderator</option>
+	<option value="4">admin</option>
+	<option value="5">shop-owner</option></select></div></div>');?>"></span>
+	<div class="col-sm-7 col-sm-offset-3"></div>
+</div>
+
+<? echo $this->formHidden($form->get('csrf'));?>
+
+<div class="form-group">
+<div class="col-sm-4 col-sm-offset-3">
+<? echo $this->formElement($form->get('submit'));?>
+</div>
+</div>
+<?php echo $this->form()->closeTag() ?>
+</div>
+</div>
+</div>
+</div>
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js')?>
+			
+<script type="text/javascript">
+$(function() {
+	$(".role-select").select2({
+		minimumResultsForSearch: 10
+	});
+	/* ADDING MORE ROLE */
+	var tplRole = $('#tplRole');
+	var tplRoleManager = tplRole.parent();
+	var rolesGroup = $('#roles-group');
+	
+	
+	var addRole = function () {	    	    
+		var rolesCount = rolesGroup.find('.roles-element').length;
+	    rolesGroup.append(tplRole.data('template').replace(/__placeholder__/g, rolesCount));
+	    return rolesCount;
+	};
+
+	var removeBtnRoles =  $('<button class="btn btn-primary col-sm-offset-1"><i class="glyphicon glyphicon-minus"></i> <?=$this->translate('Role'); ?></button>')
+    .button({
+        icons: {
+            primary: 'ui-icon-circle-plus'
+        }
+    }).on('click', function(e) {
+        e.preventDefault();        
+        count = rolesGroup.find('.roles-element').length;
+        if (count == 2) {
+        	rolesGroup.find('.roles-element:last-child').remove();
+            $(this).remove();
+        } else {
+        	rolesGroup.find('.roles-element:last-child').remove();
+        }
+    });
+
+	
+
+	var btnRoles = $('<button class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> <?=$this->translate('Role'); ?></button>')
+	    .button({
+	        icons: {
+	            primary: 'ui-icon-circle-plus'
+	        }
+	    }).on('click', function (e) {
+	    	tplRoleManager.find('div').append(removeBtnRoles);
+	        e.preventDefault();
+	        $('.removeElement').html('');
+	        var index = addRole();
+	        $("#role-chosen-"+index).select2({ 
+	    		width: '100%',
+	    		minimumResultsForSearch: 10
+	    	});
+	        //addRemoveButton('#roles');
+	    });
+
+	tplRoleManager.find('div').append(btnRoles);
+	var initRolesCount = rolesGroup.find('.roles-element').length;
+	if (initRolesCount > 1) {	
+		tplRoleManager.find('div').append(removeBtnRoles);
+	}
+});
+</script>

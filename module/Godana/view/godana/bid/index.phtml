@@ -1,0 +1,807 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/blueimp-gallery.min.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.fileupload-ui.css')
+                ->appendStylesheet($this->basePath() . '/css/jquery.Jcrop.min.css')        ;?>
+<?  $this->plugin("currencyformat")->setCurrencyCode("MGA")->setLocale("fr_FR");?>
+<? $this->headTitle($this->translate('Bid'));?>
+<div class="row">
+	<div class="col-md-2 row-bid">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<ul class="nav nav-pills nav-stacked">
+                	<li class="<? echo $this->home_active; ?>">
+                    	<a href="<?php echo $this->url('home', array(), array(), true) ?>"><? echo $this->translate('Home');?></a>
+                    </li>
+                    <li>
+                        <a href="<?php echo $this->url('bid', array('type' => null, 'categoryIdent' => null), array(), true) ?>"><? echo $this->translate('Bid');?></a>
+                    </li>
+                    <li>
+                        <a href="<?php echo $this->url('shop', array('categoryIdent' => null), array(), true) ?>"><? echo $this->translate('Shops');?></a>
+                    </li>
+                    <li>
+                        <a href="<?php echo $this->url('tools', array(), true) ?>"><? echo $this->translate('Tools');?></a>
+                    </li>
+              	</ul> 
+            </div><!-- /.panel-body -->
+		</div><!-- /.panel -->     	
+	</div>
+	<div class="col-md-10 col-md-offset-1 row-bid">
+<div id="ctnr">
+<div class="row col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 row-new-bid hide">
+<div class="panel panel-default">		
+<div class="panel-body">
+<div class="bid_area">
+
+<div class="bid_container">
+<?php
+$form = $this->bidForm;
+$form->prepare();
+$form->setAttribute('action', '#');
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'bid-form');	
+
+$bid = $form->get('bid-form');
+$bidId = $bid->get('id');
+$typeBid = $bid->get('type');
+$select_city = $bid->get('idCity');
+$city = $bid->get('city');
+$price = $bid->get('price');
+
+
+$post = $bid->get('post');
+$postId = $post->get('id');
+$categories = $post->get('categories');
+$title = $post->get('title');
+$detail = $post->get('detail');
+$contactsCollection = $post->get('contacts');
+$published = $post->get('published');
+$modified = $post->get('modified');
+$deleted = $post->get('deleted');
+
+$csrf = $form->get('csrf');
+$submit = $form->get('submit');
+$reset = $form->get('reset');
+?>
+<?=$this->form()->openTag($form) ?>
+<?=$this->formHidden($bidId);?>
+<div class="form-group <? if($this->formElementErrors($typeBid)) 
+                                echo "has-error" ?>">
+	<?=$this->formLabel($typeBid); ?>
+	<div class="gdn_input_margin">
+		<?=$this->formElement($typeBid) ?>
+		<?=$this->formElementErrors()
+			->setMessageOpenFormat('<div class="help-block">')
+    		->setMessageSeparatorString('</div><div class="help-block">')
+    		->setMessageCloseString('</div>')
+    		->render($typeBid); ?>
+	</div>
+</div>
+
+<?=$this->formHidden($postId);?>
+<div class="form-group <? if($this->formElementErrors($categories)) 
+                                echo "has-error" ?>">
+	<?=$this->formLabel($categories); ?>
+	<div class="gdn_input_margin">
+		<?=$this->formElement($categories) ?>
+		<?=$this->formElementErrors()
+			->setMessageOpenFormat('<div class="help-block">')
+    		->setMessageSeparatorString('</div><div class="help-block">')
+    		->setMessageCloseString('</div>')
+    		->render($categories); ?>
+	</div>
+</div>
+<div class="form-group <? if($this->formElementErrors($title)) 
+                                echo "has-error" ?>">
+	<?=$this->formLabel($title); ?>
+	<div class="gdn_input_margin">
+		<?=$this->formElement($title) ?>
+		<?=$this->formElementErrors()
+			->setMessageOpenFormat('<div class="help-block">')
+    		->setMessageSeparatorString('</div><div class="help-block">')
+    		->setMessageCloseString('</div>')
+    		->render($title); ?>
+	</div>
+</div>
+<div class="form-group <? if($this->formElementErrors($detail)) 
+                                echo "has-error" ?>">
+	<?=$this->formLabel($detail); ?>
+	<div class="gdn_input_margin">
+		<?=$this->formElement($detail) ?>
+		<?=$this->formElementErrors()
+			->setMessageOpenFormat('<div class="help-block">')
+    		->setMessageSeparatorString('</div><div class="help-block">')
+    		->setMessageCloseString('</div>')
+    		->render($detail); ?>
+	</div>
+</div>
+<div class="form-group <? if($this->formElementErrors($price)) 
+                                echo "has-error" ?>">
+	<?=$this->formLabel($price); ?>
+	<div class="gdn_input_margin">
+		<div class="input-group"> 
+			<?php echo $this->formElement($price) ?>
+		    <span class="input-group-addon gdn_btn">Ariary</span>
+		</div>
+		<?=$this->formElementErrors()
+			->setMessageOpenFormat('<div class="help-block">')
+    		->setMessageSeparatorString('</div><div class="help-block">')
+    		->setMessageCloseString('</div>')
+    		->render($price); ?>
+	</div>
+</div>
+
+<div class="form-group <?php if($this->formElementErrors($select_city)) 
+	echo "has-error" ?>">
+	<?=$this->formLabel($select_city); ?>
+	<div class="gdn_input_margin">
+		<?php echo $this->formElement($select_city) ?>
+		<?php  echo $this->formElementErrors()
+			->setMessageOpenFormat('<div class="help-block">')
+		    ->setMessageSeparatorString('</div><div class="help-block">')
+		    ->setMessageCloseString('</div>')
+		    ->render($select_city); ?>
+	</div>
+</div>
+<?=$this->formHidden($city);?>
+
+<? foreach ($contactsCollection as $c):
+	$contactId = $c->get('id');
+	$contactType = $c->get('type');
+	$contactValue = $c->get('value');
+?>
+<div class="gdn_input_margin contact_group">
+	<div class="form-group <?php if($this->formElementErrors($contactValue)) 
+		echo "has-error" ?>">
+		<?=$this->formHidden($contactId); ?>
+		<?=$this->formHidden($contactType); ?>
+		<div class="input-group">
+	  		<div class="input-group-btn">
+				<button type="button" class="btn btn-default btn_lg gdn_btn dropdown-toggle" data-toggle="dropdown"><span class="contact_selected" data-type="1"><i class='fa fa-mobile-phone fa-2x'></i></span> <span class="caret"></span></button>
+				<ul class="dropdown-menu contact_choice">
+		  			<li><a href="#" data-value="1" ><i class="fa fa-mobile-phone fa-2x"></i> <?=$this->translate('Mobile') ?></a></li>
+		  			<li><a href="#" data-value="2" ><strong>@</strong> <?=$this->translate('Email')?></a></li>
+		  			<li><a href="#" data-value="3" ><i class="fa fa-home"></i> <?=$this->translate('Adress')?></a></li>
+		  			<li class="divider"></li>
+		  			<li><a href="#" class="add_contact"><i class="fa fa-plus"></i> <?=$this->translate('Contact') ?></a></li>
+				</ul>
+	  		</div><!-- /.input-group-btn -->
+	  		<?php echo $this->formElement($contactValue) ?>
+			<?php  echo $this->formElementErrors()
+				->setMessageOpenFormat('<div class="help-block">')
+			    ->setMessageSeparatorString('</div><div class="help-block">')
+			    ->setMessageCloseString('</div>')
+			    ->render($contactValue); ?>
+		</div><!-- /input-group -->
+	</div><!-- /.form-group -->
+</div><!-- /.contact_group -->
+<? endforeach;?>
+<span id="tplContact" data-template='
+<?=htmlspecialchars('<div class="gdn_input_margin contact_group"><div class="form-group"><input type="hidden" value="" name="bid-form[post][contacts][__placeholder__][id]">
+<input type="hidden" name="bid-form[post][contacts][__placeholder__][type]" class="contact_type"><div class="input-group">
+<div class="input-group-btn"><button data-toggle="dropdown" class="btn btn-default btn_lg gdn_btn dropdown-toggle" type="button"><span class="contact_selected" data-type="1"><i class="fa fa-mobile-phone fa-2x"></i></span> <span class="caret"></span></button>
+<ul class="dropdown-menu contact_choice">
+<li><a data-value="1" href="#"><i class="fa fa-mobile-phone fa-2x"></i> ')
+ . $this->translate('Mobile') .
+htmlspecialchars('</a></li><li><a data-value="2" href="#"><strong>@</strong> ')
+ . $this->translate('Email') .
+htmlspecialchars('</a></li><li><a data-value="3" href="#"><i class="fa fa-home"></i> ')
+ . $this->translate('Adress') .
+htmlspecialchars('</a></li><li class="divider"></li><li><a class="remove_contact" href="#"><i class="fa fa-minus"></i> ')
+ . $this->translate('Contact') . 
+htmlspecialchars('</a></li></ul></div><input type="text" value="" placeholder="')
+ . $this->translate('Contact') .
+htmlspecialchars('" class="gdn_text" name="bid-form[post][contacts][__placeholder__][value]"></div></div></div>'); ?>
+'></span>
+
+<? echo $this->formHidden($published);?>
+<? echo $this->formHidden($modified);?>
+<? echo $this->formHidden($deleted);?>
+<?=$this->formHidden($csrf);?>
+<div class="listFileId"></div>
+<div class="row">
+<div class="col-sm-12">
+<div class="fd_upload pull-left">
+	<button class="btn btn-info show-modal" ><i class="fa fa-camera"></i></button>
+</div>
+<div class="fd_action pull-right">
+	<?=$this->formElement($submit);?>&nbsp;
+	<?=$this->formElement($reset);?>
+</div>
+</div>
+</div>
+<?=$this->form()->closeTag();?>
+
+</div><!-- /.bid_container -->
+</div><!-- /.bid_area -->
+</div><!-- /.panel-body -->
+</div><!-- /.panel -->
+</div><!-- /.row-new-bid -->
+
+<div class="item-bid bid-create <? if (!$this->zfcUserIdentity()) echo "hide";?>">
+	<div class="panel panel-default">		
+		<div class="panel-body">
+			<div class="bid_area">
+				<div class="bj">
+					<div role="button" class="add_bid">What's new?</div>
+				</div>								
+			</div>
+		</div>
+	</div>
+</div><!-- /.bid-create -->
+
+<? $bids = $this->bids;?>
+<?  $this->plugin("currencyformat")->setCurrencyCode("MGA")->setLocale("fr_FR");?>
+<? $count = 0;?>
+<? foreach ($bids as $bid):?>
+<? $bidId = $bid->getId();?>
+<? $postIdent = $bid->getPost()->getIdent();?>
+<? $type = $bid->getType();?>
+<? if ($type === 0) {
+	$typeBid = 'offer';
+} else if ($type === 1) {
+	$typeBid = 'demand';
+}?>
+<? $price = $bid->getPrice();?>
+<? $city = $bid->getCity()->getCityAccented();?>
+<? $post = $bid->getPost();?>
+<? $postIdent = $post->getIdent();?>
+<? $user = $post->getUser();?>
+<? $comments = $post->getComments();?>
+<? $contacts = $post->getContacts();?>
+
+<? //$typeBid = $bid->getType() == 0 ? 'offer' : 'demand';?>
+<? $count++;?>
+<div class="item-bid">
+	<div class="panel panel-default">		
+		<div class="panel-body">
+			<div class="row post-header">
+				<div class="col-md-3 col-xs-3"><img src="<?=$this->userPicture('sm', $user); ?>" class="img-circle"/></div>
+				<div class="col-md-9 col-xs-9"><h4 class="post-user-name"><?=ucwords($this->zfcUserDisplayName($user)); ?></h4>
+				<h5 class="post-date"><small><?=$this->translate($this->displayTimeInterval($post->getPublished())); ?></small></h5></div>
+				<input type="hidden" class="hide" id="published" value="<?=$post->getPublished()->getTimestamp(); ?>"/>
+			</div>
+			<div class="post-body">
+				<h4 class="text-muted"><?=stripcslashes($post->getTitle()); ?></h4>
+				<p class="detail-feed"><?=stripcslashes($post->getDetail()); ?></p>
+				
+				<div class="form-horizontal">
+				<? if (isset($contacts) && count($contacts)):
+					foreach ($contacts as $contact):
+						$contactType = $contact->getType()->getName();
+						$contactValue = $contact->getValue();
+				?>
+					<div class="form-group">
+						<label class="col-sm-2 col-xs-3 control-label"><?=ucfirst($this->translate($contactType)); ?></label>
+						<div class="col-sm-10 col-xs-6">
+							<p class="form-control-static"><?=$contactValue ?></p>
+						</div>
+					</div>
+					<? endforeach;?>
+				<? endif;?>
+					<div class="form-group">
+						<label class="col-sm-2 col-xs-3 control-label"><?=$this->translate('Price') ?></label>
+						<div class="col-sm-10 col-xs-6">
+							<p class="form-control-static"><?=$this->currencyFormat($price); ?></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 col-xs-3 control-label"><?=$this->translate('City') ?></label>
+						<div class="col-sm-10 col-xs-6">
+							<p class="form-control-static"><?=$city ?></p>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.post-body -->
+			
+			<? $files = $post->getFiles();?>
+			<? $postId = $post->getId();?>
+			<? if (isset($files) && count($files) > 0):?>
+				<div class="row" id="<?=$post->getId(); ?>">
+					<? $file = $files[0];?>
+					<div class="col-xs-12 col-sm-12 col-md-12 img_area" >					  
+					    <a href="<?=$file->getRelativePath(); ?>" download="<?=$file->getName(); ?>" data-gallery="#blueimp-gallery-<?=$postId; ?>">
+					      <img src="<?=$file->getMediumRelativePath(); ?>" class="img-responsive center-block">
+					    </a>
+					  </div>
+				<? for ($i = 1; $i < count($files); $i++):
+					$file = $files[$i];
+				?>					
+					<div class="col-xs-6 col-sm-12 col-md-12 hide" >					  
+					    <a href="<?=$file->getRelativePath(); ?>" download="<?=$file->getName(); ?>" data-gallery="#blueimp-gallery-<?=$postId; ?>">
+					      <img src="<?=$file->getMediumRelativePath(); ?>" class="img-responsive">
+					    </a>
+					  </div>  	
+					  								
+				<? endfor;?>
+				</div><!-- /.row -->
+			<? endif;?>
+			<h4>
+			<? $categories = $post->getCategories();?>
+			<? if (isset($categories) && count($categories) > 0):?>	
+			<? foreach ($categories as $category):?>
+				<a class="btn btn-info btn-xs" href="#"><i class="fa fa-tag"></i> <?=$this->translate($category->getIdent()); ?></a>
+			<? endforeach;?>
+			<? endif;?>			
+			</h4>
+			<div class="cmt_area">
+				<? if (isset($comments) && count($comments)):?>
+				<? $nb_comments = count($comments);
+					$count = 0;
+					$max_to_show = 1;
+				?>
+				<div class="cmt_feed">
+					<? foreach ($comments as $comment):
+						$user = $comment->getUser();
+						$created = $comment->getCreated();
+						$detail = $comment->getDetail();
+					?>
+					<? if ($count < $max_to_show - 1):
+					?>
+					<div class="cmt hide" id="cmt_<?=$comment->getId(); ?>">
+					<? else:?>
+					<div class="cmt" id="cmt_<?=$comment->getId(); ?>">
+					<? endif;?>
+						<div class="row comment-header">
+							<div class="col-md-1 col-xs-1"><img src="<?=$this->userPicture('xs', $user); ?>" class="img-circle"/></div>
+							<div class="col-md-9 col-xs-8"><h5 class="comment-user-name"><?=ucwords($this->zfcUserDisplayName($user)); ?></h5>							
+							<h5 class="comment-date"><small><?=$this->translate($this->displayTimeInterval($created)); ?></small></h5></div>
+							<? $currentUser = $this->zfcUserIdentity();?>
+							<? if ($currentUser && $currentUser->getId() === $user->getId()): ?>
+							<div class="col-md-1 col-xs-1 rmv"><span class="glyphicon glyphicon-remove remove-button" title="<?=$this->translate('Remove'); ?>"></span></div>
+							<? endif;?>
+						</div>
+						<div class="comment-body"><?=stripcslashes($detail); ?></div>
+					</div>
+					<? $count++;?>
+					<? endforeach;?>
+				</div>
+				<? else: ?>
+				<div class="cmt_feed hide"></div>
+				<? endif;?>
+				<div class="bj">
+					<div class="add_cmt" role="button"><?=$this->translate('Add a comment...') ?></div>
+				</div>
+				<div class="cmt_container hide">
+					<form method="post" name="comment-form" action="#" class="comment-form">
+						<textarea class="cmt_textarea" name="detail"></textarea>
+						<input type="hidden" name="bid" value="<?=$bidId ?>"/>
+						<div class="cmt_action pull-right">
+							<button class="btn btn-primary btn-xs" id="save_cmt" name="submit" type="submit" data-loading-text="<?=$this->translate('Loading...'); ?>"><?=$this->translate('Comment') ?></button>&nbsp;
+							<button class="btn btn-danger btn-xs reset_cmt" type="reset"><?=$this->translate('Cancel') ?></button></div>
+					</form>
+				</div> <!-- end .cmt_container -->
+			</div> <!-- end .cmt_area -->			
+		</div> <!-- end  .panel-body -->	
+	</div> <!-- end .panel -->
+</div> <!-- end .item-bid -->
+<? endforeach;?>
+
+
+
+</div><!-- /.ctnr -->
+</div><!-- /.row-bid -->
+</div>
+
+<!--<div class="container">-->
+<!--<div class="row">-->
+<?/*=$this->paginationControl(
+		$this->paginator,
+ 		'sliding',
+ 		array('partial/paginator.phtml', 'Godana'),
+	 	array(
+	 		'route' => 'bid',
+	 		'typeBid' => $this->typeBid,
+	 		'categoryIdent' => $this->categoryIdent,
+	 		'lang' => $this->lang
+	 	)
+);*/
+?>
+<!--</div>-->
+<!--</div>-->
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+	<div class="slides"></div>
+	<h3 class="title"></h3>
+	<a class="prev">‹</a>
+	<a class="next">›</a>
+	<a class="close">×</a>
+	<a class="play-pause"></a>
+	<ol class="indicator"></ol>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog wide-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><?=$this->translate('Upload image'); ?></h4>
+      </div>
+      <div class="modal-body modal-body-modified">
+		<? 
+      	$form = $this->fileForm;
+		$form->prepare();
+		$form->setAttribute('class', 'form-inline');
+		echo $this->form()->openTag($form);
+		$elem = $form->get('files');
+		?>
+		<div class="row fileupload-buttonbar">
+            <div class="container media-content">
+            	<div class="row row-media hide">
+	            	<div class="col-md-8 image-preview-container">
+	            		<div class="container ">
+	            			<div class="row files"></div>		
+	            		</div>
+	            	</div>
+					<div class="col-md-4 image-edit-container">
+	            		<div class="container ">
+	            			<div class="row"><div class="col-md-12"><div class="image-detail-container"></div></div></div>		
+	            		</div>
+	            	</div>
+            	</div>
+            	<div class="row row-upload">
+					<div class="img-selection center-block center-vertical">
+						<div class="file-upload-btn ">
+							<span class="btn btn-default btn-lg  fileinput-button">
+			                    <span><?=$this->translate('Add images'); ?></span>
+			                    <?php echo $this->formFile($elem); ?>
+							</span>
+		                </div>		
+		                <?=$this->translate('or'); ?>               
+						<button class="btn btn-default btn-lg btn-choose"><?=$this->translate('Choose images'); ?></button>
+					</div>
+            	</div>
+			</div>
+        </div>
+         <?php echo $this->form()->closeTag($form); ?>
+      </div><!-- /.modal-body -->      
+      
+      <div class="modal-footer modal-footer-modified">
+		<button class="btn btn-default btn-preview-add-image pull-left hide"><?=$this->translate('Add images'); ?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?=$this->translate('Close'); ?></button>
+        <button type="button" id="save-images" class="btn btn-primary" disabled="disabled"><?=$this->translate('Insert into post'); ?></button>
+      </div><!-- /.modal-footer -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+<div class="col-md-4 template-upload fade">
+{% if (i) { %}
+	<span class="preview">
+       	{% if (file.thumbnailUrl) { %}
+           	<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    	{% } %}
+		
+	</span>
+{% } else { %}
+	<div class="my-progress fileupload-progress fade">
+		<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			<div class="progress-bar progress-bar-success" style="width:0%;"></div>
+		</div>
+	</div>
+	<strong class="error text-danger"></strong>
+	<button class="btn btn-warning cancel">
+    	<i class="glyphicon glyphicon-ban-circle"></i>
+        <span>Cancel</span>
+	</button>
+{% } %}
+</div>
+{% } %}
+</script>
+
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+{% if (file.thumbnailUrl) { %}
+	<div class="col-md-4 template-download fade">
+		<span class="preview">		
+			<img src="{%=file.thumbnailUrl%}" class="img-thumbnail img-thumbnail-preview">
+			<span class="my-zoom-icon">
+				<a href='#' data-toggle="tooltip" title="Deselect" class="deselect my-tooltip"><span class="glyphicon glyphicon-minus"></span></a> 
+				<a href="#" data-toggle="tooltip" title="Crop" class="crop my-tooltip"><span class="glyphicon glyphicon-th"></span></a> 
+				<a href="#" class="delete my-tooltip"  data-toggle="tooltip" title="Delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}><span class="glyphicon glyphicon-remove"></span></a>
+			</span>
+			<input type="hidden" class="fileId" value="{%=file.id%}"/>		
+		
+			<input type="checkbox" name="delete" value="1" class="toggle hidden">
+		</span>	
+	</div>
+{% } %}
+{% if (file.error) { %}
+	<div class="col-md-4 template-download fade">
+    	<div class="error-file"><span class="label label-danger">Error</span> {%=file.error%}</div>
+	</div>
+		{% } %}
+{% } %}
+</script>
+
+<script type="text/javascript">
+<!--
+var category_placeholder = "<?=$this->translate('Categories'); ?>";
+var urlForm = "<?=$this->url('add-ajax-bid', array(), array(), true); ?>",
+	city_url = "<?=$this->url('admin/shop_admin/city', array(), array(), true); ?>",
+	ajaxUrl = "<?=$this->url('upload', array(), array(), true); ?>";
+$(function() {
+	var type_opts = {
+		minimumResultsForSearch: 10,
+//		placeholder: "Type"
+	};
+	$(".type-select").data("s1opts", type_opts).select2(type_opts);
+	var category_opts = {
+		placeholder: category_placeholder,
+		minimumResultsForSearch: 10
+	};
+	$(".category-select").data("s2opts", category_opts).select2(category_opts);
+	var city_opts = {
+		placeholder: "Search for a city",
+		minimumInputLength: 3,
+		ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+			url: city_url,
+		    dataType: 'json',
+		    quietMillis: 100,
+		    data: function (term, page) {
+		    	return {
+		        	q: term, // search term
+		            page_limit: 10,
+		            page: page // page number
+		       	};
+		   	},
+		    results: function (data, page) { // parse the results into the format expected by Select2.
+		    	// since we are using custom formatting functions we do not need to alter remote JSON data
+		        var more = (page * 10) < data.total; // whether or not there are more results available
+		        return {results: data.results, more: more};
+		    }
+		},
+		formatSelection: format,
+		formatResult: format
+	};
+	$("#id_city").data("s3opts", city_opts).select2(city_opts);
+	$('#id_city').change(function(e) {
+		$('#city').val($(this).val());
+	});
+	var container = document.querySelector('#ctnr');
+	var msnry = new Masonry( container, {
+	  // options
+	  columnWidth: 68,
+	  itemSelector: '.item-bid'
+	});
+	
+	msnry.layout();
+
+	$('textarea').autosize({
+		callback: function(e) {
+			msnry.layout();
+		}
+	});
+
+	$('.show-modal').godana({
+		doCrop: false,
+		ajaxUrl: ajaxUrl+'?type=bid'
+	});
+
+	$(document).on("click", ".add_bid", function(e) {
+		e.preventDefault();
+		$(this).parents('.bid_area').find('.fd_text').focus();
+		$('.bid-create').addClass('hide');
+		$('.row-new-bid').removeClass('hide');
+		msnry.stamp( $('.row-new-bid') );
+		msnry.layout();
+	});
+
+	$(document).on("click", ".reset_bid", function(e) {
+		e.preventDefault();
+		var that = this;
+		msnry.unstamp( $('.row-new-bid') );
+		$('.row-new-bid').addClass('hide');
+		$('#save_bid').button('reset');
+		$('.bid-create').removeClass('hide');
+		var contactsCount = $('.bid-form').find('.contact_group').length;
+		while (contactsCount > 1) {
+			$( '.contact_group:last' ).remove();
+			contactsCount--;
+		}
+		resetForm($("form[name=create-bid-form]"));
+		
+		$(".type-select").select2('val', '');
+		$(".category-select").select2('val', '');
+		$("#id_city").select2("val", "");		
+		$('.listFileId').html("");		
+		$('.form-group').removeClass('has-error');
+		$('.help-block').remove();
+		$('.contact_type').val(1);
+		msnry.layout();
+	});
+
+	$(document).on("click", ".add_contact", function() {
+		var contactsCount = $('.bid-form').find('.contact_group').length;
+		var template = $("#tplContact").data('template').replace(/__placeholder__/g, contactsCount);	
+		$(template).insertAfter( '.contact_group:last' );		
+		$( '.contact_group:last' ).find('.contact_type').val(1);		
+		msnry.layout();
+		return false;
+	});
+
+	$('.contact_type').val(1);
+
+	$(document).on("click", ".contact_choice a", function() {
+		var choice = $(this).data('value');
+		var contact_selected = $(this).parents('.input-group-btn').find('.contact_selected');  
+		var contact_type = $(this).parents('.contact_group').find('.contact_type');
+		//$(contact_selected).data("type", 45);
+		switch (choice) {
+			case 1: // Mobile 
+				$(contact_selected).html("<i class='fa fa-mobile-phone fa-2x'></i>");
+				break;
+			case 2: // Email
+				$(contact_selected).html("<strong>@</strong>");
+				break;
+			case 3: // Address
+				$(contact_selected).html("<i class='fa fa-home fa-lg'></i>");
+				break;
+		}
+		if (!$(this).hasClass('add_contact') && !$(this).hasClass('remove_contact')) {	
+			//console.log('add_contact');		
+			$(contact_type).val(choice);
+		}
+		$(this).parents('.input-group-btn').removeClass('open');
+		return false;
+	});
+
+	$(document).on("click", ".remove_contact", function() {
+		$( '.contact_group:last' ).remove();
+		msnry.layout();
+		return false;
+	});
+
+	$('#save-images').click(function(e) {
+		$('.fileId').each(function() {
+			if ($(this).hasClass('file-selected')) {				
+	   			$('.listFileId').append('<input type="hidden" name="file-id[]" class="file-id" value="'+$(this).val()+'">');
+			}   		
+		});
+		$('#myModal').modal('hide');		
+		return false;
+	});
+
+	$("form#create-bid-form").submit(function() {		
+        
+        $('#save_bid').button('loading'); 
+		$.post(
+			urlForm,
+			$("form#create-bid-form").serialize(),
+            function(itemJson) {
+            	var error = false;
+            	var errorType = itemJson.type;
+            	var errorCity = itemJson.city;
+            	var errorPrice = itemJson.price;
+            	var post = itemJson.post;
+            	if (post != undefined) {                	
+            		var errorCategories = post.categories;
+            		var errorTitle = post.title;
+            		var contacts = post.contacts;
+            	}
+            	
+                if (errorType != undefined && errorType.length) {	                
+	            	var element = $('select[name="bid-form[type]"]');
+	            	addError(element, errorType);	                                
+                    error = true;
+                }    
+                if (errorCity != undefined && errorCity.length) {	                
+	            	var element = $('input[name="bid-form[idCity]"]');
+	            	addError(element, errorCity);	                                
+                    error = true;
+                }
+                if (errorPrice != undefined && errorPrice.length) {	                
+	            	var element = $('input[name="bid-form[price]"]');
+	            	addError(element, errorPrice);	                                
+                    error = true;
+                }
+                if (errorCategories != undefined && errorCategories.length) {	                
+	            	var element = $('select[name="bid-form[post][categories][]"]');
+	            	addError(element, errorCategories);	                                
+                    error = true;
+                } 
+                if (errorTitle != undefined && errorTitle.length) {	                
+	            	var element = $('input[name="bid-form[post][title]"]');
+	            	addError(element, errorTitle);	                                
+                    error = true;
+                }  
+                if (contacts != undefined) {
+                	for (var i = 0; i < contacts.length; i++) {
+                        errorContact = contacts[i].value;
+                        if (errorContact != undefined && errorContact.length) {
+                        	var element = $('input[name="bid-form[post][contacts]['+i+'][value]"]');
+                        	addError(element, errorContact);	                                
+                            error = true;    
+                        }
+                    }
+                }              
+                
+                if (error) {
+                	msnry.layout(); 
+                }
+                if (!error) {     
+                	if (itemJson.success) {
+                		msnry.unstamp( $('.row-new-bid') );
+                		$('.row-new-bid').addClass('hide');
+                		$('#save_bid').button('reset');
+                		$('.bid-create').removeClass('hide');
+                		msnry.layout();
+                		var contactsCount = $('.bid-form').find('.contact_group').length;
+                		while (contactsCount > 1) {
+                			$( '.contact_group:last' ).remove();
+                			contactsCount--;
+                		}
+						var item_bid = itemJson.item_bid;
+						$(item_bid).insertAfter($('.bid-create'));						
+						resetForm($("form[name=create-bid-form]"));
+						$('.listFileId').html("");
+						$(".type-select").select2('val', '');
+						$(".category-select").select2('val', '');
+						$("#id_city").select2("val", "");
+						msnry.reloadItems();
+						msnry.layout();
+						$('textarea').autosize({
+							callback: function(e) {
+								msnry.layout();
+							}
+						});
+                    }
+                }
+                 
+        	},
+        	'json'
+        );         
+        return false;
+    });	
+
+	
+
+	function format(item) { return item.text; };
+});
+function resetForm($form) {
+	$form.find('input:text, input:hidden, input:password, input:file, select, textarea').val('');
+	$form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');				
+}  
+function addError(element, error) {      
+	$(element).parents('.form-group').addClass('has-error');
+    var errorMessage = '';
+    for (var i = 0; i < error.length; i++) {
+    	errorMessage += '<div class="help-block">'+error[i]+'</div>';
+	}
+	var input_group = $(element).parent('.input-group');
+	if (input_group.length) {
+		$(errorMessage).insertAfter(input_group);
+	} else {		
+    	$(errorMessage).insertAfter(element);
+	}
+}
+//-->
+</script>
+
+<? $this->inlineScript()
+	->appendFile($this->basePath() . '/js/select2.min.js')
+	->appendFile($this->basePath() . '/js/bootbox.min.js')
+	->appendFile($this->basePath() . '/js/readmore.min.js')
+	->appendFile($this->basePath() . '/js/jquery.autosize.min.js')
+//	->appendFile($this->basePath() . '/js/bid-upload.js')
+	->appendFile($this->basePath() . '/js/jquery.godana.js')
+	->appendFile($this->basePath() . '/js/vendor/jquery.ui.widget.js')
+    ->appendFile($this->basePath() . '/js/tmpl.min.js')
+    ->appendFile($this->basePath() . '/js/load-image.min.js')
+    ->appendFile($this->basePath() . '/js/canvas-to-blob.min.js')
+    ->appendFile($this->basePath() . '/js/jquery.blueimp-gallery.min.js')
+    ->appendFile($this->basePath() . '/js/jquery.iframe-transport.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload-process.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload-video.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload-ui.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload-validate.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload-image.js')
+    ->appendFile($this->basePath() . '/js/jquery.fileupload-audio.js')
+    ->appendFile($this->basePath() . '/js/jquery.Jcrop.min.js')
+	->appendFile($this->basePath() . '/js/masonry.pkgd.min.js');?>

@@ -1,0 +1,324 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')
+                ->appendStylesheet($this->basePath() . '/css/bootstrap-datetimepicker.min.css');?>
+<? $this->headTitle($this->translate('Admin Cooperative'));?>
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+<div class="panel panel-primary">
+<div class="panel-heading">
+	<h3 class="panel-title"><?php echo $this->translate('Create reservation board'); ?></h3>
+</div>
+<div class="panel-body">
+<? if ($this->status):?>
+<div class="alert alert-dismissable alert-success">
+<button data-dismiss="alert" class="close">×</button>
+<strong><?= $this->translate('Success!'); ?></strong> <?= $this->translate('Car added successfully.'); ?> 
+</div>
+<? endif;?>
+<?php
+$form = $this->reservationBoardForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('admin/cooperative/reservation_board_create', array('lang' => $this->lang)));
+$form->setAttribute('method', 'post');
+?>
+<?php echo $this->form()->openTag($form) ?>
+<? $reservationBoard = $form->get('reservation-board-form'); ?>
+<? echo $this->formHidden($reservationBoard->get('id'));?>
+<? $cooperative = $reservationBoard->get('cooperative'); ?>
+<div class="form-group <?php if($this->formElementErrors($cooperative)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($cooperative); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($cooperative) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($cooperative); ?>
+</div>
+</div>
+<? $zone = $reservationBoard->get('zone'); ?>
+<div class="form-group <?php if($this->formElementErrors($zone)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($zone); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($zone) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($zone); ?>
+</div>
+</div>
+<? $line = $reservationBoard->get('line'); ?>
+<div class="form-group <?php if($this->formElementErrors($line)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($line); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($line) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($line); ?>
+</div>
+</div>
+
+
+<? $departureTime = $reservationBoard->get('departureTime'); ?>
+<div class="form-group <?php if($this->formElementErrors($departureTime)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($departureTime); ?>
+<div class="gdn_input_margin">
+<div class='input-group date' id='datetimepicker1'>
+<?php echo $this->formElement($departureTime) ?>
+<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+</div>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($departureTime); ?>    
+</div>
+</div>
+
+<? $car = $reservationBoard->get('car'); ?>
+<div class="form-group <?php if($this->formElementErrors($car)) 
+echo "has-error" ?>">
+<?php echo $this->formLabel($car); ?>
+<div class="gdn_input_margin">
+<?php echo $this->formElement($car) ?>
+<?php  echo $this->formElementErrors()
+	->setMessageOpenFormat('<div class="help-block">')
+    ->setMessageSeparatorString('</div><div class="help-block">')
+    ->setMessageCloseString('</div>')
+    ->render($car); ?>
+</div>
+</div>
+<? echo $this->formHidden($form->get('csrf'));?>
+<div class="fd_action pull-right">
+	<?=$this->formElement($form->get('submit'));?>
+</div>
+<?php echo $this->form()->closeTag() ?>
+</div>
+</div>
+</div>
+</div>
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js')
+			->appendFile($this->basePath() . '/js/moment.min.js')			
+			->appendFile($this->basePath() . '/js/bootstrap-datetimepicker.min.js')
+//			->appendFile($this->basePath() . '/js/bootstrap-datepicker.js')
+//			->appendFile($this->basePath() . '/js/locales/bootstrap-datepicker.fr.js');?>
+
+<script type="text/javascript">
+var url = "<?=$this->url('admin/cooperative/reservation_car_ajax', array(), array(), true); ?>";
+$(function() {
+	var nowTemp = new Date();
+	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+	$('#datetimepicker1').datetimepicker({
+		useSeconds: false
+	}).on("show.dp", function(e) {
+		$('#datetimepicker1').data("DateTimePicker").setStartDate(moment()); 
+	});
+	$(".cooperative-select").select2({
+		minimumResultsForSearch: 10		
+	}).on("change", function(event){
+		if(event.target == this){
+			var cooperativeId = event.val;
+			$(".zone-select").off("change");
+			$(".zone-select").select2({
+				placeholder: "Select zone",
+				minimumResultsForSearch: 10,
+				ajax: {
+			        url: url+"?cooperativeId="+cooperativeId,
+			        dataType: 'json',
+			        quietMillis: 100,
+			        
+			        results: function (data) {
+			            return {results: data.zone};
+			        }
+			    }
+			}).on("change", function(event){
+				if(event.target == this){
+					var zoneId = event.val;
+					$(".line-select").select2({
+						placeholder: "Select line",
+						minimumResultsForSearch: 10,
+						ajax: {
+							url: url+"?zoneId="+zoneId+"&cooperativeId="+cooperativeId,
+					        dataType: 'json',
+					        quietMillis: 100,
+					        
+					        results: function (data) {
+					            return {results: data};
+					        }
+					    }
+					});
+				}
+			});
+			var zoneId = $(".zone-select").select2("val");
+			$(".line-select").select2({
+				placeholder: "Select line",
+				minimumResultsForSearch: 10,
+				ajax: {
+					url: url+"?zoneId="+zoneId+"&cooperativeId="+cooperativeId,
+			        dataType: 'json',
+			        quietMillis: 100,
+			        
+			        results: function (data) {
+			            return {results: data};
+			        }
+			    }
+			}).on('change', function(event){
+				if(event.target == this){
+					var lineId = event.val;
+					$('#datetimepicker1').datetimepicker().on("change.dp", function(e) {
+						var departureTime = e.date;
+						$(".car-select").select2({
+							placeholder: "Select car",
+							minimumResultsForSearch: 10,
+							ajax: {
+								url: url+"?departureTime="+departureTime+"&lineId="+lineId+"&cooperativeId="+cooperativeId,
+						        dataType: 'json',
+						        quietMillis: 100,
+						        
+						        results: function (data) {
+						            return {results: data};
+						        }
+						    }	
+						});
+					});
+					var departureTime = $('#datetimepicker1').data("DateTimePicker").getDate();
+					$(".car-select").select2({
+						placeholder: "Select car",
+						minimumResultsForSearch: 10,
+						ajax: {
+							url: url+"?departureTime="+departureTime+"&lineId="+lineId+"&cooperativeId="+cooperativeId,
+					        dataType: 'json',
+					        quietMillis: 100,
+					        
+					        results: function (data) {
+					            return {results: data};
+					        }
+					    }	
+					});
+				}
+			});
+			var departureTime = $('#datetimepicker1').data("DateTimePicker").getDate();
+			var lineId = $(".line-select").select2("val");
+			$(".car-select").select2({
+				placeholder: "Select car",
+				minimumResultsForSearch: 10,
+				ajax: {
+					url: url+"?departureTime="+departureTime+"&lineId="+lineId+"&cooperativeId="+cooperativeId,
+			        dataType: 'json',
+			        quietMillis: 100,
+			        
+			        results: function (data) {
+			            return {results: data};
+			        }
+			    }	
+			});
+		}
+	});
+	var cooperativeId = $(".cooperative-select").select2("val");	
+	$(".zone-select").select2({
+		placeholder: "Select zone",
+		minimumResultsForSearch: 10,
+		ajax: {
+	        url: url+"?cooperativeId="+cooperativeId,
+	        dataType: 'json',
+	        quietMillis: 100,
+	        
+	        results: function (data) {
+	            return {results: data.zone};
+	        }
+	    }
+	}).on("change", function(event){
+		if(event.target == this){
+			var zoneId = event.val;
+			$(".line-select").select2({
+				placeholder: "Select line",
+				minimumResultsForSearch: 10,
+				ajax: {
+					url: url+"?zoneId="+zoneId+"&cooperativeId="+cooperativeId,
+			        dataType: 'json',
+			        quietMillis: 100,
+			        
+			        results: function (data) {
+			            return {results: data};
+			        }
+			    }
+			});
+		}
+	});
+	var zoneId = $(".zone-select").select2("val");
+	$(".line-select").select2({
+		placeholder: "Select line",
+		minimumResultsForSearch: 10,
+		ajax: {
+			url: url+"?zoneId="+zoneId+"&cooperativeId="+cooperativeId,
+	        dataType: 'json',
+	        quietMillis: 100,
+	        
+	        results: function (data) {
+	            return {results: data};
+	        }
+	    }
+	}).on('change', function(event){
+		if(event.target == this){
+			var lineId = event.val;
+			$('#datetimepicker1').datetimepicker().on("change.dp", function(e) {
+				var departureTime = e.date;
+				$(".car-select").select2({
+					placeholder: "Select car",
+					minimumResultsForSearch: 10,
+					ajax: {
+						url: url+"?departureTime="+departureTime+"&lineId="+lineId+"&cooperativeId="+cooperativeId,
+				        dataType: 'json',
+				        quietMillis: 100,
+				        
+				        results: function (data) {
+				            return {results: data};
+				        }
+				    }	
+				});
+			});
+			var departureTime = $('#datetimepicker1').data("DateTimePicker").getDate();
+			$(".car-select").select2({
+				placeholder: "Select car",
+				minimumResultsForSearch: 10,
+				ajax: {
+					url: url+"?departureTime="+departureTime+"&lineId="+lineId+"&cooperativeId="+cooperativeId,
+			        dataType: 'json',
+			        quietMillis: 100,
+			        
+			        results: function (data) {
+			            return {results: data};
+			        }
+			    }	
+			});
+		}
+	});
+	var departureTime = $('#datetimepicker1').data("DateTimePicker").getDate();
+	var lineId = $(".line-select").select2("val");
+	$(".car-select").select2({
+		placeholder: "Select car",
+		minimumResultsForSearch: 10,
+		ajax: {
+			url: url+"?departureTime="+departureTime+"&lineId="+lineId+"&cooperativeId="+cooperativeId,
+	        dataType: 'json',
+	        quietMillis: 100,
+	        
+	        results: function (data) {
+	            return {results: data};
+	        }
+	    }	
+	});
+	
+	
+});
+</script>

@@ -1,0 +1,129 @@
+<?php echo $this->headLink()
+                ->appendStylesheet($this->basePath() . '/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css');?>
+<div class="row">
+<? $reservationBoard = $this->reservationBoard;
+if (isset($reservationBoard)):
+	$line = $reservationBoard->getLine();
+	$reservationBoardId = $reservationBoard->getId();
+	$car = $reservationBoard->getCar();
+	$carSeats = $car->getLineCarSeats($line);
+	$carColumns = $car->getLineCarColumns($line);
+	$fare = $car->getLineCarFare($line);
+	$reservations = $reservationBoard->getReservations();
+	$reservationSeats = array();
+	foreach ($reservations as $reservation) {
+		array_push($reservationSeats, $reservation->getSeat());
+	}
+	
+?>
+<? if ($carColumns == 3):?>
+<div class="col-md-6 col-xs-12 col-sm-7">
+<? elseif ($carColumns == 4):?>
+<div class="col-md-7 col-xs-12 col-sm-12">
+<? endif;?>
+<div class="panel panel-default">		
+		<div class="panel-body">
+		<? $carMake = $reservationBoard->getCar()->getModel()->getMake()->getName();?>
+		<img alt="" src="<?=$this->basePath().'/img/car/'.$carMake.'.jpg' ?>" width="120" height="30" class="img-responsive center-block">		
+<? 
+if ($carColumns == 3):
+$count = 1;
+?>
+<span class="user-sprite driver" title="Driver"></span>
+<? elseif ($carColumns == 4):
+$count = 2;
+?>
+<span class="user-sprite driver" title="Driver"></span>
+<span class="user-sprite driver" title="Driver"></span>
+<? endif;
+for ($i = 0; $i < $carSeats; $i++):
+	$seatNumber = $i + 1;
+	$count++;	
+	if (in_array($seatNumber, $reservationSeats)):
+	 	$key = array_search($seatNumber, $reservationSeats);
+		$res = $reservations[$key];
+		$reservationId = $res->getId();
+		$passenger = $res->getPassenger();
+		$p_name = $passenger->getName();
+		$is_fully_paid = true;
+		if ($res->getPayment() < $fare) {
+			$is_fully_paid = false;
+		}
+		$title = $passenger->getTitle();
+		if ($title == 0) {
+			$p = "Mr ".ucwords($p_name);
+		} else if ($title == 1) {
+			$p = "Mme ".ucwords($p_name);
+		} else if ($title == 2) {
+			$p = "Ms ".ucwords($p_name);
+		}		
+	?>
+	<a href="#" class="detail-seat detail-taken" title="<?=$p; ?>"
+	data-toggle="modal" data-target="#myModal" data-reservation-id="<?=$reservationId; ?>"  data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>">
+		<? if ($is_fully_paid):?>	
+			<span class="user-sprite seat-paid"></span>
+		<? else:?>
+			<span class="user-sprite seat-taken"></span>
+		<? endif;?>
+	<? else:?>
+	<a href="#" class="detail-seat detail-available" title="Seat-<?=$seatNumber; ?>"
+	data-toggle="modal" data-target="#myModal" data-seat-id="<?=$seatNumber; ?>" data-resboard-id="<?=$reservationBoardId; ?>">
+	<span class="user-sprite seat-available"></span>
+	<? endif;?>
+	</a>
+	<? if ($count % 3 == 0 && $carColumns == 3):?>
+		<div class="clearfix visible-md"></div>
+		<div class="clearfix visible-sm"></div>
+		<div class="clearfix visible-xs"></div>
+	<? elseif ($count % 4 == 0 && $carColumns == 4):?>
+		<div class="clearfix visible-md"></div>
+		<div class="clearfix visible-sm"></div>
+		<div class="clearfix visible-xs"></div>
+	<? endif;
+endfor;
+endif;?>
+
+</div>
+<div class="panel-footer"><span class="label label-primary">Driver</span> <span class="label label-default">Empty</span>
+<span class="label label-warning">Taken</span> <span class="label label-danger">Paid</span></div>
+</div>
+</div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">  
+<div class="modal-dialog">    
+
+      
+</div><!-- /.modal-dialog --> 
+</div><!-- /.modal -->
+
+<? $this->inlineScript()
+			->appendFile($this->basePath() . '/js/select2.min.js');?>
+<script type="text/javascript">
+var urlForm = "<?=$this->url('admin/cooperative/show_reservation_form', array(), array(), true); ?>";
+$(function() {
+	
+	$(document).on('click', '.detail-seat', function() {
+		var seat = $(this).data('seat-id');
+		var resBoardId = $(this).data('resboard-id');
+		if ($(this).hasClass('detail-taken')) {
+			var reservationId = $(this).data('reservation-id');
+			$('#myModal').modal().find('.modal-dialog').load(urlForm+'?reservationId='+reservationId, function() {	
+			});
+		} else {
+			$('#myModal').modal().find('.modal-dialog').load(urlForm, function() {
+				$('input[name="reservation-form[seat]"]').val(seat);
+				$('input[name="reservation-form[reservationBoard]"]').val(resBoardId);
+			});
+		}	
+	});
+
+	$('#myModal').on('hide.bs.modal', function(e) {
+		$('.modal-body').html("");
+		$('.btn-save').button('reset');
+	});
+	
+});
+</script>
