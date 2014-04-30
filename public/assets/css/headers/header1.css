@@ -120,6 +120,28 @@
 	color:#aaa;
 }
 
+/* User
+-----------------------------------*/
+
+.loginbar li ul.nav-user { 
+	top:30px; 
+	margin:0;
+	left:78px;
+	display:none; 
+	padding-top:4px;
+	position:absolute; 
+	border-radius:3px;
+	padding-bottom:4px;
+	background:#f0f0f0;
+}
+
+.loginbar li:hover ul.nav-user { 
+	display:block; 
+}
+
+.loginbar li i.icon-sort-up.sort-up-user {
+    left: 164px;
+}
 /*Header (logo and menu)
 ------------------------------------*/
 .header {

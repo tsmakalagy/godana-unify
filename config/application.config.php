@@ -14,6 +14,10 @@ return array(
 		'BjyProfiler',
 		'jqueryFileUpload',
 		'GoalioMailService',
+		'GoalioRememberMe',
+		'GoalioRememberMeDoctrineORM',
+		'GoalioForgotPassword',
+		'GoalioForgotPasswordDoctrineORM',
 		'Godana'
     ),
 

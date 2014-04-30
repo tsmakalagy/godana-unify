@@ -5,6 +5,7 @@ $form->setAttribute('action', $this->url('zfcuser/login', array(), array(), true
 $form->setAttribute('method', 'post');
 $form->setAttribute('role', 'form');
 ?>
+<div class="container">
 <div class="margin-top-40 log-page">
 <?php echo $this->form()->openTag($form) ?>
 <h3 class="center">Login to your account</h3>
@@ -27,7 +28,7 @@ $form->setAttribute('role', 'form');
 	<?php echo $this->formInput($form->get('credential')) ?>
 </div>
 <div class="controls form-inline">
-	<label class="checkbox"><input type="checkbox" /> Stay Signed in</label>
+	<label class="checkbox inline"><?php echo $this->formCheckbox($form->get('remember_me')) ?> <?php echo $this->translate('Stay logged in') ?></label>
 	<?php echo $this->formButton($form->get('submit')) ?>
 </div>
 <?php echo $this->form()->closeTag() ?>
@@ -38,12 +39,14 @@ $form->setAttribute('role', 'form');
 <?php     echo $this->mySocialSignInButton('facebook') ?>	
 </div>
 
-<div class="gdn-register center">
+<div class="gdn-register">
 <a href="<?php echo $this->url('zfcuser/register', array(), array(), true) . 
-($this->redirect ? '?redirect='.$this->redirect : '') ?>" class="btn-u btn-u-red btn-block"><?php echo $this->translate('Sign up'); ?></a>
+($this->redirect ? '?redirect='.$this->redirect : '') ?>" class="btn-u btn-u-red pull-right"><?php echo $this->translate('Sign up'); ?></a>
+<a href="<?php echo $this->url('zfcuser/forgotpassword') ?>">Forgot your password?</a>
+</div>
+<div class="clearfix"></div>
 </div>
 </div>
-
 <script type="text/javascript">
 $(function() {
 	window.setTimeout(function() {

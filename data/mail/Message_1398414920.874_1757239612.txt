@@ -1,0 +1,22 @@
+Date: Fri, 25 Apr 2014 11:35:20 +0300
+From: =?utf-8?Q?tsmakalagy@yahoo.fr?= <tsmakalagy@yahoo.fr>
+Subject: =?utf-8?Q?Godana=20activation=20link?=
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="=_3a45ad2da77c46afe6a6716e6e8c1443"
+To: tsmakalagy@yahoo.fr
+
+This is a message in Mime Format.  If you see this, your mail reader does not support this format.
+
+--=_3a45ad2da77c46afe6a6716e6e8c1443
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+
+
+--=_3a45ad2da77c46afe6a6716e6e8c1443
+Content-Type: text/html
+Content-Transfer-Encoding: 8bit
+
+<p>Click this link to activate your account on Godana <a href="http://localhost.godana.unify/mg/user/activation/done?token=12a54589902d894a4c3ae17c23a9869a&email=tsmakalagy@yahoo.fr">http://localhost.godana.unify/mg/user/activation/done?token=12a54589902d894a4c3ae17c23a9869a&email=tsmakalagy@yahoo.fr</a>.</p>
+<p>We thank you for taking your time.</p>
+--=_3a45ad2da77c46afe6a6716e6e8c1443--

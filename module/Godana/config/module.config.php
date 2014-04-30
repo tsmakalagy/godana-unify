@@ -111,7 +111,7 @@ return array(
                             'route' => '/login',
                             'defaults' => array(
                                 'controller' => 'zfcuser',
-                                'action'     => 'login',
+                                'action'     => 'ajaxLogin',
                             ),
                         ),
                     ),

@@ -111,7 +111,7 @@ class User implements UserInterface, ProviderInterface
     
      /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true, name="last_ip")
+     * @ORM\Column(type="integer", length=20, nullable=true, name="last_ip")
      */
     protected $lastIp;
     
@@ -123,7 +123,7 @@ class User implements UserInterface, ProviderInterface
     
      /**
      * @var int
-     * @ORM\Column(type="integer", name="register_ip")
+     * @ORM\Column(type="integer", length=20, name="register_ip")
      */
     protected $registerIp;
     

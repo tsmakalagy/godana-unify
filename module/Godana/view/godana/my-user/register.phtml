@@ -2,6 +2,7 @@
 				->appendStylesheet($this->basePath() . '/assets/plugins/select2/css/select2.css')
                 ->appendStylesheet($this->basePath() . '/assets/plugins/select2/css/select2-bootstrap.css')
                 ->appendStylesheet($this->basePath() . '/assets/plugins/datepicker/css/datepicker3.css');?>
+<? $this->headTitle($this->translate('Register'));?>
 <?php
 if (!$this->enableRegistration) {
     print "Registration is disabled";
@@ -9,17 +10,18 @@ if (!$this->enableRegistration) {
 }
 $form = $this->registerForm;
 $form->prepare();
-$form->setAttribute('class', 'reg-page');
+$form->setAttribute('class', 'reg-page form-horizontal');
+$form->setAttribute('autocomplete', 'off');
 $form->setAttribute('action', $this->url('zfcuser/register', array('lang' => $this->lang)));
 $form->setAttribute('method', 'post');
 ?>
+<div class="container">
 <div class="margin-top-40 row-fluid">
 	<?php echo $this->form()->openTag($form) ?>
 		<h3 class="center">Register to your account</h3>
 		<div class="control-group <?php if($this->formElementErrors($form->get('email'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('email')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('email')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('email')) ?>
             	<span class="pull-right loading-email"></span>
@@ -32,8 +34,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('username'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('username')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('username')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('username')) ?>
             	<span class="pull-right loading-username"></span>
@@ -46,8 +47,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('firstname'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('firstname')); ?>
-           	<span class="color-red">*</span>           	
+           	<?php echo $this->myFormLabel($form->get('firstname')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('firstname')) ?>
             	<span class="pull-right loading-firstname"></span>
@@ -60,7 +60,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('lastname'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('lastname')); ?>
+           	<?php echo $this->myFormLabel($form->get('lastname')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('lastname')) ?>
             	<span class="pull-right loading-lastname"></span>
@@ -73,8 +73,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('dateofbirth'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('dateofbirth')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('dateofbirth')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('dateofbirth')) ?>
             	<span class="pull-right loading-dateofbirth"></span>
@@ -87,8 +86,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('sex'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('sex')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('sex')); ?>
 			<div class="controls">
             	<?php echo $this->formSelect($form->get('sex')) ?>
             	<?php  echo $this->formElementErrors()
@@ -100,8 +98,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('password'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('password')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('password')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('password')) ?>
             	<span class="pull-right loading-password"></span>
@@ -114,8 +111,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('passwordVerify'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('passwordVerify')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('passwordVerify')); ?>
 			<div class="controls">
             	<?php echo $this->formInput($form->get('passwordVerify')) ?>
             	<span class="pull-right loading-passwordVerify"></span>
@@ -128,8 +124,7 @@ $form->setAttribute('method', 'post');
 		</div>
 		<div class="control-group <?php if($this->formElementErrors($form->get('captcha'))) 
                                 echo "error" ?>">
-           	<?php echo $this->formLabel($form->get('captcha')); ?>
-           	<span class="color-red">*</span>
+           	<?php echo $this->myFormLabel($form->get('captcha')); ?>
 			<div class="controls">
             	<?php echo $this->formCaptcha($form->get('captcha')) ?>
             	<?php  echo $this->formElementErrors()
@@ -146,6 +141,7 @@ $form->setAttribute('method', 'post');
 	<?php echo $this->form()->closeTag() ?>
 
 </div><!-- /.row-fluid -->
+</div>
 <?php $this->inlineScript()
 	->appendFile($this->basePath() . '/assets/js/godana.validate.js')
 	->appendFile($this->basePath() . '/assets/plugins/datepicker/js/bootstrap-datepicker.js')

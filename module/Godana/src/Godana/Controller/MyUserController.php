@@ -196,6 +196,54 @@ class MyUserController extends AbstractActionController
     	return new ViewModel();
     }
     
+    public function ajaxLoginAction()
+    {
+    	$this->layout('layout/login-layout');
+    	
+    	if ($this->zfcUserAuthentication()->getAuthService()->hasIdentity()) {
+            return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute());
+        }        
+        $lang = $this->params()->fromRoute('lang', 'mg');
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $form    = $this->getLoginForm();
+
+        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
+            $redirect = $request->getQuery()->get('redirect');
+        } else {
+            $redirect = false;
+        } 
+        
+    	if (!$request->isPost()) {
+            return array(
+                'loginForm' => $form,
+                'redirect'  => $redirect,
+            	'lang' => $lang,
+                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
+            );
+        }
+        
+        $form->setData($request->getPost());
+
+        if (!$form->isValid()) {
+        	$alert = '<div class="alert alert-danger alert-dismissable">';
+            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+            $alert .= $this->failedLoginMessage;
+            $alert .= '</div>';            
+            $res['alert'] = $alert;            
+            $res['success'] = false;
+            $response->setContent(\Zend\Json\Json::encode($res));
+            
+            return $response;
+        }
+
+        // clear adapters
+        $this->zfcUserAuthentication()->getAuthAdapter()->resetAdapters();
+        $this->zfcUserAuthentication()->getAuthService()->clearIdentity();
+        
+        return $this->forward()->dispatch(static::CONTROLLER_NAME, array('action' => 'authenticate', 'lang' => $lang));
+    }
+    
 	/**
      * Login form
      */
@@ -258,6 +306,7 @@ class MyUserController extends AbstractActionController
      */
     public function authenticateAction()
     {
+    	$response = $this->getResponse();
         if ($this->zfcUserAuthentication()->getAuthService()->hasIdentity()) {
             return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute());
         }
@@ -280,14 +329,34 @@ class MyUserController extends AbstractActionController
         if (!$auth->isValid()) {
 			$this->flashMessenger()->setNamespace('zfcuser-login-form')->addMessage($authMessages[0]);
             $adapter->resetAdapters();
-            return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_LOGIN, array('lang' => $lang))
-                . ($redirect ? '?redirect='.$redirect : ''));
+            
+            $alert = '<div class="my-alert alert alert-danger alert-dismissable">';
+            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+            $alert .= $authMessages[0];
+            $alert .= '</div>';            
+            $res['alert'] = $alert;            
+            $res['success'] = false;
+            $response->setContent(\Zend\Json\Json::encode($res));
+            
+            return $response;
+//            return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_LOGIN, array('lang' => $lang))
+//                . ($redirect ? '?redirect='.$redirect : ''));
         }
 
-        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $redirect) {   
-            return $this->redirect()->toUrl($redirect);
+        if ($this->getOptions()->getUseRedirectParameterIfPresent() && $redirect) {
+        	$res['success'] = true;
+        	$res['redirect'] = $redirect;
+        	$response->setContent(\Zend\Json\Json::encode($res));
+            
+            return $response;
+//            return $this->redirect()->toUrl($redirect);
         }
-        return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute(), array('lang' => $lang));
+        $res['success'] = true;
+        $res['redirect'] = $this->url()->fromRoute($this->getOptions()->getLoginRedirectRoute(), array('lang' => $lang));
+        $response->setContent(\Zend\Json\Json::encode($res));
+            
+        return $response;
+//        return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute(), array('lang' => $lang));
     }
     
 	/**
@@ -363,75 +432,47 @@ class MyUserController extends AbstractActionController
     }
     
     public function validateInputAjaxAction()
-    {
-		$form = $this->getRegisterForm();
+    {		
 		$request = $this->getRequest();
 		
 		if ($request->isPost()) {
-			// Default validators are added to the input filter
-			$input_filter = $form->getInputFilter();
-		
-			// 'my_form_element' is the name of an element in the form
-			$input_name = $request->getPost('name');
 			
-			if ($input_name != 'passwordVerify') {
-				$input_element = $input_filter->get($input_name);
+			$type = $request->getPost('type');
 			
-				// Set the value to validate against
-				$input_element->setValue($request->getPost($input_name));
-			
-				// Check if the provided value is not valid
-				if (!$input_element->isValid()) {
-					// Element value is not valid
-					$result['success'] = false;
-					$messages = $input_element->getMessages();
-					$error_message = '';
-					foreach ($messages as $message) {
-						$error_message .= '<div class="help-block">'.$message.'</div>';
-					}
-					$data = array(
-				        'success' => false,
-				        'error_msg' => $error_message
-				    );
-				    return $this->getResponse()->setContent(\Zend\Json\Json::encode($data));
-				} else {
-					$result['success'] = false;
-					$data = array(
-				        'success' => true,
-				    );
-				    return $this->getResponse()->setContent(\Zend\Json\Json::encode($data));
-				}
+			if (isset($type) && $type == 'profile') {
+				$form = $this->getProfileForm();			
 			} else {
-				$form->setValidationGroup(array('passwordVerify'));
-				
-				$password = $request->getPost('password');
-				$passwordVerify = $request->getPost('passwordVerify');
-				
-				$data['password'] = $password;
-				$data['passwordVerify'] = $passwordVerify;
-				
-				$form->setData($data);
+				$form = $this->getRegisterForm();
+			}
 			
-				// Check if the provided value is not valid
-				if (!$form->isValid()) {
-					$result['success'] = false;
-					$messages = $form->get('passwordVerify')->getMessages();
-					$error_message = '';
-					foreach ($messages as $message) {
-						$error_message .= '<div class="help-block">'.$message.'</div>';
-					}
-					$data = array(
-				        'success' => false,
-				        'error_msg' => $error_message
-				    );
-				    return $this->getResponse()->setContent(\Zend\Json\Json::encode($data));
-				} else {
-					$result['success'] = false;
-					$data = array(
-				        'success' => true,
-				    );
-				    return $this->getResponse()->setContent(\Zend\Json\Json::encode($data));
+			$input_name = $request->getPost('name');
+			$data['email'] = $request->getPost('email');
+			$data['password'] = $request->getPost('password');
+			$data[${input_name}] = $request->getPost(${input_name});
+			
+			$form->setValidationGroup(array(${input_name}));
+			
+			$form->setData($data);
+			
+			// Check if the provided value is not valid
+			if (!$form->isValid()) {
+				$result['success'] = false;
+				$messages = $form->get(${input_name})->getMessages();
+				$error_message = '';
+				foreach ($messages as $message) {
+					$error_message .= '<div class="help-block">'.$message.'</div>';
 				}
+				$data = array(
+			        'success' => false,
+			        'error_msg' => $error_message
+			    );
+			    return $this->getResponse()->setContent(\Zend\Json\Json::encode($data));
+			} else {
+				$result['success'] = false;
+				$data = array(
+			        'success' => true,
+			    );
+			    return $this->getResponse()->setContent(\Zend\Json\Json::encode($data));
 			}
 			
 		}

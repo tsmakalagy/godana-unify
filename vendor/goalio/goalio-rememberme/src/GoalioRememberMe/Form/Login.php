@@ -3,7 +3,7 @@
 namespace GoalioRememberMe\Form;
 
 use ZfcUser\Options\AuthenticationOptionsInterface;
-use ZfcUser\Form\Login as ZfcLoginForm;
+use Godana\Form\Login as ZfcLoginForm;
 
 class Login extends ZfcLoginForm
 {

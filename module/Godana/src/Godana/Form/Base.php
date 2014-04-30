@@ -16,12 +16,13 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'Email',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
             ),
             'attributes' => array(
                 'type' => 'text',
-                'class' => 'span12'
+                'class' => 'span12',
+            	'required' => true
             ),
         ));
         
@@ -30,12 +31,13 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'Username',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
             ),
             'attributes' => array(
                 'type' => 'text',
-                'class' => 'span12'
+                'class' => 'span12',
+            	'required' => true
             ),
         ));
         
@@ -44,12 +46,13 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'First name',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
             ),
             'attributes' => array(
                 'type' => 'text',
-                'class' => 'span12'
+                'class' => 'span12',
+            	'required' => true
             ),
         ));
         
@@ -72,12 +75,13 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'Date of birth',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
             ),
             'attributes' => array(
                 'type' => 'text',
-                'class' => 'datepicker span12'
+                'class' => 'datepicker span12',
+            	'required' => true
             ),
         ));		       
     
@@ -87,7 +91,7 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'Sex',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
 		        'value_options' => array(
 	            	'0' => 'M',
@@ -96,6 +100,7 @@ class Base extends ProvidesEventsForm
             ),   
             'attributes' => array(
             	'class' => 'sex-select span12 gdn-select',
+            	'required' => true
             ),        
               
         ));        
@@ -119,12 +124,13 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'Password',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
             ),
             'attributes' => array(
                 'type' => 'password',
-                'class' => 'span12'
+                'class' => 'span12',
+            	'required' => true
             ),
         ));
 
@@ -133,12 +139,13 @@ class Base extends ProvidesEventsForm
             'options' => array(
                 'label' => 'Password Verify',
         		'label_attributes' => array(
-		            'class' => 'control-label required-label',
+		            'class' => 'control-label',
 		        ),
             ),
             'attributes' => array(
                 'type' => 'password',
-                'class' => 'span12'
+                'class' => 'span12',
+            	'required' => true
             ),
         ));
 
@@ -149,13 +156,14 @@ class Base extends ProvidesEventsForm
                 'options' => array(
                     'label' => 'Please type the following text',
             		'label_attributes' => array(
-		            	'class' => 'control-label required-label',
+		            	'class' => 'control-label',
 		        	),
                     'captcha' => $this->getRegistrationOptions()->getFormCaptchaOptions(),
             		'separator' => 'blabla'
                 ),
                 'attributes' => array(
-	                'class' => 'span4 gdn_captcha_text'
+	                'class' => 'span4 gdn_captcha_text',
+                	'required' => true
 	            ),
             ));
         }

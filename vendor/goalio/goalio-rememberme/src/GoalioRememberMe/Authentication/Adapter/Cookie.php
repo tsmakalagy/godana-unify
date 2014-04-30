@@ -54,7 +54,8 @@ class Cookie extends AbstractAdapter implements ServiceManagerAwareInterface
         }
 
         $cookie = explode("\n", $cookies['remember_me']);
-
+        
+        
         $rememberMe = $this->getRememberMeMapper()->findByIdSerie($cookie[0], $cookie[1]);
 
         if(!$rememberMe) {

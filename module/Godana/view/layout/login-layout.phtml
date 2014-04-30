@@ -1,0 +1,75 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+    	<?php echo $this->headTitle('Godana')->setSeparator(' | ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+    	<meta name="description" content="" />
+    	<meta name="author" content="" />
+
+	    <!-- CSS -->
+	    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/favicon2.ico'))
+	    				->appendStylesheet($this->basePath() . '/ace/css/bootstrap.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/bootstrap-responsive.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/font-awesome.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/font-awesome-ie7.min.css', 'screen', 'IE7')
+	    				->appendStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:400,300')
+	    				->appendStylesheet($this->basePath() . '/ace/css/ace.min.css')
+                		->appendStylesheet($this->basePath() . '/ace/css/ace-responsive.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/ace-skins.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/ace-ie.min.css', 'screen', 'IE8')
+	    				->appendStylesheet($this->basePath() . '/assets/css/gdn-style.css')
+	    				 ?>
+        
+        <!-- JS Global Compulsory -->	
+        <?php $this->inlineScript()
+        				->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js', 'text/javascript', array('conditional' => '!IE'))
+        				->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', 'text/javascript', array('conditional' => 'IE'))
+        				
+        ?>
+        <!--[if !IE]>-->
+
+		<script type="text/javascript">
+			var basePath = "<?php echo $this->basePath(); ?>";
+			window.jQuery || document.write("<script src='"+basePath+"/ace/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!--<![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='"+basePath+"/ace/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src='"+basePath+"/ace/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<?php $this->headScript()
+        				->appendFile($this->basePath() . '/ace/js/bootstrap.min.js')
+        				->appendFile($this->basePath() . '/ace/js/ace-elements.min.js')
+        				->appendFile($this->basePath() . '/ace/js/ace.min.js')
+        				
+        ?>
+    </head>
+    <body class="login-layout">
+    	<div class="main-container container-fluid">
+			<?php echo $this->content; ?>
+		</div><!--/.main-container-->
+    	
+    	<?php echo $this->headScript() ?>
+    	<?php echo $this->inlineScript() ?>
+    	<script type="text/javascript">
+			function show_box(id) {
+			 $('.widget-box.visible').removeClass('visible');
+			 $('#'+id).addClass('visible');
+			}
+		</script>
+    	
+    </body>
+</html>

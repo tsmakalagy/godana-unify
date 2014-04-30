@@ -30,7 +30,8 @@ class Login extends ProvidesEventsForm
             ),
             'attributes' => array(
                 'type' => 'text',
-				'class' => 'input-xlarge',
+				'class' => 'span12',
+            	'autocomplete' => 'off'
             ),
         ));
 
@@ -53,7 +54,7 @@ class Login extends ProvidesEventsForm
             ),
             'attributes' => array(
                 'type' => 'password',
-				'class' => 'input-xlarge',
+				'class' => 'span12',
             	'placeholder' => 'Password'
             ),
         ));

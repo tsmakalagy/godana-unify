@@ -55,7 +55,7 @@ $zfcSettings = array(
      * Default value: array containing 'ZfcUser\Authentication\Adapter\Db'
      * Accepted values: array containing services that implement 'ZfcUser\Authentication\Adapter\ChainableAdapter'
      */
-//	'auth_adapters' => array( 50 => 'GoalioRememberMe\Authentication\Adapter\Cookie' ),
+	'auth_adapters' => array( 50 => 'GoalioRememberMe\Authentication\Adapter\Cookie' ),
 
     /**
      * End of ZfcUser configuration

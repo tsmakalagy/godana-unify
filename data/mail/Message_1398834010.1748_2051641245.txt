@@ -1,0 +1,9 @@
+Date: Wed, 30 Apr 2014 08:00:10 +0300
+From: =?UTF-8?Q?Your=20name?= <your_email_address@here.com>
+Subject: =?UTF-8?Q?You=20requested=20to=20reset=20your=20password?=
+To: tsmakalagy@yahoo.fr
+
+
+You have received this email because you initiated to reset your password with us. To continue with the process, please click the link below:
+
+http://localhost.godana.unify/mg/user/reset-password/26/E7828FF48AC2D16

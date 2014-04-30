@@ -8,33 +8,98 @@ use ZfcUser\Options\RegistrationOptionsInterface;
 
 class ProfileFilter extends ProvidesEventsInputFilter
 {
+    protected $usernameValidator;
+
     /**
      * @var RegistrationOptionsInterface
      */
     protected $options;
 
-    public function __construct(RegistrationOptionsInterface $options)
+    public function __construct($usernameValidator, RegistrationOptionsInterface $options)
     {
-        $this->setOptions($options);        
+        $this->setOptions($options);
+        $this->emailValidator = $emailValidator;
+        $this->usernameValidator = $usernameValidator;
+
+        if ($this->getOptions()->getEnableUsername()) {
+            $this->add(array(
+                'name'       => 'username',
+                'required'   => true,
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 255,
+                        ),
+                    ),
+                    $this->usernameValidator,
+                ),
+            ));
+        }
 
         $this->add(array(
-            'name'       => 'firstname',
+            'name'       => 'email',
             'required'   => true,
-        	'filters'    => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
-                    'name'    => 'StringLength',
-                    'options' => array(
-                    	'min' => 3,
-                        'max' => 128,
-                	),
+                    'name' => 'EmailAddress'
+                )
+            ),
+        ));
+        
+        $this->add(array(
+            'name'       => 'dateofbirth',
+            'required'   => true,
+        	'validators' => array(
+                array(
+                    'name' => 'Date',
+                	'options' => array('format' => 'm/d/Y')                	
                 ),
+				
             ),
         ));
         
         $this->add(array(
             'name'       => 'firstname',
             'required'   => true,
+            'filters'    => array(
+        		array('name' => 'StringTrim'),
+        		array('name' => 'StripTags'),
+        	),
+            'validators' => array(
+            	array(
+                	'name'    => 'StringLength',
+                    'options' => array(
+                    	'min' => 2,
+                        'max' => 128,
+                    ),
+                ),
+            ),
+        ));
+        
+        $this->add(array(
+            'name'       => 'lastname',
+            'required'   => false,
+            'filters'    => array(
+        		array('name' => 'StringTrim'),
+        		array('name' => 'StripTags'),
+        	),
+            'validators' => array(
+            	array(
+                	'name'    => 'StringLength',
+                    'options' => array(
+                    	'min' => 2,
+                        'max' => 128,
+                    ),
+                ),
+            ),
+        ));
+
+        if ($this->getOptions()->getEnableDisplayName()) {
+            $this->add(array(
+                'name'       => 'display_name',
+                'required'   => true,
                 'filters'    => array(array('name' => 'StringTrim')),
                 'validators' => array(
                     array(
@@ -45,11 +110,24 @@ class ProfileFilter extends ProvidesEventsInputFilter
                         ),
                     ),
                 ),
-        ));
+            ));
+        }
+
         $this->getEventManager()->trigger('init', $this);
     }
-
     
+
+    public function getUsernameValidator()
+    {
+        return $this->usernameValidator;
+    }
+
+    public function setUsernameValidator($usernameValidator)
+    {
+        $this->usernameValidator = $usernameValidator;
+        return $this;
+    }
+
     /**
      * set options
      *

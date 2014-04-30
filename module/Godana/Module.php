@@ -58,7 +58,11 @@ class Module
                     $viewHelper->setAuthService($locator->get('zfcuser_auth_service'));
                     $viewHelper->setObjectManager($locator->get('Doctrine\ORM\EntityManager'));
                     return $viewHelper;
-                },
+                },                
+		        'myFormLabel' => function($sm) {
+		            return new Form\View\Helper\RequiredMarkInFormLabel;
+		        },
+		        
             ),
         );
 
@@ -457,7 +461,7 @@ class Module
                 },
                 'zfcuser_login_form' => function($sm) {
                     $options = $sm->get('zfcuser_module_options');
-                    $form = new Form\Login(null, $options);
+                    $form = new \GoalioRememberMe\Form\Login(null, $options);
                     $form->setInputFilter(new Form\LoginFilter($options));
                     return $form;
                 },
@@ -481,32 +485,15 @@ class Module
                 'zfcuser_profile_form' => function ($sm) {
                     $options = $sm->get('zfcuser_module_options');
                     $form = new Form\Register(null, $options);
-                    $inputFilter = new \Zend\InputFilter\InputFilter();
-                    $callbackValidator = new \ZfcUser\Validator\UsernameValidatorCallback($sm->get('zfcuser_user_mapper'));
+                    $callbackValidator = new Validator\UsernameValidatorCallback($sm->get('zfcuser_user_mapper'));
 
                     $usernameValidator = new \Zend\Validator\Callback(array(
                     	'callback' => array($callbackValidator, 'validate'),
                     	'messages' => array(\Zend\Validator\Callback::INVALID_VALUE => 'This value is already taken')));
                     
-                    $inputFilter->add(array(
-		                'name'       => 'username',
-		                'required'   => false,
-		                'validators' => array(
-		                    array(
-		                        'name'    => 'StringLength',		                    	
-		                        'options' => array(
-		                            'min' => 3,
-		                            'max' => 255,
-		                        ),
-		                    ),
-		                    $usernameValidator,
-		                ),
-		            ));
-		            $inputFilter->add(array('name' => 'email', 'required' => false));
-		            $inputFilter->add(array('name' => 'file-id', 'required' => false));
-		            $form->setInputFilter($inputFilter);
+		            $form->setInputFilter(new Form\ProfileFilter($usernameValidator, $options));
                     $form->get('email')->setAttributes(array(
-                    	'class' => 'gdn_text',
+                    	'class' => 'span12',
                     	'readonly' => true
                     ));
                     
@@ -594,6 +581,28 @@ class Module
             $em->persist($userMeta);
             $em->flush();
         });
+        
+        $zfcAuthEvents = $mvcEvent->getApplication()->getServiceManager()->get('ZfcUser\Authentication\Adapter\AdapterChain')->getEventManager();
+        try {
+        	$zfcAuthEvents->attach(
+			    'authenticate',
+			    function ($authEvent) use ($mvcEvent, $sm) {
+			        $em = $mvcEvent->getApplication()->getServiceManager()->get('doctrine.entitymanager.orm_default');
+			        $identity = $authEvent->getIdentity();
+			        if (isset($identity) && $identity > 0) {
+			        	$user = $em->getRepository('SamUser\Entity\User')->find($identity);
+		           		$user->setLastLogin(new \DateTime('now'))
+		            		->setLastIp(ip2long($_SERVER['REMOTE_ADDR']));            	
+		            	$em->persist($user);
+		            	$em->flush();	
+			        }
+			        
+			    }
+			);	
+        } catch (\Exception $ex) {
+        	
+        }
+		
         
     }
    	
