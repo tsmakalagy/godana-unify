@@ -586,7 +586,7 @@ class Module
         try {
         	$zfcAuthEvents->attach(
 			    'authenticate',
-			    function ($authEvent) use ($mvcEvent, $sm) {
+			    function ($authEvent) use ($mvcEvent) {
 			        $em = $mvcEvent->getApplication()->getServiceManager()->get('doctrine.entitymanager.orm_default');
 			        $identity = $authEvent->getIdentity();
 			        if (isset($identity) && $identity > 0) {
