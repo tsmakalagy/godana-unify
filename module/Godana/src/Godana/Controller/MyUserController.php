@@ -450,16 +450,16 @@ class MyUserController extends AbstractActionController
 			$input_name = $request->getPost('name');
 			$data['email'] = $request->getPost('email');
 			$data['password'] = $request->getPost('password');
-			$data[${input_name}] = $request->getPost(${input_name});
+			$data[$input_name] = $request->getPost($input_name);
 			
-			$form->setValidationGroup(array(${input_name}));
+			$form->setValidationGroup(array($input_name));
 			
 			$form->setData($data);
 			
 			// Check if the provided value is not valid
 			if (!$form->isValid()) {
 				$result['success'] = false;
-				$messages = $form->get(${input_name})->getMessages();
+				$messages = $form->get($input_name)->getMessages();
 				$error_message = '';
 				foreach ($messages as $message) {
 					$error_message .= '<div class="help-block">'.$message.'</div>';
