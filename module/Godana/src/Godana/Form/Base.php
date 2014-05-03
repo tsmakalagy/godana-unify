@@ -22,7 +22,9 @@ class Base extends ProvidesEventsForm
             'attributes' => array(
                 'type' => 'text',
                 'class' => 'span12',
-            	'required' => true
+            	'required' => true,
+            	'placeholder' => 'Email',
+            	'autocomplete' => 'off'
             ),
         ));
         
@@ -37,7 +39,9 @@ class Base extends ProvidesEventsForm
             'attributes' => array(
                 'type' => 'text',
                 'class' => 'span12',
-            	'required' => true
+            	'required' => true,
+            	'placeholder' => 'Username',
+            	'autocomplete' => 'off'
             ),
         ));
         
@@ -130,7 +134,8 @@ class Base extends ProvidesEventsForm
             'attributes' => array(
                 'type' => 'password',
                 'class' => 'span12',
-            	'required' => true
+            	'required' => true,
+            	'placeholder' => 'Password'
             ),
         ));
 
@@ -145,7 +150,8 @@ class Base extends ProvidesEventsForm
             'attributes' => array(
                 'type' => 'password',
                 'class' => 'span12',
-            	'required' => true
+            	'required' => true,
+            	'placeholder' => 'Password Verify'
             ),
         ));
 

@@ -479,6 +479,10 @@ class Module
                         )),
                         $options
                     ));
+                    $form->remove('dateofbirth');
+                    $form->remove('firstname');
+                    $form->remove('lastname');
+                    $form->remove('sex');                    
                     return $form;
                 },
                 

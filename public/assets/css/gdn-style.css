@@ -118,3 +118,23 @@
 .login-container {
     margin: 30px auto;
 }
+
+.register-error * {
+	color: #D16E6C !important;
+}
+
+.register-error input {
+	border-color: #F09784;
+}
+
+.register-error .help-block {
+    font-size: 13px !important;
+}
+
+.register-valid * {
+	color: #7BA065 !important;
+}
+
+.register-valid input, .register-valid input:focus {
+	border-color: #92BF65;
+}

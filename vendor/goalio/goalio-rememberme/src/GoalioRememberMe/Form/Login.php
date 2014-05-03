@@ -24,7 +24,8 @@ class Login extends ZfcLoginForm
                 'use_hidden_element' => true,
                 'checked_value' => '1',
                 'unchecked_value' => '0'
-            )
+            ),
+//            'attributes' => array('class' => 'ace-checkbox-2')
         ));
     }
 }

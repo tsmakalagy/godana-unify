@@ -206,7 +206,8 @@ class MyUserController extends AbstractActionController
         $lang = $this->params()->fromRoute('lang', 'mg');
         $request = $this->getRequest();
         $response = $this->getResponse();
-        $form    = $this->getLoginForm();
+        $loginForm    = $this->getLoginForm();
+        $registerForm = $this->getRegisterForm();
 
         if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
             $redirect = $request->getQuery()->get('redirect');
@@ -216,16 +217,17 @@ class MyUserController extends AbstractActionController
         
     	if (!$request->isPost()) {
             return array(
-                'loginForm' => $form,
+            	'registerForm' => $registerForm,
+                'loginForm' => $loginForm,
                 'redirect'  => $redirect,
             	'lang' => $lang,
                 'enableRegistration' => $this->getOptions()->getEnableRegistration(),
             );
         }
         
-        $form->setData($request->getPost());
+        $loginForm->setData($request->getPost());
 
-        if (!$form->isValid()) {
+        if (!$loginForm->isValid()) {
         	$alert = '<div class="alert alert-danger alert-dismissable">';
             $alert .= '<button data-dismiss="alert" class="close">×</button>';
             $alert .= $this->failedLoginMessage;

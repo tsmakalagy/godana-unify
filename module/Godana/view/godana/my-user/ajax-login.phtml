@@ -5,6 +5,12 @@ $loginForm->prepare();
 $loginForm->setAttribute('action', '');
 $loginForm->setAttribute('method', 'post');
 $loginForm->setAttribute('id', 'loginForm');
+
+$registerForm = $this->registerForm;
+$registerForm->prepare();
+$registerForm->setAttribute('action', '');
+$registerForm->setAttribute('method', 'post');
+$registerForm->setAttribute('id', 'registerForm');
 ?>
 <div class="main-content">
 	<div class="row-fluid">
@@ -152,33 +158,39 @@ $loginForm->setAttribute('id', 'loginForm');
 									<div class="space-6"></div>
 									<p> Enter your details to begin: </p>
 
-									<form />
+									<?php echo $this->form()->openTag($registerForm) ?>
 										<fieldset>
 											<label>
 												<span class="block input-icon input-icon-right">
-													<input type="email" class="span12" placeholder="Email" />
+													<?php echo $this->formInput($registerForm->get('email')) ?>
 													<i class="icon-envelope"></i>
 												</span>
 											</label>
 
 											<label>
 												<span class="block input-icon input-icon-right">
-													<input type="text" class="span12" placeholder="Username" />
+													<?php echo $this->formInput($registerForm->get('username')) ?>
 													<i class="icon-user"></i>
 												</span>
 											</label>
 
 											<label>
 												<span class="block input-icon input-icon-right">
-													<input type="password" class="span12" placeholder="Password" />
+													<?php echo $this->formInput($registerForm->get('password')) ?>
 													<i class="icon-lock"></i>
 												</span>
 											</label>
 
 											<label>
 												<span class="block input-icon input-icon-right">
-													<input type="password" class="span12" placeholder="Repeat password" />
+													<?php echo $this->formInput($registerForm->get('passwordVerify')) ?>
 													<i class="icon-retweet"></i>
+												</span>
+											</label>
+											
+											<label>
+												<span class="block input-icon input-icon-right">
+													<?php echo $this->formCaptcha($registerForm->get('captcha')) ?>
 												</span>
 											</label>
 
@@ -204,7 +216,7 @@ $loginForm->setAttribute('id', 'loginForm');
 												</button>
 											</div>
 										</fieldset>
-									</form>
+									<?php echo $this->form()->closeTag() ?>
 								</div>
 
 								<div class="toolbar center">
@@ -221,10 +233,34 @@ $loginForm->setAttribute('id', 'loginForm');
 		</div><!--/.span-->
 	</div><!--/.row-fluid-->
 </div>
-
+<?php $this->inlineScript()
+	->appendFile($this->basePath() . '/assets/js/godana.validate2.js');?>
 <script type="text/javascript">
 var loginUrl = "<?php echo $this->url('zfcuser/login', array(), array(), true); ?>";
+var validateUrl = "<?=$this->url('zfcuser/input_validate', array(), array(), true); ?>";
 $(document).ready(function() {	
+	$('input[name="email"]').validateInput({
+		name: 'email',
+		url: validateUrl
+	});
+	$('input[name="username"]').validateInput({
+		name: 'username',
+		url: validateUrl
+	});
+	$('input[name="password"]').validateInput({
+		name: 'password',
+		url: validateUrl
+	});
+	$('input[name="password"]').change(function(e) {
+		var password = $(this).val();
+		$('input[name="passwordVerify"]').validateInput("destroy");
+		$('input[name="passwordVerify"]').validateInput("init", {
+			name: 'passwordVerify',
+			query: '&password='+password,
+			url: validateUrl			
+		});	
+		
+	});
 	$("form#loginForm").submit(function(e) {
 		e.preventDefault();
 		$.ajax({
