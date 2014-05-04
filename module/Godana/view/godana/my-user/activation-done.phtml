@@ -1,5 +1,28 @@
-<div class="margin-top-40 row-fluid">
-<div class="span10 ">
-<div class="alert alert-info"><h5><?=$this->translate('Congratulations! Your account has been activated. You will be redirected to login page in a moment. If not please click this'); ?> <a href="<?=$this->url('zfcuser/login', array(), array(), true) ?>" class="alert-link"><?=$this->translate('link'); ?></a></h5></div>
+<div class="main-content">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="login-container">
+				<div class="row-fluid">
+					<div class="center block">
+						<a href="<?=$this->url('home', array(), array(), true) ?>"><img id="logo-header" src="<?php echo $this->basePath();?>/assets/img/logo-godana2.png" alt="Logo"/></a>
+					</div>
+				</div>
+
+				<div class="space-6"></div>
+
+				<div class="row-fluid">
+					<div class="position-relative">
+						<?php if (isset($this->activation_ok) && !$this->activation_ok): ?>
+						<div class="alert alert-danger"><h5><?=$this->translate(sprintf('An error has occurred when activating your account. Please click %shere%s to resend the activation mail', '<a href="' . $this->activation_link . '" class="alert-link">', '</a>')); ?></h5></div>
+						<?php elseif (isset($this->activation_error) && $this->activation_error): ?>
+						<div class="alert alert-danger"><h5><?=$this->translate('There is an error processing your request. Try again next time!'); ?></h5></div>
+						<?php else: ?>
+						<div class="alert alert-info"><h5><?=$this->translate('Congratulations! Your account has been activated. You will be redirected to login page in a moment. If not please click this'); ?> <a href="<?=$this->url('zfcuser/login', array(), array(), true) ?>" class="alert-link"><?=$this->translate('link'); ?></a></h5></div>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-</div>
+

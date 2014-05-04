@@ -26,6 +26,7 @@ class MyUserController extends AbstractActionController
     const ROUTE_REGISTER     = 'zfcuser/register';
     const ROUTE_ACTIVATION_PENDING = 'zfcuser/activation_pending';
     const ROUTE_ACTIVATION_DONE = 'zfcuser/activation_done';
+    const ROUTE_ACTIVATION_RESEND = 'zfcuser/activation_resend';
     const ROUTE_CHANGEEMAIL  = 'zfcuser/changeemail';
     const ROUTE_PROFILE     = 'zfcuser/profile';
 
@@ -144,60 +145,124 @@ class MyUserController extends AbstractActionController
     
     public function activationDoneAction()
     {    	
-    	$activation_ttl = 5184000;
+    	$this->layout('layout/login-layout');
+    	$activation_ttl = 86400; // 24 hours
+    	$lang = $this->params()->fromRoute('lang', 'mg'); 
     	$token = $this->params()->fromQuery('token', null);
     	$email = $this->params()->fromQuery('email', null);
     	$activation_link_valid = false;
     	$activation_valid = false;
     	$userTokenMeta = '';
+    	$metaCreated = '';
     	
     	if ($token != null && $email != null) {
     		$user = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findOneByEmail($email);
     		if ($user instanceof User) {
-    			$registerTime = $user->getRegisterTime();
-    			if ($registerTime->getTimeStamp() + $activation_ttl > time()) {
-    				$activation_link_valid = true;
-    			}
-    			if ($activation_link_valid) {
-    				$userMetas = $user->getUserMetas();	
-    				$userToken = "";
-			        foreach ($userMetas as $userMeta) {
+    			$userName = $user->getUsername();
+    			$userMetas = $user->getUserMetas();	
+    			
+    			if (isset($userMetas) && count($userMetas)) {
+    				$userToken = "";	
+	    			foreach ($userMetas as $userMeta) {
 			        	if ($userMeta->getMetaKey() == 'token') {
 			        		$userToken = $userMeta->getMeta();
+			        		$metaCreated = $userMeta->getCreated();
 			        		$userTokenMeta = $userMeta;
 			        		break;
 			        	}
 			        }
-			        if ($userToken == $token) {
-			        	$activation_valid = true;
+			        
+			        $activation_time_ok = false;
+			        $ddd = $metaCreated->getTimeStamp() + $activation_ttl;
+			        if ($metaCreated->getTimeStamp() + $activation_ttl > time()) {
+			        	$activation_time_ok = true;
 			        }
+	    			
+			        $token_verified = false;
+	    			if ($userToken == $token) {
+	    				$token_verified = true;
+	    			}
+	    			
+	    			if ($activation_time_ok && $token_verified) {
+	    				$user->setState(2);
+	    				$user->removeUserMeta($userTokenMeta);
+	    				$this->getObjectManager()->remove($userTokenMeta);
+	    				$this->getObjectManager()->persist($user);
+	    				$this->getObjectManager()->flush();
+	    				
+	    				$this->getServiceLocator()->get('Application')
+				        	->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, 
+				        		function($event){
+				        			$application = $event->getApplication();
+				        			$serverUrl = $application->getServiceManager()->get('ViewHelperManager')->get('serverUrl')->__invoke();
+				        			$router = $event->getRouter();
+				        			$routeParams = $event->getRouteMatch()->getParams();
+				        			$lang = $routeParams['lang'];
+				        			$url = $router->assemble($routeParams, array('name' => 'zfcuser/login'));
+				        			$url = $serverUrl . $url;
+				        			$headerLine = "refresh:5;url=" . $url;
+				     				$event->getResponse()->getHeaders()->addHeaderLine($headerLine);
+				 				}, -10000);
+				 		return new ViewModel();
+	    			} else {
+	    				$user->removeUserMeta($userTokenMeta);
+	    				$this->getObjectManager()->remove($userTokenMeta);
+	    				$this->getObjectManager()->persist($user);
+	    				$this->getObjectManager()->flush();
+	    				$activation_link = $this->url()->fromRoute(static::ROUTE_ACTIVATION_RESEND, array('lang' => $lang, 'username' => $userName));
+    					return new ViewModel(array('activation_ok' => false, 'activation_link' => $activation_link));
+	    			}
     			}
-    			if ($activation_valid) {
-    				$user->setState(2);
-    				$user->removeUserMeta($userTokenMeta);
-    				$this->getObjectManager()->remove($userTokenMeta);
-    				$this->getObjectManager()->persist($user);
-    				$this->getObjectManager()->flush();
-    			}
-    			
+		        
     		}
     		
     	}
+    	return new ViewModel(array('activation_error' => true));
+    }
+    
+    public function activationResendAction()
+    {
+    	$this->layout('layout/login-layout');
     	
-    	$this->getServiceLocator()->get('Application')
-        	->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, 
-        		function($event){
-        			$application = $event->getApplication();
-        			$serverUrl = $application->getServiceManager()->get('ViewHelperManager')->get('serverUrl')->__invoke();
-        			$router = $event->getRouter();
-        			$routeParams = $event->getRouteMatch()->getParams();
-        			$lang = $routeParams['lang'];
-        			$url = $router->assemble($routeParams, array('name' => 'zfcuser/login'));
-        			$url = $serverUrl . $url;
-        			$headerLine = "refresh:5;url=" . $url;
-     				$event->getResponse()->getHeaders()->addHeaderLine($headerLine);
- 				}, -10000);   	 
-    	return new ViewModel();
+    	$lang = $this->params()->fromRoute('lang', 'mg'); 
+    	$username = $this->params()->fromRoute('username', null);
+    	
+    	$users = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByUsername($username);
+    	$user = $users[0];
+    	if (!$user instanceof User) { // User doesnt exist
+    		return new ViewModel(array('isUser' => false, 'username' => $username));
+    	} else if ($user->getState() == 2) { // User is activated => return error
+    		return new ViewModel(array('isUserActivated' => true));
+    	}
+    	$email = $user->getEmail();
+		$token = md5($email.time());
+            
+        $em = $this->getObjectManager();
+        $userMeta = new \Godana\Entity\UserMeta();
+        $userMeta->setMetaKey('token');
+        $userMeta->setUser($user);
+        $userMeta->setMeta($token);
+        $em->persist($userMeta);
+        $em->flush();
+         
+        $server_url = $this->getServiceLocator()->get('ViewHelperManager')->get('serverUrl')->__invoke();
+        
+    	$activation_link = $server_url . $this->url()->fromRoute(static::ROUTE_ACTIVATION_DONE, array('lang' => $lang));
+    	$activation_link .= '?token=' . $token . '&email='.$email;
+        
+        $viewTemplate = 'mail/activation';
+        $values = array(
+			'link' => $activation_link
+		);
+		
+		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
+		$from = 'tsmakalagy@yahoo.fr';
+		$to = $email;		
+		$subject = 'Godana activation link';
+		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
+		$mailService->send($message);
+		
+		return new ViewModel(array('isUser' => true));
     }
     
     public function ajaxLoginAction()

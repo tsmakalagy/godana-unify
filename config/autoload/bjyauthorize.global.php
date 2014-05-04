@@ -122,6 +122,7 @@ return array(
                 array('route' => 'zfcuser/input_validate', 'roles' => array('guest')),
                 array('route' => 'zfcuser/activation_pending', 'roles' => array('guest')),
                 array('route' => 'zfcuser/activation_done', 'roles' => array('guest')),
+                array('route' => 'zfcuser/activation_resend', 'roles' => array('guest')),
                 array('route' => 'zfcuser/profile', 'roles' => array('guest')),
                 array('route' => 'zfcuser/forgotpassword', 'roles' => array('guest')),
                 array('route' => 'zfcuser/resetpassword', 'roles' => array('guest')),

@@ -178,6 +178,19 @@ return array(
                             ),
                         ),
                     ),
+                    'activation_resend' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/activation/resend/:username',
+                            'defaults' => array(
+                                'controller' => 'zfcuser',
+                                'action'     => 'activationResend',
+                            ),
+                            'constraints' => array(
+		            			'username' => '[a-zA-Z0-9_-]*',
+		            		),
+                        ),
+                    ),
                     'changepassword' => array(
                         'type' => 'Literal',
                         'options' => array(
