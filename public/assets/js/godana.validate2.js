@@ -36,9 +36,9 @@
 					// $this.data('pluginName', settings);
 				}
  
-				$this.on("keypress", function() {
-					if (timeout) clearTimeout(timeout);
-					timeout = setTimeout(function() {
+				$this.on("blur", function() {
+//					if (timeout) clearTimeout(timeout);
+//					timeout = setTimeout(function() {
 			            if ($this.val() != '') {
 			            	$.ajax({
 			                	type: "POST",
@@ -67,19 +67,21 @@
 			                });
 			            } else {
 			            	$(settings.loadingClass).html("");
+			            	$this.parents('label').removeClass('register-error');
+							$this.parents('label').find('.help-block').remove();
 //			            	$this.parents('.form-group').removeClass('has-error');
 //			            	$this.parents('.form-group').find('.help-block').remove();
 			            }
 			            
-			        }, 1000);
+//			        }, 1000);
 				});			
-				$this.on("blur", function() {
-					if ($this.val() == '') {
-						$(settings.loadingClass).html("");
-						$this.parents('label').removeClass('register-error');
-						$this.parents('label').find('.help-block').remove();
-					} 
-				});	
+//				$this.on("blur", function() {
+//					if ($this.val() == '') {
+//						$(settings.loadingClass).html("");
+//						$this.parents('label').removeClass('register-error');
+//						$this.parents('label').find('.help-block').remove();
+//					} 
+//				});	
  
 			});
 		},
@@ -87,7 +89,7 @@
 			// Repeat over each element in selector
 			return $(this).each(function() {
 				var $this = $(this);
- 				$this.off("keypress");
+// 				$this.off("keypress");
  				$this.off("blur");
 				// run code here
  
