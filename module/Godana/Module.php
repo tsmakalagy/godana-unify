@@ -482,7 +482,14 @@ class Module
                     $form->remove('dateofbirth');
                     $form->remove('firstname');
                     $form->remove('lastname');
-                    $form->remove('sex');                    
+                    $form->remove('sex');  
+                    $form->setValidationGroup(array(
+					    'email',
+					    'username',
+                    	'password',
+                    	'passwordVerify',
+                    	'captcha'
+					));                  
                     return $form;
                 },
                 
@@ -564,10 +571,10 @@ class Module
             $config = $mvcEvent->getApplication()->getServiceManager()->get('config');
             $defaultUserRole = $em->getRepository('SamUser\Entity\Role')->find(2);
             $user->addRole($defaultUserRole)
-            	->setFirstname( $form->get('firstname')->getValue() )
-            	->setLastname( $form->get('lastname')->getValue() )
-            	->setDateofbirth(new \DateTime($form->get('dateofbirth')->getValue()) )
-            	->setSex( $form->get('sex')->getValue() )
+//            	->setFirstname( $form->get('firstname')->getValue() )
+//            	->setLastname( $form->get('lastname')->getValue() )
+//            	->setDateofbirth(new \DateTime($form->get('dateofbirth')->getValue()) )
+//            	->setSex( $form->get('sex')->getValue() )
             	->setRegisterTime(new \DateTime('now'))
             	->setRegisterIp(ip2long($_SERVER['REMOTE_ADDR']));
         });   

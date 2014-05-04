@@ -160,7 +160,7 @@ class Base extends ProvidesEventsForm
                 'name' => 'captcha',
                 'type' => 'Zend\Form\Element\Captcha',
                 'options' => array(
-                    'label' => 'Please type the following text',
+                    'label' => 'Enter code',
             		'label_attributes' => array(
 		            	'class' => 'control-label',
 		        	),
@@ -168,8 +168,9 @@ class Base extends ProvidesEventsForm
             		'separator' => 'blabla'
                 ),
                 'attributes' => array(
-	                'class' => 'span4 gdn_captcha_text',
-                	'required' => true
+	                'class' => 'span12 gdn-captcha-text',
+                	'required' => true,
+                	'placeholder' => 'Enter code'
 	            ),
             ));
         }

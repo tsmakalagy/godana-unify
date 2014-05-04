@@ -138,3 +138,11 @@
 .register-valid input, .register-valid input:focus {
 	border-color: #92BF65;
 }
+
+.gdn-captcha-text {
+	margin-top: 11px;
+}
+
+.my-alert {
+	margin-bottom: 20px;
+}

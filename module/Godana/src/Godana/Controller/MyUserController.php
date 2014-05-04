@@ -405,12 +405,19 @@ class MyUserController extends AbstractActionController
         $redirect = isset($prg['redirect']) ? $prg['redirect'] : null;
 
         if (!$user) {        	
-            return array(
-                'registerForm' => $form,
-            	'lang' => $lang,
-                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
-                'redirect' => $redirect,
-            );
+//            return array(
+//                'registerForm' => $form,
+//            	'lang' => $lang,
+//                'enableRegistration' => $this->getOptions()->getEnableRegistration(),
+//                'redirect' => $redirect,
+//            );
+			$alert = '<div class="my-alert alert alert-danger alert-dismissable">';
+            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+            $alert .= 'Error registration';
+            $alert .= '</div>';            
+            $res['alert'] = $alert;            
+            $res['success'] = false;
+            return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
         }
 
         if ($service->getOptions()->getLoginAfterRegistration()) {
@@ -430,7 +437,10 @@ class MyUserController extends AbstractActionController
 //        return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_LOGIN) . ($redirect ? '?redirect='.$redirect : ''));
 		$userId = $user->getId();
         
-        return $this->redirect()->toRoute(static::ROUTE_ACTIVATION_PENDING, array('lang' => $lang, 'userId' => $userId));
+//        return $this->redirect()->toRoute(static::ROUTE_ACTIVATION_PENDING, array('lang' => $lang, 'userId' => $userId));
+		$res['success'] = true;
+        $res['redirect'] = $this->url()->fromRoute(static::ROUTE_ACTIVATION_PENDING, array('lang' => $lang, 'userId' => $userId));
+        return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
     }
     
     public function validateInputAjaxAction()
@@ -451,15 +461,25 @@ class MyUserController extends AbstractActionController
 			$data['email'] = $request->getPost('email');
 			$data['password'] = $request->getPost('password');
 			$data[$input_name] = $request->getPost($input_name);
+			$data['captcha'] = $request->getPost('captcha');
+			if ($input_name == 'captcha[input]') {
+				$form->setValidationGroup(array('captcha'));	
+			} else {
+				$form->setValidationGroup(array($input_name));	
+			}
 			
-			$form->setValidationGroup(array($input_name));
 			
 			$form->setData($data);
 			
 			// Check if the provided value is not valid
 			if (!$form->isValid()) {
 				$result['success'] = false;
-				$messages = $form->get($input_name)->getMessages();
+				if ($input_name == 'captcha[input]') {
+					$messages = $form->get('captcha')->getMessages();
+				} else {
+					$messages = $form->get($input_name)->getMessages();	
+				}
+				
 				$error_message = '';
 				foreach ($messages as $message) {
 					$error_message .= '<div class="help-block">'.$message.'</div>';

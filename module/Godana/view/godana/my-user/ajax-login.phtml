@@ -36,6 +36,7 @@ $registerForm->setAttribute('id', 'registerForm');
 									<div class="space-6"></div>
 
 									<?php echo $this->form()->openTag($loginForm) ?>
+									<div class="my-alert"></div>
 										<fieldset>
 											<label>
 												<span class="block input-icon input-icon-right">
@@ -159,6 +160,7 @@ $registerForm->setAttribute('id', 'registerForm');
 									<p> Enter your details to begin: </p>
 
 									<?php echo $this->form()->openTag($registerForm) ?>
+									<div class="my-alert"></div>
 										<fieldset>
 											<label>
 												<span class="block input-icon input-icon-right">
@@ -210,7 +212,7 @@ $registerForm->setAttribute('id', 'registerForm');
 													Reset
 												</button>
 
-												<button onclick="return false;" class="width-65 pull-right btn btn-small btn-success">
+												<button onclick="" class="width-65 pull-right btn btn-small btn-success register-button">
 													Register
 													<i class="icon-arrow-right icon-on-right"></i>
 												</button>
@@ -238,7 +240,13 @@ $registerForm->setAttribute('id', 'registerForm');
 <script type="text/javascript">
 var loginUrl = "<?php echo $this->url('zfcuser/login', array(), array(), true); ?>";
 var validateUrl = "<?=$this->url('zfcuser/input_validate', array(), array(), true); ?>";
+var registerUrl = "<?=$this->url('zfcuser/register', array(), array(), true); ?>";
 $(document).ready(function() {	
+
+	$('button[type="reset"]').click(function() {
+		$('label').removeClass('register-error').removeClass('register-valid');
+		$('label').find('.help-block').remove();
+	});
 	$('input[name="email"]').validateInput({
 		name: 'email',
 		url: validateUrl
@@ -251,6 +259,13 @@ $(document).ready(function() {
 		name: 'password',
 		url: validateUrl
 	});
+
+	$('input[name="captcha[input]"]').validateInput({
+		name: 'captcha[input]',
+		url: validateUrl,
+		query: '&captcha[id]='+$('input[name="captcha[id]"]').val()
+	});
+	
 	$('input[name="password"]').change(function(e) {
 		var password = $(this).val();
 		$('input[name="passwordVerify"]').validateInput("destroy");
@@ -273,8 +288,8 @@ $(document).ready(function() {
     		},
             success: function(res) {
                 if (res.success == false) {
-                	$("form#loginForm").prepend(res.alert);
-                	$('.login-button').removeClass('disabled');
+                	$("form#loginForm .my-alert").html(res.alert);
+                	$('.login-button').removeClass('disabled');                	
                 } else {
                 	$(location).attr('href',res.redirect);  
                 }
@@ -282,8 +297,28 @@ $(document).ready(function() {
         });
         return false;
 	});
-	window.setTimeout(function() {
-		$('.my-alert').fadeOut("slow");
-	}, 30000);
+
+	$("form#registerForm").submit(function(e) {
+		e.preventDefault();
+		$.ajax({
+        	type: "POST",
+            url: registerUrl,
+            data: $("form#registerForm").serialize(),
+            dataType: "json",
+			beforeSend: function() {    
+    			$('.register-button').addClass('disabled');
+    		},
+            success: function(res) {
+                if (res.success == false) {
+                	$("form#registerForm .my-alert").html(res.alert);
+                	$('.register-button').removeClass('disabled');                	
+                } else {
+                	$(location).attr('href',res.redirect);  
+                }
+    		}
+        });
+        return false;
+	});
+	
 });
 </script>
