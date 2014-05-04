@@ -736,6 +736,7 @@ CREATE TABLE IF NOT EXISTS `gdn_user_meta` (
   `meta_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) NOT NULL,
   `meta` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `meta_created` datetime NOT NULL,
   PRIMARY KEY (`meta_key`,`user_id`),
   KEY `IDX_5667E15AA76ED395` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -830,11 +831,12 @@ CREATE TABLE IF NOT EXISTS `user_provider` (
 --
 
 CREATE TABLE IF NOT EXISTS `user_remember_me` (
-  `sid` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `sid` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`sid`,`token`,`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`sid`,`token`,`user_id`),
+  KEY `FK_D3E96EBDA76ED395` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -862,6 +864,8 @@ CREATE TABLE IF NOT EXISTS `user_role_linker` (
   PRIMARY KEY (`user_id`,`role_id`),
   KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 --
 -- Constraints for dumped tables
@@ -1151,3 +1155,9 @@ ALTER TABLE `users_roles`
 --
 ALTER TABLE `user_provider`
   ADD CONSTRAINT `user_provider_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `user_remember_me`
+--
+ALTER TABLE `user_remember_me`
+  ADD CONSTRAINT `FK_D3E96EBDA76ED395` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);

@@ -101,41 +101,45 @@ class MyUserController extends AbstractActionController
     
     public function activationPendingAction()
     {
+    	$this->layout('layout/login-layout');
     	$lang = $this->params()->fromRoute('lang', 'mg'); 
-    	$userId = $this->params()->fromRoute('userId', null);
-    	$user = $this->getObjectManager()->getRepository('SamUser\Entity\User')->find($userId);
-    	$userMetas = $user->getUserMetas();
-        //\Doctrine\Common\Util\Debug::dump($userMetas);
-        $token = "";        
-    	foreach ($userMetas as $userMeta) {
-        	if ($userMeta->getMetaKey() == 'token') {
-        		$token = $userMeta->getMeta();
-        	}
-        }
-        
-        $serverUrl = $this->getServiceLocator()->get('ViewHelperManager')->get('serverUrl')->__invoke();
-        //$basePath = $this->getServiceLocator()->get('ViewHelperManager')->get('basePath')->__invoke();
-        $server_url = $serverUrl;
-        
-    	$email = $user->getEmail();
-    	$activation_link = $server_url . $this->url()->fromRoute(static::ROUTE_ACTIVATION_DONE, array('lang' => $lang));
-    	$activation_link .= '?token=' . $token . '&email='.$email;
-        
-        $viewTemplate = 'mail/activation';
-        $values = array(
-			'link' => $activation_link
-		);
-		
-		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
-		$from = 'tsmakalagy@yahoo.fr';
-		$to = $email;		
-		$subject = 'Godana activation link';
-		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
-		$mailService->send($message);
+    	$username = $this->params()->fromRoute('username', null);
+    	$user = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByUsername($username);
+    	if (!$user[0] instanceof User) {
+    		return new ViewModel(array('isUser' => false, 'username' => $username));
+    	}
+//    	$userMetas = $user->getUserMetas();
+//        //\Doctrine\Common\Util\Debug::dump($userMetas);
+//        $token = "";        
+//    	foreach ($userMetas as $userMeta) {
+//        	if ($userMeta->getMetaKey() == 'token') {
+//        		$token = $userMeta->getMeta();
+//        	}
+//        }
+//        
+//        $serverUrl = $this->getServiceLocator()->get('ViewHelperManager')->get('serverUrl')->__invoke();
+//        //$basePath = $this->getServiceLocator()->get('ViewHelperManager')->get('basePath')->__invoke();
+//        $server_url = $serverUrl;
+//        
+//    	$email = $user->getEmail();
+//    	$activation_link = $server_url . $this->url()->fromRoute(static::ROUTE_ACTIVATION_DONE, array('lang' => $lang));
+//    	$activation_link .= '?token=' . $token . '&email='.$email;
+//        
+//        $viewTemplate = 'mail/activation';
+//        $values = array(
+//			'link' => $activation_link
+//		);
+//		
+//		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
+//		$from = 'tsmakalagy@yahoo.fr';
+//		$to = $email;		
+//		$subject = 'Godana activation link';
+//		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
+//		$mailService->send($message);
     	
     	
     	
-    	return new ViewModel();
+    	return new ViewModel(array('isUser' => true));
     }
     
     public function activationDoneAction()
@@ -435,11 +439,11 @@ class MyUserController extends AbstractActionController
 
         // TODO: Add the redirect parameter here...
 //        return $this->redirect()->toUrl($this->url()->fromRoute(static::ROUTE_LOGIN) . ($redirect ? '?redirect='.$redirect : ''));
-		$userId = $user->getId();
+		$userName = $user->getUsername();
         
 //        return $this->redirect()->toRoute(static::ROUTE_ACTIVATION_PENDING, array('lang' => $lang, 'userId' => $userId));
 		$res['success'] = true;
-        $res['redirect'] = $this->url()->fromRoute(static::ROUTE_ACTIVATION_PENDING, array('lang' => $lang, 'userId' => $userId));
+        $res['redirect'] = $this->url()->fromRoute(static::ROUTE_ACTIVATION_PENDING, array('lang' => $lang, 'username' => $userName));
         return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
     }
     

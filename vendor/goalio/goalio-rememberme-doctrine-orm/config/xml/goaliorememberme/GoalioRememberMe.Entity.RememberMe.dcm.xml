@@ -8,11 +8,17 @@
 
         <id name="sid" type="string" />
         <id name="token" type="string" />
-        <id name="user_id" type="integer" />
+        <id name="user_id" association-key="true" />
+        
+        <many-to-one field="user_id" target-entity="SamUser\Entity\User">
+            <join-column name="user_id" referenced-column-name="id" />
+        </many-to-one>
         
         <unique-constraints>
         	<unique-constraint columns="sid,token,user_id" name="user_remember_me" />
     	</unique-constraints>
+    	
+    	
 
     </mapped-superclass>
 

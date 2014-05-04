@@ -158,13 +158,13 @@ return array(
                     'activation_pending' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/activation/pending/:userId',
+                            'route' => '/activation/pending/:username',
                             'defaults' => array(
                                 'controller' => 'zfcuser',
                                 'action'     => 'activationPending',
                             ),
                             'constraints' => array(
-		            			'userId' => '[0-9]*',
+		            			'username' => '[a-zA-Z0-9_-]*',
 		            		),
                         ),
                     ),
