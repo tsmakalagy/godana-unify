@@ -159,9 +159,9 @@ $registerForm->setAttribute('id', 'registerForm');
 									<div class="space-6"></div>
 									<p> Enter your details to begin: </p>
 
-									<?php echo $this->form()->openTag($registerForm) ?>
-									<div class="my-alert"></div>
+									<?php echo $this->form()->openTag($registerForm) ?>									
 										<fieldset>
+                                            <label class="my-alert"></label>
 											<label>
 												<span class="block input-icon input-icon-right">
 													<?php echo $this->formInput($registerForm->get('email')) ?>
