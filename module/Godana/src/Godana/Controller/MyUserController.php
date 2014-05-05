@@ -105,9 +105,8 @@ class MyUserController extends AbstractActionController
     	$this->layout('layout/login-layout');
     	$lang = $this->params()->fromRoute('lang', 'mg'); 
     	$username = $this->params()->fromRoute('username', null);
-    	$users = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByUsername($username);
-    	$user = $users[0];
-        if (!$user instanceof User) {
+    	$user = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByUsername($username);
+    	if (!$user[0] instanceof User) {
     		return new ViewModel(array('isUser' => false, 'username' => $username));
     	}
     	$userMetas = $user->getUserMetas();
