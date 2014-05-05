@@ -105,8 +105,9 @@ class MyUserController extends AbstractActionController
     	$this->layout('layout/login-layout');
     	$lang = $this->params()->fromRoute('lang', 'mg'); 
     	$username = $this->params()->fromRoute('username', null);
-    	$user = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByUsername($username);
-    	if (!$user[0] instanceof User) {
+    	$users = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByUsername($username);
+    	$user = $users[0];
+        if (!$user instanceof User) {
     		return new ViewModel(array('isUser' => false, 'username' => $username));
     	}
     	$userMetas = $user->getUserMetas();
@@ -474,7 +475,7 @@ class MyUserController extends AbstractActionController
         $redirect = isset($prg['redirect']) ? $prg['redirect'] : null;
 
         if (!$user instanceof \SamUser\Entity\User) {     
-            var_dump($user);
+            //var_dump($user);
 //            return array(
 //                'registerForm' => $form,
 //            	'lang' => $lang,

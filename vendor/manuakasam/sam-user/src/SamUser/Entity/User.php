@@ -110,8 +110,8 @@ class User implements UserInterface, ProviderInterface
     protected $lastLogin;
     
      /**
-     * @var int
-     * @ORM\Column(type="integer", length=20, nullable=true, name="last_ip")
+     * @var decimal
+     * @ORM\Column(type="decimal", precision=20, scale=0, name="last_ip", nullable=true)
      */
     protected $lastIp;
     
@@ -121,9 +121,10 @@ class User implements UserInterface, ProviderInterface
      */
     protected $registerTime;
     
+    
      /**
-     * @var int
-     * @ORM\Column(type="integer", length=20, name="register_ip")
+     * @var decimal
+     * @ORM\Column(type="decimal", precision=20, scale=0, name="register_ip")
      */
     protected $registerIp;
     
