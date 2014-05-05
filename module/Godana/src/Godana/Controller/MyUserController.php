@@ -109,34 +109,34 @@ class MyUserController extends AbstractActionController
     	if (!$user[0] instanceof User) {
     		return new ViewModel(array('isUser' => false, 'username' => $username));
     	}
-//    	$userMetas = $user->getUserMetas();
-//        //\Doctrine\Common\Util\Debug::dump($userMetas);
-//        $token = "";        
-//    	foreach ($userMetas as $userMeta) {
-//        	if ($userMeta->getMetaKey() == 'token') {
-//        		$token = $userMeta->getMeta();
-//        	}
-//        }
-//        
-//        $serverUrl = $this->getServiceLocator()->get('ViewHelperManager')->get('serverUrl')->__invoke();
-//        //$basePath = $this->getServiceLocator()->get('ViewHelperManager')->get('basePath')->__invoke();
-//        $server_url = $serverUrl;
-//        
-//    	$email = $user->getEmail();
-//    	$activation_link = $server_url . $this->url()->fromRoute(static::ROUTE_ACTIVATION_DONE, array('lang' => $lang));
-//    	$activation_link .= '?token=' . $token . '&email='.$email;
-//        
-//        $viewTemplate = 'mail/activation';
-//        $values = array(
-//			'link' => $activation_link
-//		);
-//		
-//		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
-//		$from = 'tsmakalagy@yahoo.fr';
-//		$to = $email;		
-//		$subject = 'Godana activation link';
-//		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
-//		$mailService->send($message);
+    	$userMetas = $user->getUserMetas();
+        //\Doctrine\Common\Util\Debug::dump($userMetas);
+        $token = "";        
+    	foreach ($userMetas as $userMeta) {
+        	if ($userMeta->getMetaKey() == 'token') {
+        		$token = $userMeta->getMeta();
+        	}
+        }
+        
+        $serverUrl = $this->getServiceLocator()->get('ViewHelperManager')->get('serverUrl')->__invoke();
+        //$basePath = $this->getServiceLocator()->get('ViewHelperManager')->get('basePath')->__invoke();
+        $server_url = $serverUrl;
+        
+    	$email = $user->getEmail();
+    	$activation_link = $server_url . $this->url()->fromRoute(static::ROUTE_ACTIVATION_DONE, array('lang' => $lang));
+    	$activation_link .= '?token=' . $token . '&email='.$email;
+        
+        $viewTemplate = 'mail/activation';
+        $values = array(
+			'link' => $activation_link
+		);
+		
+		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
+		$from = array('email' => 'noreply@godana.com', 'name' => 'Godana admin');
+		$to = $email;		
+		$subject = 'Godana activation link';
+		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
+		$mailService->send($message);
     	
     	
     	
@@ -256,7 +256,7 @@ class MyUserController extends AbstractActionController
 		);
 		
 		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
-		$from = 'tsmakalagy@yahoo.fr';
+		$from = array('email' => 'noreply@godana.com', 'name' => 'Godana admin');
 		$to = $email;		
 		$subject = 'Godana activation link';
 		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
@@ -473,7 +473,8 @@ class MyUserController extends AbstractActionController
         $user = $service->register($post);
         $redirect = isset($prg['redirect']) ? $prg['redirect'] : null;
 
-        if (!$user) {        	
+        if (!$user instanceof \SamUser\Entity\User) {     
+            var_dump($user);
 //            return array(
 //                'registerForm' => $form,
 //            	'lang' => $lang,

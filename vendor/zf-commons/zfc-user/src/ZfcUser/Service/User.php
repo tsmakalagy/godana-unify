@@ -72,7 +72,8 @@ class User extends EventProvider implements ServiceManagerAwareInterface
         $form->bind($user);
         $form->setData($data);
         if (!$form->isValid()) {
-            return false;
+            return $form->getMessages();
+            //return false;
         }
 
         $user = $form->getData();
