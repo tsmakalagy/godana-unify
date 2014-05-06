@@ -1,3 +1,4 @@
+<? $this->headTitle($this->translate('Login'));?>
 <div class="main-content">
 	<div class="row-fluid">
 		<div class="span12">
@@ -12,15 +13,34 @@
 
 				<div class="row-fluid">
 					<div class="position-relative">
-						<?php if (!$isUser): ?>
-						<div class="alert alert-danger"><h5><?=$this->translate(sprintf('The username <strong>%s</strong> does not exist!', $this->username)); ?></h5></div>
-						<?php else: ?>
-						<div class="alert alert-info"><h5><?=$this->translate('Thank you for joining Godana! An email has been sent to your mailbox. Please click the link to activate your account.'); ?></h5></div>
-						<?php endif; ?>
+						<div class="forgot-box widget-box no-border visible">
+							<div class="widget-body">
+								<div class="widget-main">
+									<h4 class="header red lighter bigger">
+										<i class="icon-key"></i>
+										Retrieve Password
+									</h4>
+
+									<div class="space-6"></div>
+									<?php if (!$isUser): ?>
+									<div class="alert alert-danger"><h5><?=$this->translate(sprintf('The username <strong>%s</strong> does not exist!', $this->username)); ?></h5></div>
+									<?php else: ?>
+									<div class="alert alert-info"><h5><?=$this->translate('Thank you for joining Godana! An email has been sent to your mailbox. Please click the link to activate your account.'); ?></h5></div>
+									<?php endif; ?>
+									
+								</div><!--/widget-main-->
+
+								<div class="toolbar center">
+									<a href="<?=$this->url('zfcuser/login', array(), array(), true) ?>" class="back-to-login-link">
+										<?php echo $this->translate('Back to login'); ?>
+										<i class="icon-arrow-right"></i>
+									</a>
+								</div>
+							</div><!--/widget-body-->
+						</div><!--/forgot-box-->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-

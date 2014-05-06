@@ -13,8 +13,8 @@ $settings = array(
      * Default: empty
      */
     'email_from_address' => array(
-    	'email' => 'your_email_address@here.com',
-    	'name' => 'Your name',
+    	'email' => 'tsmakalagy@yahoo.fr',
+    	'name' => 'Godana admin',
 	),
 
     /**
@@ -23,14 +23,14 @@ $settings = array(
      *
      * Default: 'You requested to reset your password'
      */
-    //'reset_email_subject_line' => 'You requested to reset your password',
+    'reset_email_subject_line' => 'You requested to reset your password',
 
     /**
      * Mail Transport to use
      *
      * Default: 'Zend\Mail\Transport\Sendmail'
      */
-    //'email_transport' => 'Zend\Mail\Transport\Sendmail',
+    'email_transport' => 'Zend\Mail\Transport\Sendmail',
 
     /**
      * Password Model Entity Class
@@ -38,7 +38,7 @@ $settings = array(
      * Name of Entity class to use. Useful for using your own entity class
      * instead of the default one provided. Default is GoalioForgotPassword\Entity\Password.
      */
-    //'password_entity_class' => 'GoalioForgotPassword\Entity\Password',
+    'password_entity_class' => 'GoalioForgotPasswordDoctrineORM\Entity\Password',
 
     /**
      * Reset expire time
@@ -48,7 +48,7 @@ $settings = array(
      * Default value: 86400 seconds = 24 hours
      * Accepted values: the number of seconds the user should be allowed to change his password
      */
-    //'reset_expire' => 86400,
+    'reset_expire' => 86400,
 
     /**
      * End of GoalioForgotPassword configuration

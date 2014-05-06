@@ -23,6 +23,13 @@ class Forgot extends ProvidesEventsForm
             'options' => array(
                 'label' => 'E-Mail',
             ),
+            'attributes' => array(
+                'type' => 'text',
+                'class' => 'span12',
+            	'placeholder' => 'Email',
+            	'autocomplete' => 'off',
+            	'id' => 'forgot_email'
+            ),
         ));
 
         $submitElement = new Element\Button('submit');

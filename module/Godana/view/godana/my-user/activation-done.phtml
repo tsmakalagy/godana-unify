@@ -1,3 +1,4 @@
+<? $this->headTitle($this->translate('Login'));?>
 <div class="main-content">
 	<div class="row-fluid">
 		<div class="span12">
@@ -12,17 +13,38 @@
 
 				<div class="row-fluid">
 					<div class="position-relative">
-						<?php if (isset($this->activation_ok) && !$this->activation_ok): ?>
-						<div class="alert alert-danger"><h5><?=$this->translate(sprintf('An error has occurred when activating your account. Please click %shere%s to resend the activation mail', '<a href="' . $this->activation_link . '" class="alert-link">', '</a>')); ?></h5></div>
-						<?php elseif (isset($this->activation_error) && $this->activation_error): ?>
-						<div class="alert alert-danger"><h5><?=$this->translate('There is an error processing your request. Try again next time!'); ?></h5></div>
-						<?php else: ?>
-						<div class="alert alert-info"><h5><?=$this->translate('Congratulations! Your account has been activated. You will be redirected to login page in a moment. If not please click this'); ?> <a href="<?=$this->url('zfcuser/login', array(), array(), true) ?>" class="alert-link"><?=$this->translate('link'); ?></a></h5></div>
-						<?php endif; ?>
+						<div class="forgot-box widget-box no-border visible">
+							<div class="widget-body">
+								<div class="widget-main">
+									<h4 class="header red lighter bigger">
+										<i class="icon-key"></i>
+										Retrieve Password
+									</h4>
+
+									<div class="space-6"></div>
+									<?php if (isset($this->activation_ok) && !$this->activation_ok): ?>
+									<div class="alert alert-danger"><h5><?=$this->translate(sprintf('An error has occurred when activating your account. Please click %shere%s to resend the activation mail', '<a href="' . $this->activation_link . '" class="alert-link">', '</a>')); ?></h5></div>
+									<?php elseif (isset($this->activation_error) && $this->activation_error): ?>
+									<div class="alert alert-danger"><h5><?=$this->translate('There is an error processing your request. Try again next time!'); ?></h5></div>
+									<?php else: ?>
+									<div class="alert alert-info"><h5><?=$this->translate('Congratulations! Your account has been activated. You will be redirected to login page in a moment. If not please click this'); ?> <a href="<?=$this->url('zfcuser/login', array(), array(), true) ?>" class="alert-link"><?=$this->translate('link'); ?></a></h5></div>
+									<?php endif; ?>
+									
+								</div><!--/widget-main-->
+
+								<div class="toolbar center">
+									<a href="<?=$this->url('zfcuser/login', array(), array(), true) ?>" class="back-to-login-link">
+										<?php echo $this->translate('Back to login'); ?>
+										<i class="icon-arrow-right"></i>
+									</a>
+								</div>
+							</div><!--/widget-body-->
+						</div><!--/forgot-box-->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 

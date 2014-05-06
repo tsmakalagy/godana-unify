@@ -1,4 +1,12 @@
 <? $this->headTitle($this->translate('Login'));?>
+<?php
+
+$form = $this->resetForm;
+
+$form->prepare();
+$form->setAttribute('action', $this->url('zfcuser/resetpassword', array('userId' => $this->userId, 'token' => $this->token)));
+$form->setAttribute('method', 'post');
+?>
 <div class="main-content">
 	<div class="row-fluid">
 		<div class="span12">
@@ -18,17 +26,37 @@
 								<div class="widget-main">
 									<h4 class="header red lighter bigger">
 										<i class="icon-key"></i>
-										Retrieve Password
+										Change Password
 									</h4>
 
 									<div class="space-6"></div>
-									<?php if (!$isUser): ?>
-									<div class="alert alert-danger"><h5><?=$this->translate(sprintf('The username <strong>%s</strong> does not exist!', $this->username)); ?></h5></div>
-									<?php elseif ($isUserActivated): ?>
-									<div class="alert alert-danger"><h5><?=$this->translate('This account is already activated!'); ?></h5></div>
-									<?php else: ?>
-									<div class="alert alert-info"><h5><?=$this->translate('Thank you for joining Godana! An email has been sent to your mailbox. Please click the link to activate your account.'); ?></h5></div>
-									<?php endif; ?>
+									
+									<p>
+										Enter your new password
+									</p>
+									
+									<?php echo $this->form()->openTag($form) ?>
+									<div class="my-alert"></div>
+										<fieldset>
+											<label>
+												<span class="block input-icon input-icon-right">
+													<?php echo $this->formInput($form->get('newCredential')) ?>
+													<i class="icon-lock"></i>
+												</span>
+											</label>
+											
+											<label>
+												<span class="block input-icon input-icon-right">
+													<?php echo $this->formInput($form->get('newCredentialVerify')) ?>
+													<i class="icon-retweet"></i>
+												</span>
+											</label>
+
+											<div class="clearfix">
+												<?php echo $this->formButton($form->get('submit')); ?>
+											</div>
+										</fieldset>
+									<?php echo $this->form()->closeTag() ?>
 									
 								</div><!--/widget-main-->
 

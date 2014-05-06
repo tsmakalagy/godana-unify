@@ -145,6 +145,40 @@ return array(
                             ),
                         ),
                     ),
+                    'forgotpassword' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => '/forgot-password',
+                            'defaults' => array(
+                                'controller' => 'zfcuser',
+                                'action'     => 'forgot',
+                            ),
+                        ),
+                    ),
+                    'forgotsent' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => '/forgot-sent',
+                            'defaults' => array(
+                                'controller' => 'zfcuser',
+                                'action'     => 'forgotSent',
+                            ),
+                        ),
+                    ),
+                    'resetpassword' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/reset-password/:userId/:token',
+                            'defaults' => array(
+                                'controller' => 'zfcuser',
+                                'action'     => 'reset',
+                            ),
+                            'constraints' => array(
+                                'userId'  => '[0-9]+',
+                                'token' => '[A-F0-9]+',
+                            ),
+                        ),
+                    ),
                     'input_validate' => array(
                         'type' => 'Literal',
                         'options' => array(

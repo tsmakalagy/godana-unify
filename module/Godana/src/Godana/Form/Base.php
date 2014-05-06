@@ -24,7 +24,8 @@ class Base extends ProvidesEventsForm
                 'class' => 'span12',
             	'required' => true,
             	'placeholder' => 'Email',
-            	'autocomplete' => 'off'
+            	'autocomplete' => 'off',
+            	'id' => 'register_email'
             ),
         ));
         
@@ -41,7 +42,8 @@ class Base extends ProvidesEventsForm
                 'class' => 'span12',
             	'required' => true,
             	'placeholder' => 'Username',
-            	'autocomplete' => 'off'
+            	'autocomplete' => 'off',
+            	'id' => 'register_username'
             ),
         ));
         
@@ -135,7 +137,8 @@ class Base extends ProvidesEventsForm
                 'type' => 'password',
                 'class' => 'span12',
             	'required' => true,
-            	'placeholder' => 'Password'
+            	'placeholder' => 'Password',
+            	'id' => 'register_password'
             ),
         ));
 
@@ -151,7 +154,8 @@ class Base extends ProvidesEventsForm
                 'type' => 'password',
                 'class' => 'span12',
             	'required' => true,
-            	'placeholder' => 'Password Verify'
+            	'placeholder' => 'Password Verify',
+            	'id' => 'register_password_verify'
             ),
         ));
 

@@ -26,6 +26,10 @@ class Reset extends ProvidesEventsForm
             ),
             'attributes' => array(
                 'type' => 'password',
+                'class' => 'span12',
+            	'required' => true,
+            	'placeholder' => 'New Password',
+            	'id' => 'reset_new_password'
             ),
         ));
 
@@ -36,6 +40,10 @@ class Reset extends ProvidesEventsForm
             ),
             'attributes' => array(
                 'type' => 'password',
+                'class' => 'span12',
+            	'required' => true,
+            	'placeholder' => 'Verify New Password',
+            	'id' => 'reset_new_password_verify'
             ),
         ));
 
@@ -44,6 +52,7 @@ class Reset extends ProvidesEventsForm
             ->setLabel('Set new password')
             ->setAttributes(array(
                 'type'  => 'submit',
+            	'class' => 'pull-right btn btn-small btn-danger reset-password-button'
             ));
 
         $this->add($submitElement, array(

@@ -12,6 +12,7 @@ use Zend\View\Model\ViewModel;
 use ZfcUser\Service\User as UserService;
 use ZfcUser\Options\UserControllerOptionsInterface;
 use Zend\Stdlib\Parameters;
+use GoalioForgotPassword\Service\Password as PasswordService;
 
 class MyUserController extends AbstractActionController
 {
@@ -71,6 +72,33 @@ class MyUserController extends AbstractActionController
 	 * @var Form
 	 */
 	protected $userAddForm;
+	
+	/**
+     * @var PasswordService
+     */
+    protected $passwordService;
+
+    /**
+     * @var Form
+     */
+    protected $forgotForm;
+
+    /**
+     * @var Form
+     */
+    protected $resetForm;
+
+    /**
+     * @todo Make this dynamic / translation-friendly
+     * @var string
+     */
+    protected $message = 'An e-mail with further instructions has been sent to you.';
+
+    /**
+     * @todo Make this dynamic / translation-friendly
+     * @var string
+     */
+    protected $failedMessage = 'The e-mail address is not valid.';
 
     /**
      * @todo Make this dynamic / translation-friendly
@@ -278,6 +306,7 @@ class MyUserController extends AbstractActionController
         $response = $this->getResponse();
         $loginForm    = $this->getLoginForm();
         $registerForm = $this->getRegisterForm();
+        $forgotForm = $this->getForgotForm();
 
         if ($this->getOptions()->getUseRedirectParameterIfPresent() && $request->getQuery()->get('redirect')) {
             $redirect = $request->getQuery()->get('redirect');
@@ -289,6 +318,7 @@ class MyUserController extends AbstractActionController
             return array(
             	'registerForm' => $registerForm,
                 'loginForm' => $loginForm,
+            	'forgotForm' => $forgotForm,
                 'redirect'  => $redirect,
             	'lang' => $lang,
                 'enableRegistration' => $this->getOptions()->getEnableRegistration(),
@@ -514,6 +544,114 @@ class MyUserController extends AbstractActionController
         return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
     }
     
+	public function forgotAction()
+    {
+    	$lang = $this->params()->fromRoute('lang', 'mg');	
+        $service = $this->getPasswordService();
+        $service->cleanExpiredForgotRequests();
+
+        $request = $this->getRequest();
+        $form    = $this->getForgotForm();
+
+        if ( $this->getRequest()->isPost() )
+        {
+            $form->setData($this->getRequest()->getPost());
+            if ( $form->isValid() )
+            {
+                $userService = $this->getUserService();
+
+                $email = $this->getRequest()->getPost()->get('email');
+                $user = $userService->getUserMapper()->findByEmail($email);
+
+                //only send request when email is found
+                if($user != null) {
+                    $service->sendProcessForgotRequest($user->getId(), $email);
+                } else {
+                	$alert = '<div class="my-alert alert alert-danger alert-dismissable">';
+		            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+		            $alert .= $this->failedMessage;
+		            $alert .= '</div>';            
+		            $res['alert'] = $alert;            
+		            $res['success'] = false;
+		            return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
+                }
+				$res['success'] = true;
+        		$res['redirect'] = $this->url()->fromRoute('zfcuser/forgotsent', array('lang' => $lang)) . '?email=' . $email;
+       			return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
+//                $vm = new ViewModel(array('email' => $email));
+//                $vm->setTemplate('goalio-forgot-password/forgot/sent');
+//                return $vm;
+            } else {
+                $alert = '<div class="my-alert alert alert-danger alert-dismissable">';
+	            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+	            $alert .= $this->failedMessage;
+	            $alert .= '</div>';            
+	            $res['alert'] = $alert;            
+	            $res['success'] = false;
+	            return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
+            }
+        }
+
+    }
+    
+    public function forgotSentAction()
+    {
+    	$this->layout('layout/login-layout');
+    	$email = $this->params()->fromQuery('email', null);
+    	$users = $this->getObjectManager()->getRepository('SamUser\Entity\User')->findByEmail($email);
+    	$user = $users[0];
+    	if ($user instanceof User) {
+    		return array('success' => true, 'email' => $email);
+    	} else {
+    		return array('success' => false, 'email' => $email);
+    	}
+    }
+
+    public function resetAction()
+    {
+    	$this->layout('layout/login-layout');
+    	$lang = $this->params()->fromRoute('lang', 'mg');	
+        $service = $this->getPasswordService();
+        $service->cleanExpiredForgotRequests();
+
+        $request = $this->getRequest();
+        $form    = $this->getResetForm();
+
+        $userId    = $this->params()->fromRoute('userId', null);
+        $token     = $this->params()->fromRoute('token', null);
+
+        $password = $service->getPasswordMapper()->findByUserIdRequestKey($userId, $token);
+
+        //no request for a new password found
+        if($password === null) {
+            return $this->redirect()->toRoute(static::ROUTE_LOGIN, array('lang' => $lang));
+        }
+
+        $userService = $this->getUserService();
+        $user = $userService->getUserMapper()->findById($userId);
+
+        if ( $this->getRequest()->isPost() )
+        {
+            $form->setData($this->getRequest()->getPost());
+            if ( $form->isValid() && $user !== null )
+            {
+                $service->resetPassword($password, $user, $form->getData());
+
+                $vm = new ViewModel(array('email' => $user->getEmail()));
+                $vm->setTemplate('godana/my-user/passwordchanged');
+                return $vm;
+            }
+        }
+
+        // Render the form
+        return array(
+            'resetForm' => $form,
+            'userId'    => $userId,
+            'token'     => $token,
+            'email'     => $user->getEmail(),
+        );
+    }
+    
     public function validateInputAjaxAction()
     {		
 		$request = $this->getRequest();
@@ -522,11 +660,17 @@ class MyUserController extends AbstractActionController
 			
 			$type = $request->getPost('type');
 			
-			if (isset($type) && $type == 'profile') {
-				$form = $this->getProfileForm();			
-			} else {
-				$form = $this->getRegisterForm();
-			}
+			$form = $this->getRegisterForm();
+			
+			if (isset($type)) {
+				if ($type == 'profile') {
+					$form = $this->getProfileForm();			
+				} else if ($type == 'register') {
+					$form = $this->getRegisterForm();
+				} else if ($type == 'forgot') {
+					$form = $this->getForgotForm();
+				}
+			} 
 			
 			$input_name = $request->getPost('name');
 			$data['email'] = $request->getPost('email');
@@ -1069,6 +1213,46 @@ class MyUserController extends AbstractActionController
     public function setUserService(UserService $userService)
     {
         $this->userService = $userService;
+        return $this;
+    }
+    
+	public function getForgotForm()
+    {
+        if (!$this->forgotForm) {
+            $this->setForgotForm($this->getServiceLocator()->get('goalioforgotpassword_forgot_form'));
+        }
+        return $this->forgotForm;
+    }
+
+    public function setForgotForm(Form $forgotForm)
+    {
+        $this->forgotForm = $forgotForm;
+    }
+    
+	public function getResetForm()
+    {
+        if (!$this->resetForm) {
+            $this->setResetForm($this->getServiceLocator()->get('goalioforgotpassword_reset_form'));
+        }
+        return $this->resetForm;
+    }
+
+    public function setResetForm(Form $resetForm)
+    {
+        $this->resetForm = $resetForm;
+    }
+    
+	public function getPasswordService()
+    {
+        if (!$this->passwordService) {
+            $this->passwordService = $this->getServiceLocator()->get('goalioforgotpassword_password_service');
+        }
+        return $this->passwordService;
+    }
+
+    public function setPasswordService(PasswordService $passwordService)
+    {
+        $this->passwordService = $passwordService;
         return $this;
     }
 }

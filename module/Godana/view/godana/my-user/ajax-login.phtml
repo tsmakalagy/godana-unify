@@ -11,6 +11,12 @@ $registerForm->prepare();
 $registerForm->setAttribute('action', '');
 $registerForm->setAttribute('method', 'post');
 $registerForm->setAttribute('id', 'registerForm');
+
+$forgotForm = $this->forgotForm;
+$forgotForm->prepare();
+$forgotForm->setAttribute('action', '');
+$forgotForm->setAttribute('method', 'post');
+$forgotForm->setAttribute('id', 'forgotForm');
 ?>
 <div class="main-content">
 	<div class="row-fluid">
@@ -39,7 +45,7 @@ $registerForm->setAttribute('id', 'registerForm');
 									<div class="my-alert"></div>
 										<fieldset>
 											<label>
-												<span class="block input-icon input-icon-right">
+												<span class="block input-icon input-icon-right">												
 													<?php echo $this->formInput($loginForm->get('identity')) ?>
 													<i class="icon-user"></i>
 												</span>
@@ -117,26 +123,27 @@ $registerForm->setAttribute('id', 'registerForm');
 
 									<div class="space-6"></div>
 									<p>
-										Enter your email and to receive instructions
+										Enter your email to receive instructions
 									</p>
 
-									<form />
+									<?php echo $this->form()->openTag($forgotForm) ?>
+									<div class="my-alert"></div>
 										<fieldset>
 											<label>
 												<span class="block input-icon input-icon-right">
-													<input type="email" class="span12" placeholder="Email" />
+													<?php echo $this->formInput($forgotForm->get('email')) ?>
 													<i class="icon-envelope"></i>
 												</span>
 											</label>
 
 											<div class="clearfix">
-												<button onclick="return false;" class="width-35 pull-right btn btn-small btn-danger">
+												<button onclick="" class="width-35 pull-right btn btn-small btn-danger forgot-button">
 													<i class="icon-lightbulb"></i>
 													Send Me!
 												</button>
 											</div>
 										</fieldset>
-									</form>
+									<?php echo $this->form()->closeTag() ?>
 								</div><!--/widget-main-->
 
 								<div class="toolbar center">
@@ -241,37 +248,41 @@ $registerForm->setAttribute('id', 'registerForm');
 var loginUrl = "<?php echo $this->url('zfcuser/login', array(), array(), true); ?>";
 var validateUrl = "<?=$this->url('zfcuser/input_validate', array(), array(), true); ?>";
 var registerUrl = "<?=$this->url('zfcuser/register', array(), array(), true); ?>";
+var forgotUrl = "<?=$this->url('zfcuser/forgotpassword', array(), array(), true); ?>";
 $(document).ready(function() {	
 
 	$('button[type="reset"]').click(function() {
 		$('label').removeClass('register-error').removeClass('register-valid');
 		$('label').find('.help-block').remove();
 	});
-	$('input[name="email"]').validateInput({
+	$('#register_email').validateInput({
 		name: 'email',
-		url: validateUrl
+		url: validateUrl,
+		query: '&type=register'
 	});
-	$('input[name="username"]').validateInput({
+	$('#register_username').validateInput({
 		name: 'username',
-		url: validateUrl
+		url: validateUrl,
+		query: '&type=register'
 	});
-	$('input[name="password"]').validateInput({
+	$('#register_password').validateInput({
 		name: 'password',
-		url: validateUrl
+		url: validateUrl,
+		query: '&type=register'
 	});
 
 	$('input[name="captcha[input]"]').validateInput({
 		name: 'captcha[input]',
 		url: validateUrl,
-		query: '&captcha[id]='+$('input[name="captcha[id]"]').val()
+		query: '&captcha[id]='+$('input[name="captcha[id]"]').val()+'&type=register'
 	});
 	
-	$('input[name="password"]').change(function(e) {
+	$('#register_password').change(function(e) {
 		var password = $(this).val();
-		$('input[name="passwordVerify"]').validateInput("destroy");
-		$('input[name="passwordVerify"]').validateInput("init", {
+		$('#register_password_verify').validateInput("destroy");
+		$('#register_password_verify').validateInput("init", {
 			name: 'passwordVerify',
-			query: '&password='+password,
+			query: '&password='+password+'&type=register',
 			url: validateUrl			
 		});	
 		
@@ -317,6 +328,34 @@ $(document).ready(function() {
                 if (res.success == false) {
                 	$("form#registerForm .my-alert").html(res.alert);
                 	$('.register-button').removeClass('disabled');                	
+                } else {
+                	$(location).attr('href',res.redirect);  
+                }
+    		}
+        });
+        return false;
+	});
+
+	$('#forgot_email').validateInput({
+		name: 'email',
+		url: validateUrl,
+		query: '&type=forgot'
+	});
+
+	$("form#forgotForm").submit(function(e) {
+		e.preventDefault();
+		$.ajax({
+        	type: "POST",
+            url: forgotUrl,
+            data: $("form#forgotForm").serialize(),
+            dataType: "json",
+			beforeSend: function() {    
+    			$('.forgot-button').addClass('disabled');
+    		},
+            success: function(res) {
+                if (res.success == false) {
+                	$("form#forgotForm .my-alert").html(res.alert);
+                	$('.forgot-button').removeClass('disabled');                	
                 } else {
                 	$(location).attr('href',res.redirect);  
                 }
