@@ -60,9 +60,9 @@ class RememberMe extends EventProvider implements ServiceManagerAwareInterface
         return false;
     }
 
-    public function removeSerie($userId, $serieId)
+    public function removeSerie($user, $serieId)
     {
-        $this->getMapper()->removeSerie($userId, $serieId);
+        $this->getMapper()->removeSerie($user->getId(), $serieId); // Change from $userId
     }
 
     public function removeCookie()
@@ -79,7 +79,8 @@ class RememberMe extends EventProvider implements ServiceManagerAwareInterface
     {
         $cookieLength = $this->getOptions()->getCookieExpire();
         $cookieDomain = $this->getOptions()->getCookieDomain();
-        $cookieValue = $entity->getUserId() . "\n" . $entity->getSid() . "\n" . $entity->getToken();
+        $cookieValue = $entity->getUserId()->getId() . "\n" . $entity->getSid() . "\n" . $entity->getToken(); // Change from
+        // $entity->getUserId()
         return setcookie("remember_me", $cookieValue, time() + $cookieLength, '/', $cookieDomain, null, true);
     }
 
