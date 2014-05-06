@@ -133,7 +133,7 @@ class MyUserController extends AbstractActionController
 		);
 		
 		$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
-		$from = array('email' => 'noreply@godana.com', 'name' => 'Godana admin');
+		$from = array('email' => 'tsmakalagy@yahoo.fr', 'name' => 'Godana admin');
 		$to = $email;		
 		$subject = 'Godana activation link';
 		$message = $mailService->createHtmlMessage($from, $to, $subject, $viewTemplate, $values);   
