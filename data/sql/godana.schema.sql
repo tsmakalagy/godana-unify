@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2014 at 07:15 AM
+-- Generation Time: May 06, 2014 at 11:33 AM
 -- Server version: 5.1.49
 -- PHP Version: 5.3.3-7
 
@@ -15,9 +15,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Database: `godana_new`
---
 
 -- --------------------------------------------------------
 
@@ -29,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `gdn_attribute` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -46,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `gdn_bid` (
   PRIMARY KEY (`id_bid`),
   UNIQUE KEY `UNIQ_40C75C60D1AA708F` (`id_post`),
   KEY `IDX_40C75C60A67B1E36` (`id_city`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -64,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `gdn_car` (
   KEY `IDX_7D08090E8D0C5D40` (`cooperative_id`),
   KEY `IDX_7D08090E7975B7E7` (`model_id`),
   KEY `IDX_7D08090EC3423909` (`driver_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -78,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `gdn_car_driver` (
   `cooperative_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_3640824F8D0C5D40` (`cooperative_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -105,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `gdn_car_make` (
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_1153A19D5E237E06` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -119,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `gdn_car_model` (
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_F32A4EA8CFBF73EB` (`make_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -135,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `gdn_category` (
   `category_type` int(11) NOT NULL,
   PRIMARY KEY (`id_category`),
   KEY `IDX_C6B9DA9E70DF7698` (`id_parent_category`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -153,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `gdn_comment` (
   PRIMARY KEY (`id`),
   KEY `IDX_DBDBA013A76ED395` (`user_id`),
   KEY `IDX_DBDBA0134B89032C` (`post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -167,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `gdn_contact` (
   `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_contact`),
   KEY `UNIQ_3CD14478CDE5729` (`type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -179,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `gdn_contact_type` (
   `id_contact_type` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_contact_type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -192,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `gdn_cooperative` (
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `description` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -281,21 +278,6 @@ CREATE TABLE IF NOT EXISTS `gdn_cooperative_zone` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gdn_country`
---
-
-CREATE TABLE IF NOT EXISTS `gdn_country` (
-  `id_country` int(11) NOT NULL AUTO_INCREMENT,
-  `cc_fips` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
-  `cc_iso` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
-  `tld` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `country_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_country`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `gdn_driver_contact`
 --
 
@@ -318,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `gdn_feed` (
   `post_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_4A4CB3BA4B89032C` (`post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -335,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `gdn_file` (
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id_file`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -350,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `gdn_image` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_AFE4285A93CB796C` (`file_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -367,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `gdn_line` (
   KEY `IDX_B81843E745E9C671` (`departure`),
   KEY `IDX_B81843E75BE55CB4` (`arrival`),
   KEY `IDX_B81843E79F2C3FAB` (`zone_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -400,25 +382,7 @@ CREATE TABLE IF NOT EXISTS `gdn_line_contact` (
   PRIMARY KEY (`id`),
   KEY `IDX_BEE87FA8D0C5D40` (`cooperative_id`),
   KEY `IDX_BEE87FA4D7B7542` (`line_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gdn_mada_cities`
---
-
-CREATE TABLE IF NOT EXISTS `gdn_mada_cities` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `country_code` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  `city_name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `city_accented` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `region` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `population` bigint(20) NOT NULL,
-  `latitude` decimal(10,7) NOT NULL,
-  `longitude` decimal(10,7) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18424 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -435,7 +399,7 @@ CREATE TABLE IF NOT EXISTS `gdn_media` (
   `size` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_media`),
   KEY `IDX_F58D09D1AA708F` (`id_post`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -448,7 +412,7 @@ CREATE TABLE IF NOT EXISTS `gdn_passenger` (
   `title` int(11) NOT NULL,
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -481,7 +445,7 @@ CREATE TABLE IF NOT EXISTS `gdn_post` (
   `id_user` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_post`),
   KEY `IDX_33869B9C6B3CA4B` (`id_user`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -558,7 +522,7 @@ CREATE TABLE IF NOT EXISTS `gdn_product` (
   PRIMARY KEY (`id`),
   KEY `IDX_9CE5F6D2C54C8C93` (`type_id`),
   KEY `IDX_9CE5F6D24D16C4DD` (`shop_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -614,7 +578,7 @@ CREATE TABLE IF NOT EXISTS `gdn_product_type` (
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `unit` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -633,7 +597,7 @@ CREATE TABLE IF NOT EXISTS `gdn_reservation` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_828A2064502E565` (`passenger_id`),
   KEY `IDX_828A206E7EC5785` (`board_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -651,7 +615,7 @@ CREATE TABLE IF NOT EXISTS `gdn_reservation_board` (
   KEY `IDX_65453E59C3C6F69F` (`car_id`),
   KEY `IDX_65453E594D7B7542` (`line_id`),
   KEY `IDX_65453E598D0C5D40` (`cooperative_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -668,9 +632,10 @@ CREATE TABLE IF NOT EXISTS `gdn_shop` (
   `is_deleted` int(11) NOT NULL,
   `cover_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `shop_idx` (`ident`),
   KEY `IDX_C566BBB37E3C61F9` (`owner_id`),
   KEY `IDX_C566BBB3922726E9` (`cover_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -724,7 +689,7 @@ CREATE TABLE IF NOT EXISTS `gdn_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -751,7 +716,7 @@ CREATE TABLE IF NOT EXISTS `gdn_zone` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -766,7 +731,7 @@ CREATE TABLE IF NOT EXISTS `role` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_57698A6AB8C2FD88` (`roleId`),
   KEY `IDX_57698A6A727ACA70` (`parent_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -787,14 +752,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `state` int(11) DEFAULT NULL,
   `file_id` int(11) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
-  `last_ip` int(11) DEFAULT NULL,
+  `last_ip` decimal(20,0) DEFAULT NULL,
   `register_time` datetime NOT NULL,
-  `register_ip` int(11) NOT NULL,
+  `register_ip` decimal(20,0) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_1483A5E9E7927C74` (`email`),
   UNIQUE KEY `UNIQ_1483A5E9F85E0677` (`username`),
   KEY `IDX_1483A5E993CB796C` (`file_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -808,6 +773,20 @@ CREATE TABLE IF NOT EXISTS `users_roles` (
   PRIMARY KEY (`user_id`,`role_id`),
   KEY `IDX_51498A8EA76ED395` (`user_id`),
   KEY `IDX_51498A8ED60322AC` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_password_reset`
+--
+
+CREATE TABLE IF NOT EXISTS `user_password_reset` (
+  `request_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `request_time` datetime NOT NULL,
+  PRIMARY KEY (`request_key`),
+  UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -850,7 +829,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
   `is_default` tinyint(1) NOT NULL,
   `parent_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -864,8 +843,6 @@ CREATE TABLE IF NOT EXISTS `user_role_linker` (
   PRIMARY KEY (`user_id`,`role_id`),
   KEY `role_id` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 
 --
 -- Constraints for dumped tables
