@@ -300,8 +300,11 @@ $(document).ready(function() {
 
 	$("form#registerForm").submit(function(e) {
 		e.preventDefault();
-        document.getElementById("captcha-challenge").value = document.getElementById("recaptcha_challenge_field").value;
-        document.getElementById("captcha-response").value = document.getElementById("recaptcha_response_field").value;
+		if (($("#captcha-challenge").length > 0) && ($("#captcha-response").length > 0)) {
+			$("#captcha-challenge").val($("#recaptcha_challenge_field").val());
+	        $("#captcha-response").val($("#recaptcha_response_field").val());
+		} 
+        
 		$.ajax({
         	type: "POST",
             url: registerUrl,
