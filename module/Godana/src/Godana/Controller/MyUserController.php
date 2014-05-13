@@ -715,6 +715,13 @@ class MyUserController extends AbstractActionController
 		}
     }
     
+    public function adminAction()
+    {
+    	$this->layout('layout/ace-layout');
+    	$lang = $this->params()->fromRoute('lang', 'mg');
+    	return new ViewModel(array('lang' => $lang));
+    }
+    
 	/**
      * Edit user profile
      */

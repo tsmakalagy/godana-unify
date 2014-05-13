@@ -21,7 +21,7 @@ class Login extends ZfcLoginForm
             'name' => 'remember_me',
             'options' => array(
                 'label' => 'Stay logged in',
-                'use_hidden_element' => true,
+                'use_hidden_element' => false,
                 'checked_value' => '1',
                 'unchecked_value' => '0'
             ),

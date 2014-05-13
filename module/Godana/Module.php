@@ -59,6 +59,12 @@ class Module
                     $viewHelper->setObjectManager($locator->get('Doctrine\ORM\EntityManager'));
                     return $viewHelper;
                 },                
+                'userAge' => function ($sm) {
+                    $locator = $sm->getServiceLocator();
+                    $viewHelper = new View\Helper\UserAge();
+                    $viewHelper->setAuthService($locator->get('zfcuser_auth_service'));
+                    return $viewHelper;
+                },    
 		        'myFormLabel' => function($sm) {
 		            return new Form\View\Helper\RequiredMarkInFormLabel;
 		        },

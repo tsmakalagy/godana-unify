@@ -1,0 +1,200 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+    	<?php echo $this->headTitle('Godana')->setSeparator(' | ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+    	<meta name="description" content="" />
+    	<meta name="author" content="" />
+
+	    <!-- CSS -->
+	    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/favicon2.ico'))
+	    				->appendStylesheet($this->basePath() . '/ace/css/bootstrap.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/bootstrap-responsive.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/font-awesome.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/font-awesome-ie7.min.css', 'screen', 'IE7')
+	    				->appendStylesheet($this->basePath() . '/ace/css/jquery-ui-1.10.3.custom.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/jquery.gritter.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/select2.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/bootstrap-editable.css')
+	    				->appendStylesheet('http://fonts.googleapis.com/css?family=Open+Sans:400,300')
+	    				->appendStylesheet($this->basePath() . '/ace/css/ace.min.css')
+                		->appendStylesheet($this->basePath() . '/ace/css/ace-responsive.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/ace-skins.min.css')
+	    				->appendStylesheet($this->basePath() . '/ace/css/ace-ie.min.css', 'screen', 'IE8')
+	    				->appendStylesheet($this->basePath() . '/assets/css/gdn-style.css')
+	    				 ?>
+        
+        <!-- JS Global Compulsory -->	
+        <?php $this->inlineScript()
+        				->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js', 'text/javascript', array('conditional' => '!IE'))
+        				->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', 'text/javascript', array('conditional' => 'IE'))
+        				
+        ?>
+        <!--[if !IE]>-->
+
+		<script type="text/javascript">
+			var basePath = "<?php echo $this->basePath(); ?>";
+			window.jQuery || document.write("<script src='"+basePath+"/ace/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!--<![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='"+basePath+"/ace/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src='"+basePath+"/ace/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<?php $this->headScript()
+        				->appendFile($this->basePath() . '/ace/js/bootstrap.min.js')
+        				->appendFile($this->basePath() . '/ace/js/excanvas.min.js', 'text/javascript', array('conditional' => 'lte IE 8',))
+        				->appendFile($this->basePath() . '/ace/js/jquery-ui-1.10.3.custom.min.js')
+        				->appendFile($this->basePath() . '/ace/js/jquery.ui.touch-punch.min.js')
+        				->appendFile($this->basePath() . '/ace/js/jquery.gritter.min.js')
+        				->appendFile($this->basePath() . '/ace/js/bootbox.min.js')
+        				->appendFile($this->basePath() . '/ace/js/jquery.slimscroll.min.js')
+        				->appendFile($this->basePath() . '/ace/js/jquery.easy-pie-chart.min.js')
+        				->appendFile($this->basePath() . '/ace/js/jquery.hotkeys.min.js')
+        				->appendFile($this->basePath() . '/ace/js/bootstrap-wysiwyg.min.js')
+        				->appendFile($this->basePath() . '/ace/js/select2.min.js')
+        				->appendFile($this->basePath() . '/ace/js/date-time/bootstrap-datepicker.min.js')
+        				->appendFile($this->basePath() . '/ace/js/fuelux/fuelux.spinner.min.js')
+        				->appendFile($this->basePath() . '/ace/js/x-editable/bootstrap-editable.min.js')
+        				->appendFile($this->basePath() . '/ace/js/x-editable/ace-editable.min.js')
+        				->appendFile($this->basePath() . '/ace/js/jquery.maskedinput.min.js')
+        				
+        				->appendFile($this->basePath() . '/ace/js/ace-elements.min.js')
+        				->appendFile($this->basePath() . '/ace/js/ace.min.js')
+        				
+        ?>
+    </head>
+
+	<body>
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a href="<?=$this->url('home', array(), array(), true) ?>"><img id="logo-header" src="<?php echo $this->basePath();?>/assets/img/logo-godana-white.png" alt="Logo" /></a>
+
+					<ul class="nav ace-nav pull-right">			
+
+						<li class="purple">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<i class="icon-bell-alt icon-animated-bell"></i>								
+							</a>
+
+							<ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-closer">
+								<li class="nav-header">
+									<i class="icon-warning-sign"></i>
+									No Notifications
+								</li>
+
+							</ul>
+						</li>
+
+						<li class="green">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<i class="icon-envelope icon-animated-vertical"></i>
+							</a>
+
+							<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-closer">
+								<li class="nav-header">
+									<i class="icon-envelope-alt"></i>
+									0 Messages
+								</li>
+								
+							</ul>
+						</li>
+
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="<?php echo $this->userPicture('sm'); ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
+								<span class="user-info">
+									<small><?php echo $this->translate('Welcome'); ?>,</small>
+									<?php echo $this->zfcUserDisplayName() ?>
+								</span>
+
+								<i class="icon-caret-down"></i>
+							</a>
+
+							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+								<li>
+									<a href="<?php echo $this->url('zfcuser/logout', array(), array(), true) ?>">
+										<i class="icon-off"></i>
+										<?php echo $this->translate('Sign Out'); ?>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul><!--/.ace-nav-->
+				</div><!--/.container-fluid-->
+			</div><!--/.navbar-inner-->
+		</div><!--/.navbar  -->
+		<div class="main-container container-fluid">
+			<a class="menu-toggler" id="menu-toggler" href="#">
+				<span class="menu-text"></span>
+			</a>
+			
+			<div class="sidebar" id="sidebar">
+				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+						<button class="btn btn-small btn-success">
+							<i class="icon-signal"></i>
+						</button>
+
+						<button class="btn btn-small btn-info">
+							<i class="icon-pencil"></i>
+						</button>
+
+						<button class="btn btn-small btn-warning">
+							<i class="icon-group"></i>
+						</button>
+
+						<button class="btn btn-small btn-danger">
+							<i class="icon-cogs"></i>
+						</button>
+					</div>
+
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success"></span>
+
+						<span class="btn btn-info"></span>
+
+						<span class="btn btn-warning"></span>
+
+						<span class="btn btn-danger"></span>
+					</div>
+				</div><!--#sidebar-shortcuts-->
+
+				<ul class="nav nav-list">
+					<li>
+						<a href="index.html">
+							<i class="icon-dashboard"></i>
+							<span class="menu-text"> Dashboard </span>
+						</a>
+					</li>
+
+					
+				</ul><!--/.nav-list-->
+
+				<div class="sidebar-collapse" id="sidebar-collapse">
+					<i class="icon-double-angle-left"></i>
+				</div>
+			</div><!--/.sidebar  -->
+			
+			<div class="main-content">
+				<?php echo $this->content; ?>
+			</div><!--/.main-content  -->
+		</div><!--/.main-container  -->
+		<?php echo $this->headScript() ?>
+		<?php echo $this->inlineScript() ?>
+	</body>
+</html>

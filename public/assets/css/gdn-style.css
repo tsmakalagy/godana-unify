@@ -146,3 +146,11 @@
 .my-alert {
 	margin-bottom: 20px;
 }
+
+.nav-tabs.padding-right-16 {
+    padding-right: 16px;
+}
+
+.nav-tabs.padding-right-18 {
+    padding-right: 18px;
+}
