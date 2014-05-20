@@ -18,6 +18,7 @@ class CropController extends AbstractActionController
 	
 	public function indexAction()
 	{		
+		$response = $this->getResponse();
 		$lii = new LiquenImg();		
 		
 		if ($this->request->isPost()) {
@@ -75,7 +76,8 @@ class CropController extends AbstractActionController
 			$om = $this->getObjectManager();
 			$file = $om->find('Godana\Entity\File', (int)$fileId);			
 			$success = true;
-			$c = $post->get('c');			
+			$c = $post->get('c');	
+			$images = array();		
 			foreach ($listWidth as $dim => $w) {		
 				$w = (int)$w;				
 				if ($w > 0) {
@@ -102,11 +104,15 @@ class CropController extends AbstractActionController
 						$image->setFile($file);
 						$om->persist($image);	
 					}
-				}			
-				
+				}	
+				$relativePath = substr($return, strpos($return, '/files/'));
+				$images['image_'.$w] = preg_replace("|files/.*$|", $relativePath, $source['file']);				
 			}
 			if ($success) $om->flush();
-			return new \Zend\View\Model\JsonModel(array('success' => $success));
+//			return new \Zend\View\Model\JsonModel(array('success' => $success, 'images' => $images));
+			$response->setContent(\Zend\Json\Json::encode(array('success' => $success, 'images' => $images)));
+            
+        	return $response;
 		}
 		
 	}

@@ -64,8 +64,18 @@ class CustomUploadHandler extends UploadHandler
         	if ($deleted) {
         		$om = $this->getObjectManager();        	
         		$myfile = $om->getRepository('Godana\Entity\File')->findOneByName($name);
-        		$om->remove($myfile);
-        		$om->flush();
+        		if ($myfile instanceof \Godana\Entity\File) {
+        			$om->remove($myfile);	        		
+	        		// deleting cropped images from db
+	        		$images = $myfile->getImages();
+	        		foreach ($images as $image) {
+	        			if ($image instanceof \Godana\Entity\Image) {
+	        				$om->remove($image);
+	        			}
+	        		}	
+	        		$om->flush();
+        		}
+        		
         	}
         } 
         return $this->generate_response($response, $print_response);

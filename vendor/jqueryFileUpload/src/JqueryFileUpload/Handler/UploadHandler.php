@@ -200,6 +200,12 @@ class UploadHandler
         }
         return '';
     }
+    
+	protected function get_cropped_files($file_name) {
+        $cropped_files = array();
+        $path = $this->options['upload_dir'].$this->get_user_path().'cropped/';
+        return glob($path.$file_name.'_*');
+    }
 
     public function get_upload_path($file_name = null, $version = null) {
         $file_name = $file_name ? $file_name : '';
@@ -1297,6 +1303,12 @@ class UploadHandler
                 }
             }
             $response[$file_name] = $success;
+        	$cropped_files = $this->get_cropped_files($file_name);
+            foreach ($cropped_files as $cropped_file) {
+                if (is_file($cropped_file)) {
+                    unlink($cropped_file);
+                }
+            }
         }
         return $this->generate_response($response, $print_response);
     }

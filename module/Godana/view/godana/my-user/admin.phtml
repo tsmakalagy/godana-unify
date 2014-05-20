@@ -1,3 +1,8 @@
+<?php echo $this->headLink()
+				->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/file-upload.css')
+				->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.fileupload.css')
+                ->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.fileupload-ui.css')
+                ->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.Jcrop.css');?>
 <? $this->headTitle($this->translate('User'));?>
 <? $locale = 'en_US';
 	if ($this->lang == 'en') {
@@ -6,6 +11,7 @@
 		$locale = 'fr_FR';
 	}
 ?>
+
 <div class="breadcrumbs" id="breadcrumbs">
 	<ul class="breadcrumb">
 		<li>
@@ -230,10 +236,12 @@
 										<h4 class="header blue bolder smaller">General</h4>
 
 										<div class="row-fluid">
-											<div class="span4">												
-												<span class="profile-picture">
-													<img class="editable" id="avatar2" src="<?php echo $this->userPicture('md'); ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
-												</span>
+											<div class="span4">	
+												<a href="#" class="fileinput-button show-modal">											
+													<span class="profile-picture img-preview">
+														<img id="avatar2" src="<?php echo $this->userPicture('thumbnail'); ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
+													</span>
+												</a>
 											</div>
 
 											<div class="vspace"></div>
@@ -452,7 +460,112 @@
 	</div><!--/.row-fluid  -->
 </div><!--/.page-content  -->
 
+<div class="modal hide fade" id="uploadModal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h4 class="blue">Change Avatar</h4>
+	</div>
+	
+	<form class="no-margin" id="fileupload" action="" method="POST" enctype="multipart/form-data">
+	<div class="modal-body">
+		<div class="space-4"></div>
+		<div style="width:94%;margin-left:3%;">
+		    <div class="gdn-file-input gdn-file-multiple">
+			
+			<label data-title="Click to choose new avatar">
+                <input type="file" name="files[]" id="input_file">
+			    <span data-title="No File ..."><i class="icon-picture"></i></span>
+			</label>
+			<a href="#" class="remove"><i class="icon-remove"></i></a>
+		    </div>
+		    <div class="gdn-file-preview">
+			<div class="files"></div>
+		    </div>
+		</div>
+	</div>
+	
+	<div class="modal-footer center">
+		<button type="button" class="btn btn-small btn-success submit-button"><i class="icon-ok"></i> Submit</button>
+		<button type="button" class="btn btn-small" data-dismiss="modal"><i class="icon-remove"></i> Cancel</button>
+	</div>
+	</form>
+</div>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-upload">
+	<span class="preview"></span>
+	<strong class="error red"></strong>
+	<p class="size">Processing...</p>
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar progress-bar-success" style="width:0%;"></div></div>
+	{% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel btn-upload-cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+    </div>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-download gdn-dashed">
+	    {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}     
+            {% if (file.deleteUrl) { %}
+                <a href="#" class="delete delete-image remove" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="icon-remove"></i>
+                </a>
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}     
+	<span class="preview">
+	    {% if (file.mediumUrl) { %}
+		<span class="profile-picture"><img src="{%=file.mediumUrl%}" id="target"></span>
+	    {% } %}
+	</span> 
+	<div id="preview-pane" class="hide">
+	    <div class="preview-container">
+	      <img src="{%=file.mediumUrl%}" class="jcrop-preview" alt="Preview" />
+	    </div>	    
+	</div>               
+    </div>
+{% } %}
+</script>
+
+<?php $this->inlineScript()
+	->appendFile($this->basePath() . '/assets/js/godana.validate.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/tmpl.min.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/load-image.min.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/canvas-to-blob.min.js')	
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.iframe-transport.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload-process.js')	
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload-image.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload-audio.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload-video.js')	
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload-validate.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.fileupload-ui.js')
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/jquery.Jcrop.js')	
+	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/upload.godana.js');
+?>
+
+
 <script type="text/javascript">
+var ajaxUrl = "<?=$this->url('upload', array(), array(), true); ?>";
+var cropUrl = "<?=$this->url('crop', array(), array(), true); ?>";
 $(function() {
 	$('.edit-profile').on('click', function(e){
 		$('.user-profile').parent().hide();
@@ -461,6 +574,11 @@ $(function() {
 	$('.view-profile').on('click', function(e){
 		$('.user-profile').parent().hide();
 		$('#user-profile-view').parent().show();
+	});
+	$('.show-modal').imageupload({
+		doCrop: true,
+		uploadUrl: ajaxUrl+'?type=user',
+		cropUrl: cropUrl
 	});
 });
 </script>
