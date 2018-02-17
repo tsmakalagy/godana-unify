@@ -33,7 +33,8 @@
                 // $this.data('pluginName', settings);
             }
 
-            $this.on("click", function() {
+            $this.on("click", function(e) {
+            	e.preventDefault();
                 $('#'+settings.modalId).modal('show');
                 disableSubmit();
             });	

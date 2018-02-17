@@ -24,7 +24,7 @@ class ProfileFilter extends ProvidesEventsInputFilter
         if ($this->getOptions()->getEnableUsername()) {
             $this->add(array(
                 'name'       => 'username',
-                'required'   => true,
+                'required'   => false,
                 'validators' => array(
                     array(
                         'name'    => 'StringLength',
@@ -50,7 +50,7 @@ class ProfileFilter extends ProvidesEventsInputFilter
         
         $this->add(array(
             'name'       => 'dateofbirth',
-            'required'   => true,
+            'required'   => false,
         	'validators' => array(
                 array(
                     'name' => 'Date',
@@ -62,7 +62,7 @@ class ProfileFilter extends ProvidesEventsInputFilter
         
         $this->add(array(
             'name'       => 'firstname',
-            'required'   => true,
+            'required'   => false,
             'filters'    => array(
         		array('name' => 'StringTrim'),
         		array('name' => 'StripTags'),
@@ -71,7 +71,7 @@ class ProfileFilter extends ProvidesEventsInputFilter
             	array(
                 	'name'    => 'StringLength',
                     'options' => array(
-                    	'min' => 2,
+                    	'min' => 3,
                         'max' => 128,
                     ),
                 ),
@@ -95,11 +95,33 @@ class ProfileFilter extends ProvidesEventsInputFilter
                 ),
             ),
         ));
+        $validator = new \Zend\Validator\Regex(array('pattern' => '/^03[2-4][-. ]?[0-9]{2}[-. ]?[0-9]{3}[-. ]?[0-9]{2}$/'));
+        $validator->setOptions(array(
+		    'messages' => array(
+		         \Zend\Validator\Regex::NOT_MATCH => "The input is not a valid phone number"
+		     )
+		));
+         $this->add(array(
+            'name'       => 'phone',
+            'required'   => false,
+            'filters'    => array(
+        		array('name' => 'StringTrim'),
+        		array('name' => 'StripTags'),
+        	),
+            'validators' => array(
+            	$validator
+            ),
+        ));
+        
+        $this->add(array(
+            'name'       => 'sex',
+            'required'   => false,
+        ));
 
         if ($this->getOptions()->getEnableDisplayName()) {
             $this->add(array(
                 'name'       => 'display_name',
-                'required'   => true,
+                'required'   => false,
                 'filters'    => array(array('name' => 'StringTrim')),
                 'validators' => array(
                     array(

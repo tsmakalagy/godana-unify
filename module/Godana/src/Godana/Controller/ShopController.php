@@ -268,6 +268,7 @@ class ShopController extends AbstractActionController
 		$paginator->setCurrentPageNumber($page);
         $result = array();
  		$result['total'] = count($paginator);
+ 		var_dump(count($paginator));
  		$result['results'] = array();
 		foreach($paginator AS $item) {
 			$res = array(

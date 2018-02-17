@@ -1,6 +1,6 @@
 <?php echo $this->headLink()
-                ->appendStylesheet($this->basePath() . '/css/select2.css')
-                ->appendStylesheet($this->basePath() . '/css/select2-bootstrap.css')?>
+                ->appendStylesheet($this->basePath() . '/ace/css/select2.css')
+                ->appendStylesheet($this->basePath() . '/ace/css/select2-bootstrap.css')?>
 <? $this->headTitle($this->translate('Admin Cooperative'));?>
 <div class="row">
 <div class="col-md-10 col-md-offset-1">
@@ -108,7 +108,7 @@ echo "has-error" ?>">
 </div>
 
 <? $this->inlineScript()
-			->appendFile($this->basePath() . '/js/select2.min.js')?>
+			->appendFile($this->basePath() . '/ace/js/select2.min.js')?>
 			
 <script type="text/javascript">
 var url = "<?=$this->url('admin/cooperative/car_add', array(), array(), true); ?>";

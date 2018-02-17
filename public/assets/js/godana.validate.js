@@ -36,8 +36,8 @@
 					// $this.data('pluginName', settings);
 				}
  
-				$this.on("keypress", function() {
-					if (timeout) clearTimeout(timeout);
+				$this.on("blur", function() {
+					if (timeout) clearTimeout(timeout);cityAction
 					timeout = setTimeout(function() {
 			            if ($this.val() != '') {
 			            	$.ajax({
@@ -54,7 +54,11 @@
 			                        if (!res.success) {
 			                        	$(settings.loadingClass).html("<i class='icon-remove text-error'></i>");                        	
 			                        	$this.parents('.control-group').addClass('error');
-			                        	$this.parents('.control-group').append(res.error_msg);
+			                        	if ($this.parents('.controls').length > 0) {
+			                        		$this.parents('.controls').append(res.error_msg);
+			                        	} else {
+			                        		$this.parents('.control-group').append(res.error_msg);
+			                        	}			                        	
 //			                        	$(settings.btnRegister).addClass('disabled');
 			                        } else {
 			                        	$(settings.loadingClass).html("<i class='icon-ok text-success'></i>");
@@ -85,7 +89,7 @@
 			// Repeat over each element in selector
 			return $(this).each(function() {
 				var $this = $(this);
- 				$this.off("keypress");
+ 				//$this.off("keypress");
  				$this.off("blur");
 				// run code here
  

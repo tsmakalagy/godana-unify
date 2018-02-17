@@ -501,11 +501,11 @@ class MyUserController extends AbstractActionController
         }
 		
         $post = $prg;
+//        var_dump($prg);
         $user = $service->register($post);
         $redirect = isset($prg['redirect']) ? $prg['redirect'] : null;
 
-        if (!$user instanceof \SamUser\Entity\User) {     
-            //var_dump($user);
+        if (!$user instanceof \SamUser\Entity\User) {   
 //            return array(
 //                'registerForm' => $form,
 //            	'lang' => $lang,
@@ -659,6 +659,7 @@ class MyUserController extends AbstractActionController
 		if ($request->isPost()) {
 			
 			$type = $request->getPost('type');
+			var_dump($type);
 			
 			$form = $this->getRegisterForm();
 			
@@ -719,7 +720,66 @@ class MyUserController extends AbstractActionController
     {
     	$this->layout('layout/ace-layout');
     	$lang = $this->params()->fromRoute('lang', 'mg');
-    	return new ViewModel(array('lang' => $lang));
+    	$profileForm = $this->getProfileForm();
+    	$service = $this->getUserService();
+        $currentUser = $service->getAuthService()->getIdentity();
+        $profileForm = $this->getProfileForm();
+        
+		$profileForm->setHydrator($service->getFormHydrator());	
+		
+        $data['firstname'] = $currentUser->getFirstname();
+        $data['lastname'] = $currentUser->getLastname();
+        $data['username'] = $currentUser->getUsername();
+        if ($currentUser->getDateofbirth()) {
+        	$data['dateofbirth'] = $currentUser->getDateofbirth()->format('m/d/Y');
+        }
+        $data['sex'] = $currentUser->getSex();
+        $data['email'] = $currentUser->getEmail();
+        $data['phone'] = $currentUser->getPhone();
+        $profileForm->setData($data);
+    	
+        if (!$this->getRequest()->isPost()) {
+    		return new ViewModel(array('lang' => $lang, 'profileForm' => $profileForm));
+        }
+        $profileForm->setData($this->getRequest()->getPost());
+        if (!$profileForm->isValid()) {
+			$alert = '<div class="my-alert alert alert-danger alert-dismissable">';
+            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+            $alert .= 'There is an error in updating your profile';
+            $alert .= '</div>';            
+            $res['alert'] = $alert;            
+            $res['success'] = false;
+            $messages = $profileForm->getMessages();
+            $error = array();
+            foreach ($messages as $key => $message) {
+            	$err = array();
+            	$err['name'] = $key;
+            	$err['value'] = '';
+            	foreach ($message as $msg) {
+            		$err['value'] .= '<div class="help-block">'.$msg.'</div>';
+            	}
+            	array_push($error, $err);
+            }
+            $res['error'] = $error;
+            return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
+        }
+        
+    	if (!$service->editProfile($profileForm->getData())) {
+            $alert = '<div class="my-alert alert alert-danger alert-dismissable">';
+            $alert .= '<button data-dismiss="alert" class="close">×</button>';
+            $alert .= 'Error profile2';
+            $alert .= '</div>';            
+            $res['alert'] = $alert;            
+            $res['success'] = false;
+            return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
+        }
+        $alert = '<div class="my-alert alert alert-success alert-dismissable">';
+        $alert .= '<button data-dismiss="alert" class="close">×</button>';
+        $alert .= 'Your profile has been updated';
+        $alert .= '</div>';            
+        $res['alert'] = $alert; 
+        $res['success'] = true;
+        return $this->getResponse()->setContent(\Zend\Json\Json::encode($res));
     }
     
 	/**

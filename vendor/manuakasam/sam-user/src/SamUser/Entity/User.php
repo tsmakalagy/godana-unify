@@ -134,6 +134,12 @@ class User implements UserInterface, ProviderInterface
      * 
      */
     protected $userMetas;   
+    
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=128, nullable=true)
+     */
+    protected $phone;
 
     /**
      * Initialies the roles variable.
@@ -514,5 +520,16 @@ class User implements UserInterface, ProviderInterface
     {
         $this->userMetas[] = $userMeta;
         return $this;
+    }
+    
+	public function getPhone()
+    {
+    	return $this->phone;
+    }
+    
+    public function setPhone($phone)
+    {
+    	$this->phone = $phone;
+    	return $this;
     }
 }

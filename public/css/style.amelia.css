@@ -1,0 +1,79 @@
+@import url("//fonts.googleapis.com/css?family=Lobster|Cabin:400,700");
+.navbar-brand {
+  font-family: 'Lobster', cursive;
+}
+.btn .caret {
+  border-top-color: #fff;
+}
+.btn-default:hover {
+  color: #444444;
+}
+.btn-default .caret {
+  border-top-color: #444444;
+}
+.text-primary,
+.text-primary:hover {
+  color: #f0a6ac;
+}
+.text-success,
+.text-success:hover {
+  color: #93e08b;
+}
+.text-danger,
+.text-danger:hover {
+  color: #eda776;
+}
+.text-warning,
+.text-warning:hover {
+  color: #ecd77f;
+}
+.text-info,
+.text-info:hover {
+  color: #b8abd8;
+}
+.table-responsive > .table {
+  background-color: transparent;
+}
+.has-warning .help-block,
+.has-warning .control-label {
+  color: #ecd77f;
+}
+.has-warning .form-control,
+.has-warning .form-control:focus {
+  border-color: #ecd77f;
+}
+.has-error .help-block,
+.has-error .control-label {
+  color: #f0a6ac;
+}
+.has-error .form-control,
+.has-error .form-control:focus {
+  border-color: #f0a6ac;
+}
+.has-success .help-block,
+.has-success .control-label {
+  color: #93e08b;
+}
+.has-success .form-control,
+.has-success .form-control:focus {
+  border-color: #93e08b;
+}
+legend {
+  font-family: 'Lobster', cursive;
+  color: #fff;
+}
+.input-group-addon {
+  color: #444444;
+}
+.pagination a:hover {
+  color: #fff;
+}
+.pager a:hover {
+  color: #fff;
+}
+.list-group-item {
+  background-color: #13a0aa;
+}
+.popover {
+  color: #444444;
+}

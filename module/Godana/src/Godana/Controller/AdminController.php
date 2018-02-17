@@ -10,7 +10,7 @@ class AdminController extends AbstractActionController
 	public function indexAction()
 	{
 		$view = new ViewModel();
- 		$this->layout('layout/sb-admin-layout');
+ 		$this->layout('layout/admin-layout');
  		return $view;
  	}
 }

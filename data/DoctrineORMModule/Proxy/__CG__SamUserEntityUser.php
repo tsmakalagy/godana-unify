@@ -64,10 +64,10 @@ class User extends \SamUser\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'id', 'username', 'email', 'displayName', 'password', 'state', 'roles', 'firstname', 'lastname', 'dateofbirth', 'sex', 'file', 'lastLogin', 'lastIp', 'registerTime', 'registerIp', 'userMetas');
+            return array('__isInitialized__', 'id', 'username', 'email', 'displayName', 'password', 'state', 'roles', 'firstname', 'lastname', 'dateofbirth', 'sex', 'file', 'lastLogin', 'lastIp', 'registerTime', 'registerIp', 'userMetas', 'phone');
         }
 
-        return array('__isInitialized__', 'id', 'username', 'email', 'displayName', 'password', 'state', 'roles', 'firstname', 'lastname', 'dateofbirth', 'sex', 'file', 'lastLogin', 'lastIp', 'registerTime', 'registerIp', 'userMetas');
+        return array('__isInitialized__', 'id', 'username', 'email', 'displayName', 'password', 'state', 'roles', 'firstname', 'lastname', 'dateofbirth', 'sex', 'file', 'lastLogin', 'lastIp', 'registerTime', 'registerIp', 'userMetas', 'phone');
     }
 
     /**
@@ -615,6 +615,28 @@ class User extends \SamUser\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'addUserMeta', array($userMeta));
 
         return parent::addUserMeta($userMeta);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPhone()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPhone', array());
+
+        return parent::getPhone();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPhone($phone)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPhone', array($phone));
+
+        return parent::setPhone($phone);
     }
 
 }

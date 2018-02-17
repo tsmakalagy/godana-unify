@@ -44,19 +44,16 @@ class User extends ZfcUserService
         	$currentUser->setUsername($data['username']);
         } 
         
-    	if (array_key_exists('file-id', $data)) {
-	    	$listFileId = $data['file-id'];	    	
-	        if (count($listFileId)) {	        	
-	            foreach ($listFileId as $fileId) {
-	            	$file = $om->find('Godana\Entity\File', (int)$fileId);
-		    		if ($file instanceof File) {
-		    			$currentUser->setFile($file);	
-		    		}
-	            }
-	        }
-    		
-    		
-        	
+        if (array_key_exists('phone', $data)) {
+        	$currentUser->setPhone($data['phone']);
+        } 
+        
+    	if (array_key_exists('fileId', $data)) {
+	    	$fileId = $data['fileId'];	    	
+	    	$file = $om->find('Godana\Entity\File', (int)$fileId);
+    		if ($file instanceof File) {
+		    	$currentUser->setFile($file);	
+		    }
         }
 
         parent::getEventManager()->trigger(__FUNCTION__, $this, array('user' => $currentUser));

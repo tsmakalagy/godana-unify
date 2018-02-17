@@ -57,8 +57,9 @@ class Base extends ProvidesEventsForm
             ),
             'attributes' => array(
                 'type' => 'text',
-                'class' => 'span12',
-            	'required' => true
+                'class' => 'input-small span6',
+            	'placeholder' => 'First name',
+            	'required' => false
             ),
         ));
         
@@ -72,7 +73,8 @@ class Base extends ProvidesEventsForm
             ),
             'attributes' => array(
                 'type' => 'text',
-                'class' => 'span12'
+            	'placeholder' => 'Last name',
+                'class' => 'input-small span6'
             )
         ));
         
@@ -87,29 +89,40 @@ class Base extends ProvidesEventsForm
             'attributes' => array(
                 'type' => 'text',
                 'class' => 'datepicker span12',
-            	'required' => true
+            	'placeholder' => 'mm/dd/yyyy',
+            	'required' => false
             ),
         ));		       
     
         $this->add(array(
             'name' => 'sex',
-        	'type' => '\Zend\Form\Element\Select',
+        	'type' => 'Zend\Form\Element\Radio',
+   			'options' => array(
+           		'label' => 'Gender',
+           		'value_options' => array(
+                   '0' => 'Female',
+                   '1' => 'Male',
+           		),
+           		'label_attributes' => array(
+		            'class' => 'control-label',
+		        ),
+   			)
+        ));     
+
+        $this->add(array(
+            'name' => 'phone',
             'options' => array(
-                'label' => 'Sex',
+                'label' => 'Phone',
         		'label_attributes' => array(
 		            'class' => 'control-label',
 		        ),
-		        'value_options' => array(
-	            	'0' => 'M',
-	           	 	'1' => 'F',
-			   	),			   	
-            ),   
+            ),
             'attributes' => array(
-            	'class' => 'sex-select span12 gdn-select',
-            	'required' => true
-            ),        
-              
-        ));        
+                'type' => 'text',
+                'class' => 'span12',
+            	'placeholder' => 'Phone',
+            ),
+        ));	
 
         $this->add(array(
             'name' => 'display_name',
@@ -158,6 +171,11 @@ class Base extends ProvidesEventsForm
             	'id' => 'register_password_verify'
             ),
         ));
+        
+        $this->add(array(
+            'type' => 'Zend\Form\Element\Hidden',
+            'name' => 'fileId'
+        ));
 
         if ($this->getRegistrationOptions()->getUseRegistrationFormCaptcha()) {
             $this->add(array(
@@ -169,7 +187,6 @@ class Base extends ProvidesEventsForm
 		            	'class' => 'control-label',
 		        	),
                     'captcha' => $this->getRegistrationOptions()->getFormCaptchaOptions(),
-            		'separator' => 'blabla'
                 ),
                 'attributes' => array(
 	                'class' => 'span12 gdn-captcha-text',
@@ -184,7 +201,7 @@ class Base extends ProvidesEventsForm
             ->setLabel('Submit')
             ->setAttributes(array(
                 'type'  => 'submit',
-                'class' => 'btn-u pull-right',
+                'class' => 'btn btn-info',
             ));
 
         $this->add($submitElement, array(

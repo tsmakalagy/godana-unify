@@ -99,7 +99,8 @@ $(function() {
 	            // since we are using custom formatting functions we do not need to alter remote JSON data
 	            var more = (page * 10) < data.total; // whether or not there are more results available
 	            return {results: data.results, more: more};
-	        }
+	        },
+            error: function(req, err){ console.log('my message' + err); }
 	    },
 	    formatSelection: format,
 	    formatResult: format

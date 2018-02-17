@@ -243,13 +243,13 @@ $forgotForm->setAttribute('id', 'forgotForm');
 	</div><!--/.row-fluid-->
 </div>
 <?php $this->inlineScript()
-	->appendFile($this->basePath() . '/assets/js/godana.validate2.js');?>
+	->appendFile($this->basePath() . '/assets/js/godana.validate.js');?>
 <script type="text/javascript">
-var loginUrl = "<?php echo $this->url('zfcuser/login', array(), array(), true); ?>";
+var loginUrl = "<?= $this->url('zfcuser/login', array(), array(), true); ?>";
 var validateUrl = "<?=$this->url('zfcuser/input_validate', array(), array(), true); ?>";
 var registerUrl = "<?=$this->url('zfcuser/register', array(), array(), true); ?>";
 var forgotUrl = "<?=$this->url('zfcuser/forgotpassword', array(), array(), true); ?>";
-$(document).ready(function() {	
+$(document).ready(function() {
 
 	$('button[type="reset"]').click(function() {
 		$('label').removeClass('register-error').removeClass('register-valid');
@@ -276,16 +276,16 @@ $(document).ready(function() {
 		url: validateUrl,
 		query: '&captcha[id]='+$('input[name="captcha[id]"]').val()+'&type=register'
 	});
-	
+
 	$('#register_password').change(function(e) {
 		var password = $(this).val();
 		$('#register_password_verify').validateInput("destroy");
 		$('#register_password_verify').validateInput("init", {
 			name: 'passwordVerify',
 			query: '&password='+password+'&type=register',
-			url: validateUrl			
-		});	
-		
+			url: validateUrl
+		});
+
 	});
 	$("form#loginForm").submit(function(e) {
 		e.preventDefault();
@@ -299,12 +299,18 @@ $(document).ready(function() {
     		},
             success: function(res) {
                 if (res.success == false) {
+                    console.log(res.success);
                 	$("form#loginForm .my-alert").html(res.alert);
                 	$('.login-button').removeClass('disabled');                	
                 } else {
                 	$(location).attr('href',res.redirect);  
                 }
-    		}
+    		},
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+                console.log(thrownError);
+            }
         });
         return false;
 	});
@@ -331,7 +337,12 @@ $(document).ready(function() {
                 } else {
                 	$(location).attr('href',res.redirect);  
                 }
-    		}
+    		},
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+                console.log(thrownError);
+            }
         });
         return false;
 	});

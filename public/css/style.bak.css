@@ -1,0 +1,96 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    background-color: #edffec;
+}
+
+.zf-green {
+    color: #68b604;
+}
+
+.btn-success {
+  background-color: #57a900;
+  background-image: -moz-linear-gradient(top, #70d900, #57a900);
+  background-image: -ms-linear-gradient(top, #70d900, #57a900);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
+  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+  background-image: -o-linear-gradient(top, #70d900, #57a900);
+  background-image: linear-gradient(top, #70d900, #57a900);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #57a900;
+}
+
+.btn-success:active, .btn-success.active {
+  background-color: #57a900;
+}
+
+div.container a.brand {
+    background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
+    margin-left: 0;
+    padding: 8px 20px 12px 40px;
+}
+
+.navbar-inverse {
+	background-color: #DFF0D8 !important;
+	background-image: -moz-linear-gradient(top, #DFF0D8, #C8E5BC);
+  	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#DFF0D8), to(#C8E5BC));
+  	background-image: -webkit-linear-gradient(top, #DFF0D8, #C8E5BC);
+  	background-image: -o-linear-gradient(top, #DFF0D8, #C8E5BC);
+  	background-image: linear-gradient(to bottom, #DFF0D8, #C8E5BC);
+  	background-repeat: repeat-x;
+  	border: none !important;
+}
+
+.navbar-inverse .navbar-toggle {
+    border: none;
+}
+
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #62C493;
+}
+
+.navbar-inverse .navbar-collapse {
+	border: none;
+}
+
+.navbar-fixed-top > .container {
+	padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+.navbar-brand {
+	color: #449D44 !important;
+	text-shadow: 0 1px 0 #E2FFFF !important;
+}
+
+.navbar .nav > li > a {
+	color: #449D44 !important;
+	text-shadow: 0 1px 0 #E2FFFF !important;
+	
+}
+
+.navbar .nav > li.active > a {
+	color: #1D2B29 !important;
+    text-shadow: 0 1px 0 #A9D7FF !important;
+    background-color: #62c493 !important;
+    -webkit-box-shadow: inset 0 12px 24px rgba(0, 0, 0, 0.333);
+     -moz-box-shadow: inset 0 12px 24px rgba(0, 0, 0, 0.333);
+          box-shadow: inset 0 12px 24px rgba(0, 0, 0, 0.333);
+}
+
+.navbar .nav li.dropdown.open > .dropdown-toggle {
+	color: #1D2B29 !important;
+    text-shadow: 0 1px 0 #A9D7FF !important;
+    background-color: #62c493 !important;
+    -webkit-box-shadow: inset 0 12px 24px rgba(0, 0, 0, 0.333);
+     -moz-box-shadow: inset 0 12px 24px rgba(0, 0, 0, 0.333);
+          box-shadow: inset 0 12px 24px rgba(0, 0, 0, 0.333);
+}

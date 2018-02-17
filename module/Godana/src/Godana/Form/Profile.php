@@ -33,6 +33,7 @@ class Profile extends Base
         if ($this->getRegistrationOptions()->getUseRegistrationFormCaptcha() && $this->captchaElement) {
             $this->add($this->captchaElement, array('name'=>'captcha'));
         }
+        
         $this->get('submit')->setLabel('Register')->setAttributes(array(
             	'class' => 'btn btn-primary',
             ));

@@ -116,7 +116,7 @@
 
 						<li class="light-blue">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-								<img class="nav-user-photo" src="<?php echo $this->userPicture('sm'); ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
+<!--								<img class="nav-user-photo" src="--><?php //echo $this->userPicture('sm'); ?><!--" alt="--><?php //echo $this->zfcUserDisplayName() ?><!--" />-->
 								<span class="user-info">
 									<small><?php echo $this->translate('Welcome'); ?>,</small>
 									<?php echo $this->zfcUserDisplayName() ?>
@@ -181,9 +181,120 @@
 							<span class="menu-text"> Dashboard </span>
 						</a>
 					</li>
+                    <? if ($isAdmin):?>
+                        <li><a href="<?=$this->url('admin/search_init', array(), array(), true) ?>"><i class="fa fa-refresh fa-fw"></i> <?=$this->translate('Reinitialize search') ?></a></li>
+                        <li>
+                            <a href="#"><i class="fa fa-user fa-fw"></i> <?=$this->translate('Users'); ?><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=$this->url('admin/user/add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add'); ?></a>
+                                </li>
+                                <li>
+                                    <a href="<?=$this->url('admin/user', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> <?=$this->translate('Shops'); ?><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="<?=$this->url('admin/shop_admin/shop_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add'); ?></a>
+                                </li>
+                                <li>
+                                    <a href="<?=$this->url('admin/shop_admin', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    <? endif;?>
+                    <li>
+                        <a href="#"><i class="fa fa-ticket fa-fw"></i> <?=$this->translate('Cooperative'); ?><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="<?=$this->url('admin/cooperative/create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New'); ?></a>
+                            </li>
+                            <li>
+                                <a href="<?=$this->url('admin/cooperative', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Zone'); ?> <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/zone_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Line'); ?> <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/line_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/line_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add cooperative line'); ?></a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Car'); ?> <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/car_make_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New make'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List make'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/car_model_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New model'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List model'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/car_driver_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('New driver'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List driver'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/car_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add car'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/line_car_add', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Add car line'); ?></a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-dot-circle-o fa-fw"></i> <?=$this->translate('Reservation'); ?> <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/reservation_board_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Reserve a car'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/reservation_create', array(), array(), true) ?>"><i class="fa fa-plus fa-fw"></i> <?=$this->translate('Make a reservation'); ?></a>
+                                    </li>
+                                    <li>
+                                        <a href="<?=$this->url('admin/cooperative/reservation_car_list', array(), array(), true) ?>"><i class="fa fa-list fa-fw"></i> <?=$this->translate('List reservation car'); ?></a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
 
-					
-				</ul><!--/.nav-list-->
+
+                </ul><!--/.nav-list-->
 
 				<div class="sidebar-collapse" id="sidebar-collapse">
 					<i class="icon-double-angle-left"></i>

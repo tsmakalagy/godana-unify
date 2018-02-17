@@ -2,7 +2,8 @@
 				->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/file-upload.css')
 				->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.fileupload.css')
                 ->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.fileupload-ui.css')
-                ->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.Jcrop.css');?>
+                ->appendStylesheet($this->basePath() . '/assets/plugins/file-upload/css/jquery.Jcrop.css')
+                ->appendStylesheet($this->basePath() . '/assets/plugins/datepicker/css/datepicker3.css');?>
 <? $this->headTitle($this->translate('User'));?>
 <? $locale = 'en_US';
 	if ($this->lang == 'en') {
@@ -96,7 +97,7 @@
 								<div class="row-fluid">
 									<div class="span3 center">
 										<span class="profile-picture">
-											<img class="" id="avatar2" src="<?php echo $this->userPicture('md'); ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
+											<img class="" id="avatar2" src="<?php  ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
 										</span>
 										<div class="space space-4"></div>
 									</div><!--/span-->
@@ -198,8 +199,15 @@
 					<div class="offset1 span10">					
 
 						<div class="space"></div>
+<?php
+	$profileForm = $this->profileForm;
+	$profileForm->prepare();
+	$profileForm->setAttribute('class', 'form-horizontal');
+	$profileForm->setAttribute('method', 'post');
+	$profileForm->setAttribute('id', 'profileForm');
 
-						<form class="form-horizontal" />
+ ?>
+						<!-- <form class="form-horizontal" >-->
 							<div class="tabbable">
 								<ul class="nav nav-tabs padding-16 padding-right-16">
 									<li class="active">
@@ -233,25 +241,29 @@
 
 								<div class="tab-content profile-edit-tab-content">
 									<div id="edit-basic" class="tab-pane in active">
+									 <?php echo $this->form()->openTag($profileForm) ?>
+									 <div class="my-alert"></div>
 										<h4 class="header blue bolder smaller">General</h4>
 
 										<div class="row-fluid">
-											<div class="span4">	
+											<div class="span2">	
 												<a href="#" class="fileinput-button show-modal">											
 													<span class="profile-picture img-preview">
-														<img id="avatar2" src="<?php echo $this->userPicture('thumbnail'); ?>" alt="<?php echo $this->zfcUserDisplayName() ?>" />
+<!--														<img id="avatar2" src="--><?php //echo $this->userPicture('md'); ?><!--" alt="--><?php //echo $this->zfcUserDisplayName() ?><!--" />-->
 													</span>
 												</a>
 											</div>
 
 											<div class="vspace"></div>
 
-											<div class="span8">
+											<div class="span10">
 												<div class="control-group">
-													<label class="control-label" for="form-field-username">Username</label>
+													<?php echo $this->formLabel($profileForm->get('username')); ?>
+													<!-- <label class="control-label" for="form-field-username">Username</label>-->
 
-													<div class="controls">
-														<input type="text" id="form-field-username" placeholder="Username" value="alexdoe" />
+													<div class="controls">														
+														<?php echo $this->formInput($profileForm->get('username')) ?>
+														<!-- <input type="text" id="form-field-username" placeholder="Username" value="alexdoe" />-->
 													</div>
 												</div>
 
@@ -259,8 +271,10 @@
 													<label class="control-label" for="form-field-first">Name</label>
 
 													<div class="controls">
-														<input class="input-small" type="text" id="form-field-first" placeholder="First Name" value="Alex" />
-														<input class="input-small" type="text" id="form-field-last" placeholder="Last Name" value="Doe" />
+														<?php echo $this->formInput($profileForm->get('firstname')) ?>
+														<?php echo $this->formInput($profileForm->get('lastname')) ?>
+														<!-- <input class="input-small" type="text" id="form-field-first" placeholder="First Name" value="Alex" />
+														<input class="input-small" type="text" id="form-field-last" placeholder="Last Name" value="Doe" />-->
 													</div>
 												</div>
 											</div>
@@ -268,11 +282,13 @@
 
 										<hr />
 										<div class="control-group">
-											<label class="control-label" for="form-field-date">Birth Date</label>
+											<?php echo $this->formLabel($profileForm->get('dateofbirth')); ?>
+											<!-- <label class="control-label" for="form-field-date">Birth Date</label>-->
 
 											<div class="controls">
 												<div class="input-append">
-													<input class="input-small date-picker" id="form-field-date" type="text" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy" />
+													<?php echo $this->formInput($profileForm->get('dateofbirth')); ?>
+													<!-- <input class="input-small date-picker" id="form-field-date" type="text" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy" />-->
 													<span class="add-on">
 														<i class="icon-calendar"></i>
 													</span>
@@ -281,12 +297,13 @@
 										</div>
 
 										<div class="control-group">
-											<label class="control-label">Gender</label>
+											<?php echo $this->formLabel($profileForm->get('sex')); ?>
+											<!-- <label class="control-label">Gender</label>-->
 
 											<div class="controls">
 												<div class="space-2"></div>
-
-												<label class="inline">
+											<?php echo $this->formRadio($profileForm->get('sex')); ?>
+												<!-- <label class="inline">
 													<input name="form-field-radio" type="radio" />
 													<span class="lbl"> Male</span>
 												</label>
@@ -295,89 +312,53 @@
 												<label class="inline">
 													<input name="form-field-radio" type="radio" />
 													<span class="lbl"> Female</span>
-												</label>
+												</label>-->
 											</div>
 										</div>
 
-										<div class="control-group">
-											<label class="control-label" for="form-field-comment">Comment</label>
-
-											<div class="controls">
-												<textarea id="form-field-comment"></textarea>
-											</div>
-										</div>
 
 										<div class="space"></div>
 										<h4 class="header blue bolder smaller">Contact</h4>
 
 										<div class="control-group">
-											<label class="control-label" for="form-field-email">Email</label>
+										<?php echo $this->formLabel($profileForm->get('email')); ?>
+											<!-- <label class="control-label" for="form-field-email">Email</label>-->
 
 											<div class="controls">
 												<span class="input-icon input-icon-right">
-													<input type="email" id="form-field-email" value="alexdoe@gmail.com" />
+													<?php echo $this->formInput($profileForm->get('email')); ?>
+													<!-- <input type="email" id="form-field-email" value="alexdoe@gmail.com" />-->
 													<i class="icon-envelope"></i>
 												</span>
 											</div>
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="form-field-website">Website</label>
+										<?php echo $this->formLabel($profileForm->get('phone')); ?>
+											<!-- <label class="control-label" for="form-field-phone">Phone</label>-->
 
 											<div class="controls">
 												<span class="input-icon input-icon-right">
-													<input type="url" id="form-field-website" value="http://www.alexdoe.com/" />
-													<i class="icon-globe"></i>
-												</span>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="form-field-phone">Phone</label>
-
-											<div class="controls">
-												<span class="input-icon input-icon-right">
-													<input class="input-medium input-mask-phone" type="text" id="form-field-phone" />
+												<?php echo $this->formInput($profileForm->get('phone')); ?>
+													<!-- <input class="input-medium input-mask-phone" type="text" id="form-field-phone" />-->
 													<i class="icon-phone icon-flip-horizontal"></i>
 												</span>
 											</div>
 										</div>
-
-										<div class="space"></div>
-										<h4 class="header blue bolder smaller">Social</h4>
-
-										<div class="control-group">
-											<label class="control-label" for="form-field-facebook">Facebook</label>
-
-											<div class="controls">
-												<span class="input-icon">
-													<input type="text" value="facebook_alexdoe" id="form-field-facebook" />
-													<i class="icon-facebook"></i>
-												</span>
-											</div>
+										<div class="form-actions">
+										<?php echo $this->formButton($profileForm->get('submit')) ?>
+											<!-- <button class="btn btn-info" type="button">
+												<i class="icon-ok bigger-110"></i>
+												Save
+											</button>-->
+			
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="reset">
+												<i class="icon-undo bigger-110"></i>
+												Reset
+											</button>
 										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="form-field-twitter">Twitter</label>
-
-											<div class="controls">
-												<span class="input-icon">
-													<input type="text" value="twitter_alexdoe" id="form-field-twitter" />
-													<i class="icon-twitter"></i>
-												</span>
-											</div>
-										</div>
-
-										<div class="control-group">
-											<label class="control-label" for="form-field-gplus">Google+</label>
-
-											<div class="controls">
-												<span class="input-icon">
-													<input type="text" value="google_alexdoe" id="form-field-gplus" />
-													<i class="icon-google-plus"></i>
-												</span>
-											</div>
-										</div>
+									<?php echo $this->form()->closeTag() ?>	
 									</div>
 
 									<div id="edit-settings" class="tab-pane">
@@ -399,22 +380,6 @@
 											</label>
 										</div>
 
-										<div class="space-8"></div>
-
-										<div>
-											<label class="inline">
-												<input type="checkbox" name="form-field-checkbox" />
-												<span class="lbl"> Keep a history of my conversations</span>
-											</label>
-
-											<label class="inline">
-												<span class="space-2 block"></span>
-
-												for
-												<input type="text" class="input-mini" maxlength="3" />
-												days
-											</label>
-										</div>
 									</div>
 
 									<div id="edit-password" class="tab-pane">
@@ -439,19 +404,19 @@
 								</div>
 							</div>
 
-							<div class="form-actions">
-								<button class="btn btn-info" type="button">
-									<i class="icon-ok bigger-110"></i>
-									Save
-								</button>
-
-								&nbsp; &nbsp; &nbsp;
-								<button class="btn" type="reset">
-									<i class="icon-undo bigger-110"></i>
-									Reset
-								</button>
-							</div>
-						</form>
+<!--							<div class="form-actions">-->
+<!--								<button class="btn btn-info" type="button">-->
+<!--									<i class="icon-ok bigger-110"></i>-->
+<!--									Save-->
+<!--								</button>-->
+<!---->
+<!--								&nbsp; &nbsp; &nbsp;-->
+<!--								<button class="btn" type="reset">-->
+<!--									<i class="icon-undo bigger-110"></i>-->
+<!--									Reset-->
+<!--								</button>-->
+<!--							</div>-->
+						<!-- </form>-->
 					</div><!--/span-->
 				</div><!--/user-profile-->
 			</div>
@@ -547,6 +512,7 @@
 
 <?php $this->inlineScript()
 	->appendFile($this->basePath() . '/assets/js/godana.validate.js')
+	->appendFile($this->basePath() . '/assets/plugins/datepicker/js/bootstrap-datepicker.js')
 	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/tmpl.min.js')
 	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/load-image.min.js')
 	->appendFile($this->basePath() . '/assets/plugins/file-upload/js/canvas-to-blob.min.js')	
@@ -566,19 +532,65 @@
 <script type="text/javascript">
 var ajaxUrl = "<?=$this->url('upload', array(), array(), true); ?>";
 var cropUrl = "<?=$this->url('crop', array(), array(), true); ?>";
+var validateUrl = "<?=$this->url('zfcuser/input_validate', array(), array(), true); ?>";
+var profileUrl = "<?=$this->url('zfcuser/admin', array(), array(), true); ?>";
 $(function() {
+	$(".datepicker").datepicker();
 	$('.edit-profile').on('click', function(e){
 		$('.user-profile').parent().hide();
 		$('#user-profile-edit').parent().show();
+		return false;
 	});
 	$('.view-profile').on('click', function(e){
 		$('.user-profile').parent().hide();
 		$('#user-profile-view').parent().show();
+		return false;
 	});
 	$('.show-modal').imageupload({
 		doCrop: true,
 		uploadUrl: ajaxUrl+'?type=user',
 		cropUrl: cropUrl
+	});	
+	$("form#profileForm").submit(function(e) {
+		$('.control-group').removeClass('error');
+    	$('.control-group').find('.help-block').remove();	
+		e.preventDefault();
+		$.ajax({
+        	type: "POST",
+            url: profileUrl,
+            data: $("form#profileForm").serialize(),
+            dataType: "json",
+			beforeSend: function() {    
+    			//$('.register-button').addClass('disabled');
+				$('.update-profile-button').addClass('disabled');
+				$('.gdn-loading').removeClass('icon-ok').addClass('icon-spinner icon-spin');
+    		},
+            success: function(res) {
+                if (res.success == false) {
+                	$("form#profileForm .my-alert").html(res.alert);
+                	$('.update-profile-button').removeClass('disabled');  
+                	$('.gdn-loading').addClass('icon-remove').removeClass('icon-spinner icon-spin');
+                	
+                	for (var i = 0; i < res.error.length; i++) {
+                    	var error = res.error[i];
+                    	var name = error.name;
+                    	var value = error.value;
+                    	var $element = $('input[name="'+name+'"]');
+                    	$element.parents('.control-group').addClass('error');
+                    	if ($element.parents('.controls').length > 0) {
+                    		$element.parents('.controls').append(value);
+                    	} else {
+                    		$element.parents('.control-group').append(value);
+                    	} 
+                	}     	
+                } else {
+                	$("form#profileForm .my-alert").html(res.alert);
+                	$('.update-profile-button').removeClass('disabled');
+                	$('.gdn-loading').addClass('icon-ok').removeClass('icon-spinner icon-spin');
+                }
+    		}
+        });
+        return false;
 	});
 });
 </script>

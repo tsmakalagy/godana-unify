@@ -58,7 +58,7 @@
                         </li>-->  
                         <li class="dropdown">
                                 <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-th-large fa-lg"></i> Fanampiny <i class="caret"></i>
-                                <!-- <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $this->zfcUserDisplayName() ?> <i class="caret"></i>-->
+                                 <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $this->zfcUserDisplayName() ?> <i class="caret"></i>
 
                                 </a>
                                 <ul class="dropdown-menu">
@@ -93,60 +93,60 @@
     				    </span>
 					</form>
                     <ul class="nav navbar-nav navbar-right">
-                         <? if ($this->zfcUserIdentity()):?>
-                            	<li class="dropdown">
-	                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><img src="<?=$this->userPicture('xs'); ?>"> <i class="caret"></i>
-	                                <!-- <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $this->zfcUserDisplayName() ?> <i class="caret"></i>-->
-	
-	                                </a>
-	                                <ul class="dropdown-menu">	                               
-	                                    <li>
-	                                        <a tabindex="-1" href="<?php echo $this->url('zfcuser/profile', array(), array(), true) ?>"><i class="fa fa-user"></i> <? echo $this->translate('Profile');?></a>
-	                                    </li>
-	                                    <li class="divider"></li>
-	                                    <? 
-	                                    $roles = $this->currentUserRole();
-	                                    $isAdmin = false;
-	                                    $isShopOwner = false;	
-	                                    $isCooperative = false;
-	                                    foreach ($roles as $role) {
-	                                    	if ($role->getRoleId() == 'admin') {
-	                                    		$isAdmin = true;
-	                                    	}
-	                                    	if ($role->getRoleId() == 'shop-owner') {
-	                                    		$isShopOwner = true;
-	                                    	}
-	                                    	if (strpos($role->getRoleId(), 'cooperative') === 0) {
-	                                    		$isCooperative = true;
-	                                    	}
-	                                    }                    
-	                                    if ($isAdmin):?>
-	                                    <li>
-	                                        <a tabindex="-1" href="<?=$this->url('admin', array(), array(), true); ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Admin');?></a>
-	                                    </li>
-	                                    <li class="divider"></li>
-	                                    <? endif;?>
-	                                    <? if ($isShopOwner && !$isAdmin): ?>
-	                                    <li>
-	                                        <a tabindex="-1" href="<?=$this->url('admin', array(), array(), true); ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Admin');?></a>
-	                                    </li>
-	                                    <li class="divider"></li>
-	                                    <? endif;?>
-	                                    <? if ($isCooperative || $isAdmin): ?>
-	                                    <li>
-	                                        <a tabindex="-1" href="<?=$this->url('admin/cooperative', array(), array(), true) ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Cooperative');?></a>
-	                                    </li>
-	                                    <li class="divider"></li>
-	                                    <? endif;?>
-	                                    <li>
-	                                        <a tabindex="-1" href="<?php echo $this->url('zfcuser/logout', array(), array(), true) ?>"><i class="fa fa-power-off"></i> <?php echo $this->translate('Sign Out'); ?></a>
-	                                    </li>
-	                                    
-	                                </ul>
-	                            </li>
-                            <? else: ?>
-                            	<li><a href="<?php echo $this->url('zfcuser/login', array(), array(), true); ?>"><? echo $this->translate('Login');?></a></li>
-                            <? endif;?>
+                         <?php if ($this->zfcUserIdentity()):?>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><img src="<?=$this->userPicture('xs'); ?>"> <i class="caret"></i>
+                                 <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo $this->zfcUserDisplayName() ?> <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="<?php echo $this->url('zfcuser/profile', array(), array(), true) ?>"><i class="fa fa-user"></i> <? echo $this->translate('Profile');?></a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <?
+                                    $roles = $this->currentUserRole();
+                                    $isAdmin = false;
+                                    $isShopOwner = false;
+                                    $isCooperative = false;
+                                    foreach ($roles as $role) {
+                                        if ($role->getRoleId() == 'admin') {
+                                            $isAdmin = true;
+                                        }
+                                        if ($role->getRoleId() == 'shop-owner') {
+                                            $isShopOwner = true;
+                                        }
+                                        if (strpos($role->getRoleId(), 'cooperative') === 0) {
+                                            $isCooperative = true;
+                                        }
+                                    }
+                                    if ($isAdmin):?>
+                                    <li>
+                                        <a tabindex="-1" href="<?=$this->url('admin', array(), array(), true); ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Admin');?></a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <? endif;?>
+                                    <? if ($isShopOwner && !$isAdmin): ?>
+                                    <li>
+                                        <a tabindex="-1" href="<?=$this->url('admin', array(), array(), true); ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Admin');?></a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <? endif;?>
+                                    <? if ($isCooperative || $isAdmin): ?>
+                                    <li>
+                                        <a tabindex="-1" href="<?=$this->url('admin/cooperative', array(), array(), true) ?>"><i class="fa fa-gear"></i> <? echo $this->translate('Cooperative');?></a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <? endif;?>
+                                    <li>
+                                        <a tabindex="-1" href="<?php echo $this->url('zfcuser/logout', array(), array(), true) ?>"><i class="fa fa-power-off"></i> <?php echo $this->translate('Sign Out'); ?></a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        <? else: ?>
+                            <li><a href="<?php echo $this->url('zfcuser/login', array(), array(), true); ?>"><? echo $this->translate('Login');?></a></li>
+                        <? endif;?>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div><!-- /.container -->

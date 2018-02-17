@@ -43,7 +43,9 @@ class Module
         	'invokables' => array(
         		'truncateText' => 'Godana\View\Helper\Truncate',
         		'displayTimeInterval' => 'Godana\View\Helper\DisplayTimeInterval',
-        		'mySocialSignInButton' => 'Godana\View\Helper\MySocialSignInButton'
+        		'mySocialSignInButton' => 'Godana\View\Helper\MySocialSignInButton',
+        		'formradio' => 'Godana\Form\View\Helper\FormRadio',
+        		'formbutton' => 'Godana\Form\View\Helper\FormButton'
         	),
             'factories' => array(
                 'currentUserRole' => function ($sm) {
@@ -517,7 +519,9 @@ class Module
                     $form->remove('password');
                     $form->remove('passwordVerify');
                     $form->remove('captcha');
-                    $form->get('submit')->setLabel('Save');                    
+                    $form->get('submit')->setLabel('Save')->setAttributes(array(
+		            	'class' => 'btn btn-info update-profile-button',
+		            ))->setOptions(array('icon' => '<i class="icon-ok bigger-110 gdn-loading"></i>'));             
                     return $form;
                 },
 
