@@ -81,13 +81,15 @@ echo "has-error" ?>">
 <script type="text/javascript">
 var city_url = "<?=$this->url('admin/shop_admin/city', array(), array(), true); ?>";
 $(function() {
+    console.log(city_url);
 	$("#select_departure").select2({
 		placeholder: "Search for a city",
 	    minimumInputLength: 3,
 	    ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
 	        url: city_url,
 	        dataType: 'json',
-	        quietMillis: 100,
+//	        quietMillis: 100,
+            delay: 250,
 	        data: function (term, page) {
 	            return {
 	                q: term, // search term
@@ -100,7 +102,7 @@ $(function() {
 	            var more = (page * 10) < data.total; // whether or not there are more results available
 	            return {results: data.results, more: more};
 	        },
-            error: function(req, err){ console.log('my message' + err); }
+            cache: true
 	    },
 	    formatSelection: format,
 	    formatResult: format

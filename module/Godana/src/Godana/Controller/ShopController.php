@@ -47,9 +47,8 @@ class ShopController extends AbstractActionController
      * @var ObjectManager
      */
     protected $objectManager;
-    
-    
-	public function indexAction()
+
+    public function indexAction()
 	{
 		$this->layout('layout/sb-admin-layout');
  		$this->layout()->shop_active = 'active';
@@ -268,7 +267,6 @@ class ShopController extends AbstractActionController
 		$paginator->setCurrentPageNumber($page);
         $result = array();
  		$result['total'] = count($paginator);
- 		var_dump(count($paginator));
  		$result['results'] = array();
 		foreach($paginator AS $item) {
 			$res = array(

@@ -242,8 +242,8 @@ class CooperativeController extends AbstractActionController
 	    $lang = $this->params()->fromRoute('lang', 'mg');
 	    $form = $this->getCooperativeLineForm();
 	    
-	    $cooperative = new Cooperative();
-	    $form->bind($cooperative);
+	    $line = new Line();
+	    $form->bind($line);
 	    
 	    $zoneId = $this->params()->fromQuery('zoneId', null);
 	    $cooperativeId = $this->params()->fromQuery('cooperativeId', null);
@@ -671,6 +671,7 @@ class CooperativeController extends AbstractActionController
 		    	'lineCarForm' => $form,
 		    	'lang' => $lang,
 		    );
+        } else {
         }
 	    
 	    return array(
@@ -1091,7 +1092,7 @@ class CooperativeController extends AbstractActionController
         } else {
         	$reservation = new Reservation();         	
         	$form->bind($reservation);
-        	$form->get('reservation-form')->get('passenger')->get('contacts')->get(0)->get('type')->setValue(1);
+//        	$form->get('reservation-form')->get('passenger')->get('contacts')->get(0)->get('type')->setValue(1);
         	$form->get('reservation-form')->get('payment')->setValue(0);         	
         }    
        
